@@ -7,3 +7,7 @@ RespiratoryPhase
 Nerve
 RespiratorySystem
 LinearBloodPressureContinuous
+TestSatSignal
+Saturation
+LinearNerveSignal
+Bla
