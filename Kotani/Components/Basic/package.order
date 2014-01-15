@@ -10,4 +10,10 @@ LinearBloodPressureContinuous
 TestSatSignal
 Saturation
 LinearNerveSignal
+HormoneConcentration
+SubstanceConcentration
+NeurotransmitterConcentration
+SubstanceProduction
+NeurotransmitterProduction
 Bla
+TestConnector
