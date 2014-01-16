@@ -55,6 +55,29 @@ model SinusNode "SinusNode"
 		viewinfo[0](
 			viewSettings(clrRaster=12632256),
 			typename="ModelInfo"),
+		viewinfo[3](
+			property[0](
+				id=2004,
+				val="2005"),
+			property[1](
+				id=2012,
+				val="2013"),
+			property[2](
+				id=2017,
+				val="000000"),
+			property[3](
+				id=2018,
+				val="True"),
+			property[4](
+				id=6012,
+				val="False"),
+			property[5](
+				id=6013,
+				val="True"),
+			property[6](
+				id=6022,
+				val="True"),
+			typename="3DObjectInfo"),
 		Icon(
 			coordinateSystem(grid={10,10}),
 			graphics={

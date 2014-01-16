@@ -16,6 +16,8 @@ model Heart
 		iconTransformation(
 			origin={-8.022919999999999,99.7135},
 			extent={{-10,-10},{10,10}})));
+	Basic.HormoneConcentration cvne annotation(Placement(transformation(extent={{-108.4,90},{-88.40000000000001,110}})));
+	Basic.NeurotransmitterConcentration ccne annotation(Placement(transformation(extent={{71.59999999999999,90},{91.59999999999999,110}})));
 	Real S "contractility";
 	Real tlast(start=0) "timestamp of last heartbeat";
 	Real plast(start=0) "blood pressure at the end of the last diastole";
@@ -27,14 +29,22 @@ model Heart
 	parameter Real facT=0 "influence of duration since last heartbeat";
 	parameter Real maxS=0 "saturation value for contractility";
 	parameter Real satExpS=0 "saturation exponent for contractility";
+	parameter Real tauv0=0 "base value for time it takes until blood pressure (hypothetically) reaches zero";
+	parameter Real facCvneWind=0 "influence of venous concentration of Norepinephrine on time it takes until blood pressure (hypothetically) reaches zero";
 	protected
 		Real progress "progress of systole (rising from 0 to 1 linearly)";
+		Real tauv "time until blood pressure (hypothetically) reaches zero";
 	equation
 		satS.sat = maxS;
 		satS.satexp = satExpS;
-		t = (time - tlast) / Tsys;
-		p = plast + S * progress * exp(1 - progress);
-		when sinusNerve.activation > 1 then
+		progress = (time - tlast) / Tsys;
+		tauv = tauv0 - facCvneWind * cvne.concentration;
+		if (time - tlast) < Tsys then
+		  artery.pressure = plast + S * progress * exp(1 - progress);
+		else
+		  artery.rate = -artery.pressure/tauv;
+		end if;
+		when sinusNerve.activation >= 1 then
 		    satS.x = S0 + facCcne * ccne + facT * (time - pre(tlast)) + facCvne * cvne;
 		  tlast = time;
 		  plast = pre(artery.pressure);
@@ -48,9 +58,19 @@ model Heart
 				right=61,
 				bottom=31),
 			typename="ObjectInfo")),
-		viewinfo[2](
+		viewinfo[0](
 			viewSettings(clrRaster=12632256),
 			typename="ModelInfo"),
+		viewinfo[3](
+			minOrder=0.5,
+			maxOrder=12,
+			mode=0,
+			minStep=0.01,
+			maxStep=0.1,
+			relTol=1e-005,
+			oversampling=4,
+			anaAlgorithm=0,
+			typename="AnaStatInfo"),
 		Icon(graphics={
 					Polygon(
 						points={{-6.01366,52.0005},{10.6053,66.61369999999999},{46.1353,77.2154},{73.356,63.7483},{79.3732,33.0893},{62.1812,
