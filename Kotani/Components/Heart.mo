@@ -1,7 +1,5 @@
 within Kotani.Components;
 model Heart
-  // CP: 65001
-  // SimulationX Version: 3.6.0.23962 x64
   Kotani.Components.Basic.BloodVessel artery annotation(Placement(transformation(origin = {-100,-1.14613}, extent = {{-10,-10},{10,10}}), iconTransformation(origin = {-100.573,0.573066}, extent = {{-10,-10},{10,10}})));
   Real S "contractility";
   Real tlast(start = 0) "timestamp of last heartbeat";
