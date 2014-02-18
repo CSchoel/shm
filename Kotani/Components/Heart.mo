@@ -4,6 +4,7 @@ model Heart
   Real S "contractility";
   Real tlast(start = 0) "timestamp of last heartbeat";
   Real plast(start = 0) "blood pressure at the end of the last diastole";
+  Real test(start = 1);
   Kotani.Components.Basic.Saturation satS;
   parameter Real Tsys = 0.125 "duration of systole";
   parameter Real S0 = -13.8 "base Value for contractility";
@@ -17,23 +18,24 @@ model Heart
   Basic.NeurotransmitterConcentration ccne annotation(Placement(visible = true, transformation(origin = {104.89,99.6118}, extent = {{-10,-10},{10,10}}, rotation = 0), iconTransformation(origin = {81.6,100}, extent = {{-10,-10},{10,10}}, rotation = 0)));
   Basic.HormoneConcentration cvne annotation(Placement(visible = true, transformation(origin = {-81.7087,98.4473}, extent = {{-10,-10},{10,10}}, rotation = 0), iconTransformation(origin = {-98.4,100}, extent = {{-10,-10},{10,10}}, rotation = 0)));
   Kotani.Components.Basic.DiscreteSignal sinusSignal annotation(Placement(visible = true, transformation(origin = {3.19725,98.9372}, extent = {{-10,-10},{10,10}}, rotation = 0), iconTransformation(origin = {-2.84732,96.756}, extent = {{-10,-10},{10,10}}, rotation = 0)));
+  Kotani.Components.Basic.BloodVessel pdia;
+  Kotani.Components.Basic.BloodVessel psys;
 protected
   Real progress "progress of systole (rising from 0 to 1 linearly)";
   Real tauv "time until blood pressure (hypothetically) reaches zero";
-  Real test(start = 50);
+  Boolean systole = time - tlast < Tsys;
 equation
+  psys.rate = der(psys.pressure);
+  psys.pressure = 10;
+  test = satS.satx;
+  pdia.rate = der(pdia.pressure);
+  pdia.rate = -pdia.pressure / tauv;
   satS.sat = maxS;
   satS.satexp = satExpS;
   satS.x = S;
   progress = (time - tlast) / Tsys;
   tauv = tauv0 - facCvneWind * cvne.concentration;
-  if time - tlast < Tsys then
-    artery.pressure = plast + satS.satx * progress * exp(1 - progress);
-    test = plast + satS.satx * progress * exp(1 - progress);
-  else
-    artery.rate = -artery.pressure / tauv;
-    der(test) = -test / tauv;
-  end if;
+  artery.rate = 1;
   when sinusSignal.s >= 1 then
       S = S0 + facCcne * ccne.concentration + facT * (time - pre(tlast)) + facCvne * cvne.concentration;
     tlast = pre(time);
