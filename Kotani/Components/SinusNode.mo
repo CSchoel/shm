@@ -10,14 +10,20 @@ model SinusNode "SinusNode"
   parameter Real paraMax = 2.5 "saturation value for the parasympathetic neural activity at the sinus node";
   parameter Real paraSatexp = 2 "saturation speed (exponent) of parasympathetic neural activity at the sinus node";
   parameter Real sfpara = 5.8 "sensitivity of the sinus node to parasympathetic activity";
+  parameter Real ccneSatexp = 2 "saturation speed (exponend) of cardiac concentration of Norepinephrine";
+  parameter Real ccneMax = 2 "saturation value for the cardiac concentration of Norepinephrine";
   Kotani.Components.Basic.Saturation satPara;
+  Kotani.Components.Basic.Saturation satCcne;
   Real fs "sympathetic influence on sinus node";
   Real ps "parasympathetic influence on sinus node";
 equation
+  satCcne.satexp = ccneSatexp;
+  satCcne.sat = ccneMax;
+  satCcne.x = ccne.concentration;
   satPara.satexp = paraSatexp;
   satPara.sat = paraMax;
   satPara.x = delay(parasympathicus.activation, paraDelay, paraDelay);
-  fs = 1 + sfsym * ccne.concentration;
+  fs = 1 + sfsym * satCcne.satx;
   ps = 1 - sfpara * satPara.satx;
   phase.rate = 1 / T0 * fs * ps;
   when phase.activation > 1 then
