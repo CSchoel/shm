@@ -32,9 +32,10 @@ equation
   satCvne.satexp = satExpCvne;
   satCvne.sat = maxCvne;
   satCvne.x = cvne.concentration;
-  psys.rate = 1;
-  //psys.rate = der(psys.pressure);
-  psys.pressure = plast + satS.satx * progress * exp(1 - progress);
+  psys.rate = der(psys.pressure);
+  psys.rate = 1 / Tsys * satS.satx * (1 - progress) * exp(1 - progress);
+  //psys.rate is a manual differentiation of the following equation from the kotani model
+  //psys.pressure = plast + satS.satx * progress * exp(1 - progress);
   //psys.pressure = 10;
   //test = satS.satx;
   pdia.rate = der(pdia.pressure);
@@ -49,6 +50,7 @@ equation
       S = S0 + facCcne * ccne.concentration + facT * (time - pre(tlast)) + facCvne * cvne.concentration;
     tlast = time;
     plast = pre(artery.pressure);
+    reinit(psys.pressure, plast);
   
   end when;
   //S = S0 + facCcne * ccne.concentration + facT * (time - pre(tlast)) + facCvne * cvne.concentration;
