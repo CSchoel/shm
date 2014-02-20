@@ -2,7 +2,7 @@ within Kotani.Components;
 model SinusNode "SinusNode"
   Kotani.Components.Basic.Nerve parasympathicus annotation(Placement(transformation(origin = {100,100}, extent = {{-10,-10},{10,10}}), iconTransformation(origin = {50,50}, extent = {{-10,-10},{10,10}})));
   Kotani.Components.Basic.Nerve phase;
-  Kotani.Components.Basic.HormoneConcentration ccne "Cardiac Concentration of Norepinephrine" annotation(Placement(transformation(origin = {-139.9,9.9}, extent = {{-10,-10},{10,10}}), iconTransformation(origin = {-100,0}, extent = {{-10,-10},{10,10}})));
+  Kotani.Components.Basic.NeurotransmitterConcentration ccne "Cardiac Concentration of Norepinephrine" annotation(Placement(transformation(origin = {-139.9,9.9}, extent = {{-10,-10},{10,10}}), iconTransformation(origin = {-100,0}, extent = {{-10,-10},{10,10}})));
   parameter Real T0 = 0.6 "base rate at which sinus node fires without input from central nervous system";
   parameter Real sfsym = 1.6 "scaling factor for sympathetic influence on sinus node";
   parameter Real symDelay = 1.65 "time taken for sympathetic neural activity to trigger release of cardiac Norepinephrine";
