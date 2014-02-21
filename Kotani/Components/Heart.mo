@@ -29,9 +29,6 @@ protected
   Real progress "progress of systole (rising from 0 to 1 linearly)";
   Real tauv "time until blood pressure (hypothetically) reaches zero";
   Boolean systole = time - tlast < Tsys;
-  //initial equation
-  //  psys = 0;
-  //  pdia = 0;
 equation
   satCvne.satexp = satExpCvne;
   satCvne.sat = maxCvne;
