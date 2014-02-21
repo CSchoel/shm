@@ -10,6 +10,8 @@ protected
 equation
   con.rate = der(con.concentration);
   con.rate = -con.concentration / Tuptake + prodFac * signal;
+  //we do not change input signals
+  trigger.rate = 0;
   annotation(experiment(StopTime = 1, StartTime = 0));
 end SubstanceEmission;
 

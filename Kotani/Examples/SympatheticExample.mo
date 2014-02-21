@@ -17,6 +17,6 @@ equation
   connect(nerveSystem.fiber,simpleLung.baro) annotation(Line(points = {{-35,74},{-22,74},{-22,76},{-10,76}}, color = {0,0,0}, smooth = Smooth.None));
   connect(nerveSystem.fiber,sympatheticSystem.baro) annotation(Line(points = {{-35,74},{-18,74},{-18,18},{0,18}}, color = {0,0,0}, smooth = Smooth.None));
   connect(nerveSystem1.fiber,sympatheticSystem.signal) annotation(Line(points = {{15,-16},{12,-16},{12,8},{10,8}}, color = {0,0,0}, smooth = Smooth.None));
-  annotation(Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-100,-100},{100,100}}), graphics));
+  annotation(Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-100,-100},{100,100}}), graphics), experiment(StartTime = 0, StopTime = 10, Tolerance = 0.000001));
 end SympatheticExample;
 
