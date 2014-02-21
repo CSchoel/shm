@@ -18,8 +18,8 @@ model KotaniFullExample
   Kotani.Components.Basic.BloodSystem bloodsystem2 annotation(Placement(visible = true, transformation(origin = {-73.2143,-41.0714}, extent = {{-10,-10},{10,10}}, rotation = 0)));
   Kotani.Components.Basic.LinearBloodPressure linearbloodpressure1 annotation(Placement(visible = true, transformation(origin = {-77.6786,-65.1786}, extent = {{-10,-10},{10,10}}, rotation = 0)));
 equation
+  connect(baroreceptors1.artery,bloodsystem1.vessel) annotation(Line(points = {{-73.1924,-16.9077},{-44.1964,-16.9077},{-44.1964,-31.4732},{-31.6964,-31.4732},{-31.6964,-31.4732}}));
   connect(linearbloodpressure1.vessel,bloodsystem2.vessel) annotation(Line(points = {{-77.6786,-65.1786},{-83.7054,-65.1786},{-83.7054,-40.8482},{-83.7054,-40.8482}}));
-  connect(baroreceptors1.artery,bloodsystem2.vessel) annotation(Line(points = {{-73.1924,-16.9077},{-93.3036,-16.9077},{-93.3036,-41.2946},{-82.8125,-41.2946},{-82.8125,-41.2946}}));
   connect(nervesystem4.fiber,hormoneemission1.trigger) annotation(Line(points = {{11.0133,-79.1991},{10.2336,-79.1991},{10.2336,-16.6852},{-5.33927,-16.6852},{-5.33927,-5.33927},{-5.33927,-5.33927}}));
   connect(linearnervesignal1.nerve1,nervesystem4.fiber) annotation(Line(points = {{-21.802,-80.089},{12.0133,-80.089},{12.0133,-79.644},{12.0133,-79.644}}));
   connect(hormoneemission1.con,heart1.cvne) annotation(Line(points = {{-5.50924,5.83745},{37.3749,5.83745},{37.3749,0.222469},{38.0423,0.222469},{38.0423,0.222469}}));
@@ -38,6 +38,6 @@ equation
   connect(respiratorysystem1.phase,sympatheticsystem1.resp) annotation(Line(points = {{-25.7953,58.287},{-38.7097,58.287},{-38.7097,52.0578},{-38.7097,52.0578}}));
   connect(respiratorysystem1.phase,simplelung1.resp) annotation(Line(points = {{-25.7953,58.287},{-28.921,58.287},{-28.921,71.4127},{-14.683,71.4127},{-14.683,76.7519},{-14.683,76.7519}}));
   connect(sinusnode1.signal,heart1.sinusSignal) annotation(Line(points = {{46.5183,11.6351},{46.7186,11.6351},{46.7186,-0.113053},{46.6563,-0.113053}}));
-  annotation(Icon(coordinateSystem(extent = {{-100,-100},{100,100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2,2})), Diagram(coordinateSystem(extent = {{-100,-100},{100,100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2,2})));
+  annotation(Icon(coordinateSystem(extent = {{-100,-100},{100,100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2,2})), Diagram(coordinateSystem(extent = {{-100,-100},{100,100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2,2})), experiment(StartTime = 0, StopTime = 10, Tolerance = 0.000001));
 end KotaniFullExample;
 
