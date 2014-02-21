@@ -18,9 +18,9 @@ model KotaniFullExample
   Kotani.Components.Basic.BloodSystem bloodsystem2 annotation(Placement(visible = true, transformation(origin = {-73.2143,-41.0714}, extent = {{-10,-10},{10,10}}, rotation = 0)));
   Kotani.Components.Basic.LinearBloodPressure linearbloodpressure1 annotation(Placement(visible = true, transformation(origin = {-77.6786,-65.1786}, extent = {{-10,-10},{10,10}}, rotation = 0)));
 equation
+  connect(nervesystem2.fiber,hormoneemission1.trigger) annotation(Line(points = {{-33.4805,15.3504},{-33.0357,15.3504},{-33.0357,-4.46429},{-5.35714,-4.46429},{-5.35714,-4.46429}}));
   connect(baroreceptors1.artery,bloodsystem1.vessel) annotation(Line(points = {{-73.1924,-16.9077},{-44.1964,-16.9077},{-44.1964,-31.4732},{-31.6964,-31.4732},{-31.6964,-31.4732}}));
   connect(linearbloodpressure1.vessel,bloodsystem2.vessel) annotation(Line(points = {{-77.6786,-65.1786},{-83.7054,-65.1786},{-83.7054,-40.8482},{-83.7054,-40.8482}}));
-  connect(nervesystem4.fiber,hormoneemission1.trigger) annotation(Line(points = {{11.0133,-79.1991},{10.2336,-79.1991},{10.2336,-16.6852},{-5.33927,-16.6852},{-5.33927,-5.33927},{-5.33927,-5.33927}}));
   connect(linearnervesignal1.nerve1,nervesystem4.fiber) annotation(Line(points = {{-21.802,-80.089},{12.0133,-80.089},{12.0133,-79.644},{12.0133,-79.644}}));
   connect(hormoneemission1.con,heart1.cvne) annotation(Line(points = {{-5.50924,5.83745},{37.3749,5.83745},{37.3749,0.222469},{38.0423,0.222469},{38.0423,0.222469}}));
   connect(neurotransmitteremission1.con,heart1.ccne) annotation(Line(points = {{14.068,18.5182},{24.0267,18.5182},{24.0267,-31.8131},{64.2937,-31.8131},{64.2937,0.444939},{54.9499,0.444939},{54.9499,0.444939}}));
