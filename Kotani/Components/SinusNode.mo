@@ -39,6 +39,7 @@ equation
   signal.s = if change(signal0) then 1 else 0;
   //we do not change the input signals
   parasympathicus.rate = 0;
+  ccne.rate = 0;
   annotation(Icon(coordinateSystem(grid = {10,10}), graphics = {Text(textString = "S", fillPattern = FillPattern.Solid, extent = {{-16.7204,-16.4585},{16.7204,16.4585}}, visible = true, origin = {-83.2796,83.5415}),Text(textString = "P", fillPattern = FillPattern.Solid, extent = {{-16.5365,-16.3527},{16.5365,16.3527}}, visible = true, origin = {83.4635,83.6473}),Line(points = {{41.765,44.267},{8.38,-18.204},{-1.91,27.731},{-48.235,-53.794}}, color = {128,128,0}, thickness = 1, visible = true, origin = {3.2,-14.1}),Line(points = {{16.054,3.333},{-8.957,-16.667},{-7.097,13.333}}, color = {128,128,0}, thickness = 1, visible = true, origin = {-36,-51.2}),Ellipse(fillColor = {255,255,255}, extent = {{-79.375,-79.375},{79.375,79.375}}, visible = true, origin = {0.8,-10.7})}), Diagram(coordinateSystem(grid = {10,10}), graphics = {Rectangle(lineColor = {0,0,0}, fillColor = {255,255,255}, fillPattern = FillPattern.Solid, extent = {{-85,80},{-25,35}})}), experiment(StopTime = 1, StartTime = 0));
 end SinusNode;
 
