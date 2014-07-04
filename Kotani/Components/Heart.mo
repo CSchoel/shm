@@ -1,7 +1,7 @@
 within Kotani.Components;
 model Heart
   Kotani.Components.Basic.BloodVessel artery annotation(Placement(transformation(origin = {-100,-1.14613}, extent = {{-10,-10},{10,10}}), iconTransformation(origin = {-100.573,0.573066}, extent = {{-10,-10},{10,10}})));
-  discrete Real S(start = S0) "contractility";
+  discrete Real S(start = 0) "contractility";
   discrete Real tlast(start = 0) "timestamp of last heartbeat";
   discrete Real plast(start = 0) "blood pressure at the end of the last diastole";
   //discrete Real Tlast(start = 0) "duration of last cycle";
@@ -46,19 +46,16 @@ equation
   tauv = tauv0 - facCvneWind * satCvne.satx;
   artery.rate = if systole then -rsys else -rdia;
   when sinusSignal.s >= 1 then
-      S = S0 + facCcne * ccne.concentration + facT * (time - pre(tlast)) + facCvne * cvne.concentration;
+    S = S0 + facCcne * ccne.concentration + facT * (time - pre(tlast)) + facCvne * cvne.concentration;
     tlast = time;
     plast = pre(artery.pressure);
     reinit(psys, plast);
-  
   end when;
   when not systole then
-      reinit(pdia, artery.pressure);
-  
+    reinit(pdia, artery.pressure);
   end when;
   //we do not change inputs
   ccne.rate = 0;
   cvne.rate = 0;
   annotation(Diagram(coordinateSystem(extent = {{-148.5,-105},{148.5,105}}, grid = {5,5})), experiment(StopTime = 1, StartTime = 0), Icon(coordinateSystem(extent = {{-100,-100},{100,100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2,2}), graphics = {Polygon(origin = {2.25166,-11.1836}, fillColor = {170,0,0}, fillPattern = FillPattern.Solid, points = {{-6.01366,52.0005},{10.6053,66.6137},{46.1353,77.2154},{73.356,63.7483},{79.3732,33.0893},{62.1812,0.424539},{-7.73286,-74.074},{-71.9162,7.0148},{-80.7988,39.1065},{-78.5065,62.6022},{-61.028,73.777},{-42.4033,72.0578},{-20.3403,66.9002},{-6.01366,52.0005}})}));
 end Heart;
-

@@ -15,11 +15,9 @@ equation
   testp = plast + unsteady * progress;
   der(progress) = 2;
   when sample(2, 3) then
-      unsteady = time;
+    unsteady = time;
     tlast = time;
     plast = p;
-  
   end when;
   annotation(Icon(coordinateSystem(extent = {{-100,-100},{100,100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2,2})), Diagram(coordinateSystem(extent = {{-100,-100},{100,100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2,2})));
 end UnsteadyTestBad;
-

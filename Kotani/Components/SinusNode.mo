@@ -28,12 +28,11 @@ equation
   satPara.sat = paraMax;
   satPara.x = delay(parasympathicus.activation, paraDelay, paraDelay);
   fs = 1 + sfsym * satCcne.satx;
-  ps = 1 - sfpara * satPara.satx;
-  rate = 1 / T0 * fs * ps;
+  fp = 1 - sfpara * satPara.satx;
+  rate = 1 / T0 * fs * fp;
   when phase > 1 then
-      reinit(phase, 0);
+    reinit(phase, 0);
     signal0 = not pre(signal0);
-  
   end when;
   //need to use phase.activation == 0 because the when clause voids the event phase.activation > 1
   signal.s = if change(signal0) then 1 else 0;
@@ -42,4 +41,3 @@ equation
   ccne.rate = 0;
   annotation(Icon(coordinateSystem(grid = {10,10}), graphics = {Text(textString = "S", fillPattern = FillPattern.Solid, extent = {{-16.7204,-16.4585},{16.7204,16.4585}}, visible = true, origin = {-83.2796,83.5415}),Text(textString = "P", fillPattern = FillPattern.Solid, extent = {{-16.5365,-16.3527},{16.5365,16.3527}}, visible = true, origin = {83.4635,83.6473}),Line(points = {{41.765,44.267},{8.38,-18.204},{-1.91,27.731},{-48.235,-53.794}}, color = {128,128,0}, thickness = 1, visible = true, origin = {3.2,-14.1}),Line(points = {{16.054,3.333},{-8.957,-16.667},{-7.097,13.333}}, color = {128,128,0}, thickness = 1, visible = true, origin = {-36,-51.2}),Ellipse(fillColor = {255,255,255}, extent = {{-79.375,-79.375},{79.375,79.375}}, visible = true, origin = {0.8,-10.7})}), Diagram(coordinateSystem(grid = {10,10}), graphics = {Rectangle(lineColor = {0,0,0}, fillColor = {255,255,255}, fillPattern = FillPattern.Solid, extent = {{-85,80},{-25,35}})}), experiment(StopTime = 1, StartTime = 0));
 end SinusNode;
-

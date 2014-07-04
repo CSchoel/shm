@@ -13,14 +13,13 @@ equation
   test2 = if switch then test2_1 else test2_2;
   //Not needed
   when switch then
-      reinit(test2_1, test2);
-  
+    reinit(test2_1, test2);
   end when;
-  if switch then
-    test = 10 + x;
-  else
-    der(test) = -1;
-  end if;
+  test = 1;
+  //if switch then
+  //  test = 10 + x;
+  //else
+  //  der(test) = -1;
+  //end if;
   annotation(Icon(coordinateSystem(extent = {{-100,-100},{100,100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2,2})), Diagram(coordinateSystem(extent = {{-100,-100},{100,100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2,2})));
 end EquationSwitchTest;
-
