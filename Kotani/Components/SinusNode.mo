@@ -1,8 +1,8 @@
 within Kotani.Components;
 model SinusNode "SinusNode"
   Kotani.Components.Basic.Nerve parasympathicus annotation(Placement(transformation(origin = {100,100}, extent = {{-10,-10},{10,10}}), iconTransformation(origin = {50,50}, extent = {{-10,-10},{10,10}})));
-  Real phase(start = 0);
-  Real rate(start = 0);
+  Real phase "phase for integrate-and-fire, when this variable reaches a value greater than 1, the sinus node fires";
+  Real rate "rate of the integrate-and-fire phase";
   Kotani.Components.Basic.NeurotransmitterConcentration ccne "Cardiac Concentration of Norepinephrine" annotation(Placement(transformation(origin = {-139.9,9.9}, extent = {{-10,-10},{10,10}}), iconTransformation(origin = {-100,0}, extent = {{-10,-10},{10,10}})));
   parameter Real T0 = 0.6 "base rate at which sinus node fires without input from central nervous system";
   parameter Real sfsym = 1.6 "scaling factor for sympathetic influence on sinus node";
@@ -13,12 +13,15 @@ model SinusNode "SinusNode"
   parameter Real sfpara = 5.8 "sensitivity of the sinus node to parasympathetic activity";
   parameter Real ccneSatexp = 2 "saturation speed (exponend) of cardiac concentration of Norepinephrine";
   parameter Real ccneMax = 2 "saturation value for the cardiac concentration of Norepinephrine";
+  parameter Real initialPhase = 0 "initial value for the integrate-and-fire phase";
   Kotani.Components.Basic.Saturation satPara;
   Kotani.Components.Basic.Saturation satCcne;
   Real fs "sympathetic influence on sinus node";
   Real fp "parasympathetic influence on sinus node";
   Kotani.Components.Basic.DiscreteSignal signal annotation(Placement(visible = true, transformation(origin = {-1.33482,-86.0957}, extent = {{-10,-10},{10,10}}, rotation = 0), iconTransformation(origin = {0.222469,-101.669}, extent = {{-10,-10},{10,10}}, rotation = 0)));
   Boolean signal0(start = false) "switches values on each heartbeat (used to propagate heartbeat event)";
+initial equation
+  phase = initialPhase;
 equation
   rate = der(phase);
   satCcne.satexp = ccneSatexp;
