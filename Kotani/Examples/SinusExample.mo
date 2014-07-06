@@ -1,10 +1,10 @@
 within Kotani.Examples;
 model SinusExample
   Components.Basic.NerveSystem nerveSystem1 annotation(Placement(transformation(origin = {-60,60}, extent = {{-10,-10},{10,10}})));
-  Components.Basic.LinearNerveSignal linearNerveSignal1(topval = 10) annotation(Placement(transformation(origin = {-110,65}, extent = {{-10,-10},{10,10}})));
+  Components.Basic.LinearNerveSignal linearNerveSignal1(rate = 10) annotation(Placement(transformation(origin = {-110,65}, extent = {{-10,-10},{10,10}})));
   Components.Basic.NerveSystem nerveSystem2 annotation(Placement(transformation(origin = {15,50}, extent = {{-10,-10},{10,10}})));
   Components.SinusNode sinusNode1 annotation(Placement(transformation(origin = {-15,17.8768}, extent = {{-10,-10},{10,10}})));
-  Components.Basic.LinearNerveSignal linearNerveSignal2(t1 = 3, t2 = 4, topval = 0.1) annotation(Placement(transformation(origin = {30,77.0404}, extent = {{-10,-10},{10,10}})));
+  Components.Basic.LinearNerveSignal linearNerveSignal2(t1 = 3, t2 = 4, rate = 0.1) annotation(Placement(transformation(origin = {30,77.0404}, extent = {{-10,-10},{10,10}})));
   Components.HormoneEmission hormoneEmission1;
   Kotani.Components.NeurotransmitterEmission neurotransmitteremission1 annotation(Placement(visible = true, transformation(origin = {-44.0625,26.7188}, extent = {{-10,-10},{10,10}}, rotation = 0)));
   Kotani.Components.Basic.NeurotransmitterAmount neurotransmitteramount1 annotation(Placement(visible = true, transformation(origin = {-33.9844,45.7031}, extent = {{-10,-10},{10,10}}, rotation = 0)));
