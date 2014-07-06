@@ -1,9 +1,9 @@
 within Kotani.Components;
 model Heart
   Kotani.Components.Basic.BloodVessel artery annotation(Placement(transformation(origin = {-100,-1.14613}, extent = {{-10,-10},{10,10}}), iconTransformation(origin = {-100.573,0.573066}, extent = {{-10,-10},{10,10}})));
-  discrete Real S(start = 0) "contractility";
-  discrete Real tlast(start = 0) "timestamp of last heartbeat";
-  discrete Real plast(start = 0) "blood pressure at the end of the last diastole";
+  discrete Real S "contractility";
+  discrete Real tlast "timestamp of last heartbeat";
+  discrete Real plast "blood pressure at the end of the last diastole";
   //discrete Real Tlast(start = 0) "duration of last cycle";
   Kotani.Components.Basic.Saturation satS;
   Kotani.Components.Basic.Saturation satCvne;
@@ -18,17 +18,27 @@ model Heart
   parameter Real facCvneWind = 1.2 "influence of vascular concentration of Norepinephrine on time it takes until blood pressure (hypothetically) reaches zero";
   parameter Real satExpCvne = 1.5 "saturation exponent (speed) for vascular concentration of Norepinephrine";
   parameter Real maxCvne = 1 "saturation value for vascular concentration of Norepinephrine";
+  //initial values
+  parameter Real initialS = 0 "initial value for contractility";
+  parameter Real initialTlast = 0 "initial value for timestamp of last heartbeat";
+  parameter Real initialPlast = 50 "initial value for blood pressure at the end of the last diastole";
   Basic.NeurotransmitterConcentration ccne annotation(Placement(visible = true, transformation(origin = {104.89,99.6118}, extent = {{-10,-10},{10,10}}, rotation = 0), iconTransformation(origin = {81.6,100}, extent = {{-10,-10},{10,10}}, rotation = 0)));
   Basic.HormoneConcentration cvne annotation(Placement(visible = true, transformation(origin = {-81.7087,98.4473}, extent = {{-10,-10},{10,10}}, rotation = 0), iconTransformation(origin = {-98.4,100}, extent = {{-10,-10},{10,10}}, rotation = 0)));
   Kotani.Components.Basic.DiscreteSignal sinusSignal annotation(Placement(visible = true, transformation(origin = {3.19725,98.9372}, extent = {{-10,-10},{10,10}}, rotation = 0), iconTransformation(origin = {-2.84732,96.756}, extent = {{-10,-10},{10,10}}, rotation = 0)));
-  Real pdia(start = 0);
-  Real rdia(start = 0);
-  Real psys(start = 0);
-  Real rsys(start = 0);
+  Real pdia;
+  Real rdia;
+  Real psys;
+  Real rsys;
 protected
   Real progress "progress of systole (rising from 0 to 1 linearly)";
   Real tauv "time until blood pressure (hypothetically) reaches zero";
   Boolean systole = time - tlast < Tsys;
+initial equation
+  S = initialS;
+  tlast = initialTlast;
+  plast = initialPlast;
+  pdia = artery.pressure;
+  psys = artery.pressure;
 equation
   satCvne.satexp = satExpCvne;
   satCvne.sat = maxCvne;
