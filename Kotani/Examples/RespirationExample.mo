@@ -2,7 +2,7 @@ within Kotani.Examples;
 model RespirationExample
   Kotani.Components.Baroreceptors baroreceptors1 annotation(Placement(visible = true, transformation(origin = {-68.1127,40.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
   Kotani.Components.Basic.BloodSystem bloodSystem1 annotation(Placement(visible = true, transformation(origin = {-107.7574,1.9638}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
-  Kotani.Components.Basic.LinearBloodPressure linearBloodPressure1(topval = 200) annotation(Placement(visible = true, transformation(origin = {-110.0,-30.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
+  Kotani.Components.Basic.LinearBloodPressure linearBloodPressure1(rate = 200) annotation(Placement(visible = true, transformation(origin = {-110.0,-30.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
   Kotani.Components.Basic.NerveSystem nerveSystem2 annotation(Placement(visible = true, transformation(origin = {-45.0,65.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
   Kotani.Components.SimpleLung simpleLung1 annotation(Placement(visible = true, transformation(origin = {0.0,72.3713}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
   Kotani.Components.Basic.RespiratorySystem respiratorySystem1 annotation(Placement(visible = true, transformation(origin = {26.9455,50.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
