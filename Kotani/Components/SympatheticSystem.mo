@@ -1,8 +1,8 @@
 within Kotani.Components;
 model SympatheticSystem
   Kotani.Components.Basic.RespiratoryPhase resp annotation(Placement(visible = true, transformation(origin = {17.8036,4.7749}, extent = {{-14.85,-10.5},{14.85,10.5}}, rotation = 0), iconTransformation(origin = {0.0,100.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
-  Kotani.Components.Basic.Nerve baro annotation(Placement(visible = true, transformation(origin = {-148.5677,35.5947}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0), iconTransformation(origin = {-100.0,0.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
-  Kotani.Components.Basic.Nerve signal annotation(Placement(visible = true, transformation(origin = {0.0,-104.6138}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0), iconTransformation(origin = {-0.0,-100.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
+  Kotani.Components.Basic.NerveInput baro annotation(Placement(visible = true, transformation(origin = {-148.5677,35.5947}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0), iconTransformation(origin = {-100.0,0.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
+  Kotani.Components.Basic.NerveOutput signal annotation(Placement(visible = true, transformation(origin = {0.0,-104.6138}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0), iconTransformation(origin = {-0.0,-100.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
   parameter Real baro_influence = 0.8;
   parameter Real resp_influence = 0.0003;
   parameter Real v0 = 0.95;

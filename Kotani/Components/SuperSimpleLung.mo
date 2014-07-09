@@ -1,7 +1,7 @@
 within Kotani.Components;
 model SuperSimpleLung
   Kotani.Components.Basic.RespiratoryPhase resp annotation(Placement(visible = true, transformation(origin = {0.0,-102.7206}, extent = {{-14.85,-10.5},{14.85,10.5}}, rotation = 0), iconTransformation(origin = {0.0,-97.8291}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
-  Kotani.Components.Basic.Nerve baro annotation(Placement(visible = true, transformation(origin = {-147.9538,0.4341}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0), iconTransformation(origin = {-100.0,-0.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
+  Kotani.Components.Basic.NerveInput baro annotation(Placement(visible = true, transformation(origin = {-147.9538,0.4341}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0), iconTransformation(origin = {-100.0,-0.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
   parameter Real Tresp = 3.5 "base duration of respiratory phase";
   parameter Real G = 0.2 "scaling factor for influence of baroreceptor afferents";
   parameter Real nu_trig = 1.3 "threshold for baroreceptor afferents";

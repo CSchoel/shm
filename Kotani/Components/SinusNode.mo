@@ -1,6 +1,6 @@
 within Kotani.Components;
 model SinusNode "SinusNode"
-  Kotani.Components.Basic.Nerve parasympathicus annotation(Placement(transformation(origin = {100,100}, extent = {{-10,-10},{10,10}}), iconTransformation(origin = {50,50}, extent = {{-10,-10},{10,10}})));
+  Kotani.Components.Basic.NerveInput parasympathicus annotation(Placement(transformation(origin = {100,100}, extent = {{-10,-10},{10,10}}), iconTransformation(origin = {50,50}, extent = {{-10,-10},{10,10}})));
   Real phase "phase for integrate-and-fire, when this variable reaches a value greater than 1, the sinus node fires";
   Real rate "rate of the integrate-and-fire phase";
   Kotani.Components.Basic.NeurotransmitterConcentration ccne "Cardiac Concentration of Norepinephrine" annotation(Placement(transformation(origin = {-139.9,9.9}, extent = {{-10,-10},{10,10}}), iconTransformation(origin = {-100,0}, extent = {{-10,-10},{10,10}})));

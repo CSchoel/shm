@@ -1,6 +1,6 @@
 within Kotani.Components.Basic;
 model FiringNerveReceiver
-  Kotani.Components.Basic.Nerve nerve1 annotation(Placement(visible = true, transformation(origin = {-6.44007,99.1055}, extent = {{-10,-10},{10,10}}, rotation = 0), iconTransformation(origin = {-6.44007,99.1055}, extent = {{-10,-10},{10,10}}, rotation = 0)));
+  Kotani.Components.Basic.NerveInput nerve1 annotation(Placement(visible = true, transformation(origin = {-6.44007,99.1055}, extent = {{-10,-10},{10,10}}, rotation = 0), iconTransformation(origin = {-6.44007,99.1055}, extent = {{-10,-10},{10,10}}, rotation = 0)));
   discrete Real test;
 equation
   when pre(nerve1.activation) >= 0.5 then

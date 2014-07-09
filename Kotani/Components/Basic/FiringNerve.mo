@@ -1,6 +1,6 @@
 within Kotani.Components.Basic;
 model FiringNerve "FiringNerve"
-  Nerve nerve1 annotation(Placement(transformation(extent = {{-150,30},{-130,50}}), iconTransformation(extent = {{-111.7,-8.3},{-91.7,11.7}})));
+  NerveOutput nerve1 annotation(Placement(transformation(extent = {{-150,30},{-130,50}}), iconTransformation(extent = {{-111.7,-8.3},{-91.7,11.7}})));
 protected
   Real ts(start = 1);
 equation
