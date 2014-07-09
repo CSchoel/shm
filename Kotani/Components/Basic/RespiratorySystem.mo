@@ -1,6 +1,6 @@
 within Kotani.Components.Basic;
 model RespiratorySystem
-  parameter Real initialPhase = 0 "initial respiration phase";
+  parameter Real initialPhase = 1 "initial respiration phase";
   Kotani.Components.Basic.RespiratoryPhase phase annotation(Placement(visible = true, transformation(origin = {-78.5812,1.3022}, extent = {{-14.85,-10.5},{14.85,10.5}}, rotation = 0), iconTransformation(origin = {-100.0,-0.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
 initial equation
   phase.phase = initialPhase;
