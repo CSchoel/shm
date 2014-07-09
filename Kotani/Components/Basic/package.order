@@ -20,3 +20,8 @@ NeurotransmitterProduction
 Bla
 TestConnector
 FiringNerve
+NeurotransmitterAmount
+HormoneAmout
+FiringNerveReceiver
+DiscreteSignal
+DiracSignal
