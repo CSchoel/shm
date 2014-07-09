@@ -19,7 +19,7 @@ model SinusNode "SinusNode"
   Real fs "sympathetic influence on sinus node";
   Real fp "parasympathetic influence on sinus node";
   Kotani.Components.Basic.DiscreteSignal signal annotation(Placement(visible = true, transformation(origin = {-1.33482,-86.0957}, extent = {{-10,-10},{10,10}}, rotation = 0), iconTransformation(origin = {0.222469,-101.669}, extent = {{-10,-10},{10,10}}, rotation = 0)));
-  Boolean signal0(start = false) "switches values on each heartbeat (used to propagate heartbeat event)";
+  Boolean signal0(start = false, fixed = true) "switches values on each heartbeat (used to propagate heartbeat event)";
 initial equation
   phase = initialPhase;
 equation
