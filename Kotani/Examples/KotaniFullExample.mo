@@ -6,7 +6,6 @@ model KotaniFullExample
   Kotani.Components.SinusNode sinusnode1 annotation(Placement(visible = true, transformation(origin = {46.4961, 21.802}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Kotani.Components.ParasympatheticSystem parasympatheticsystem1 annotation(Placement(visible = true, transformation(origin = {4.44939, 42.9366}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Kotani.Components.SympatheticSystem sympatheticsystem1 annotation(Placement(visible = true, transformation(origin = {-38.7097, 41.8242}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Kotani.Components.Basic.RespiratorySystem respiratorysystem1 annotation(Placement(visible = true, transformation(origin = {-15.7953, 58.287}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Kotani.Components.Baroreceptors baroreceptors1 annotation(Placement(visible = true, transformation(origin = {-73.1924, -16.9077}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Kotani.Components.Basic.BloodSystem bloodsystem1 annotation(Placement(visible = true, transformation(origin = {-21.802, -31.3682}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Kotani.Components.NeurotransmitterEmission neurotransmitteremission1 annotation(Placement(visible = true, transformation(origin = {14.238, 13.3482}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -14,6 +13,8 @@ model KotaniFullExample
   Kotani.Components.Basic.NeurotransmitterAmount neurotransmitteramount1 annotation(Placement(visible = true, transformation(origin = {26.5848, 18.2813}, extent = {{-2.87946, -2.87946}, {2.87946, 2.87946}}, rotation = 0)));
   Kotani.Components.Basic.HormoneAmout hormoneamout1 annotation(Placement(visible = true, transformation(origin = {19.442, 2.65625}, extent = {{-3.10268, -3.10268}, {3.10268, 3.10268}}, rotation = 0)));
 equation
+  connect(simplelung1.resp, parasympatheticsystem1.resp) annotation(Line(points = {{-14.4605, 76.7577}, {5.36673, 76.7577}, {5.36673, 52.9517}, {5.36673, 52.9517}}));
+  connect(simplelung1.resp, sympatheticsystem1.resp) annotation(Line(points = {{-14.4605, 76.7577}, {-38.9982, 76.7577}, {-38.9982, 51.5206}, {-38.9982, 51.5206}}));
   connect(parasympatheticsystem1.signal, sinusnode1.parasympathicus) annotation(Line(points = {{4.44939, 32.9366}, {27.907, 32.9366}, {27.907, 47.9428}, {51.5206, 47.9428}, {51.5206, 26.4758}, {51.5206, 26.4758}}));
   connect(sympatheticsystem1.signal, neurotransmitteremission1.trigger) annotation(Line(points = {{-38.7097, 31.8242}, {-38.6404, 31.8242}, {-38.6404, 8.58676}, {13.5957, 8.58676}, {13.5957, 8.58676}}));
   connect(sympatheticsystem1.signal, hormoneemission1.trigger) annotation(Line(points = {{-38.7097, 31.8242}, {-38.6404, 31.8242}, {-38.6404, -3.9356}, {-5.72451, -3.9356}, {-5.72451, -3.9356}}));
@@ -27,9 +28,6 @@ equation
   connect(neurotransmitteremission1.con, neurotransmitteramount1.con) annotation(Line(points = {{14.068, 18.5182}, {27.0089, 18.5182}, {27.0089, 18.0804}, {27.0089, 18.0804}}));
   connect(baroreceptors1.artery, bloodsystem1.vessel) annotation(Line(points = {{-73.1924, -16.9077}, {-44.1964, -16.9077}, {-44.1964, -31.4732}, {-31.6964, -31.4732}, {-31.6964, -31.4732}}));
   connect(bloodsystem1.vessel, heart1.artery) annotation(Line(points = {{-31.802, -31.3682}, {-36.7075, -31.3682}, {-36.7075, -10.0111}, {36.9299, -10.0111}, {36.9299, -10.0111}}));
-  connect(respiratorysystem1.phase, parasympatheticsystem1.resp) annotation(Line(points = {{-25.7953, 58.287}, {-25.8065, 58.287}, {-25.8065, 69.6329}, {4.22692, 69.6329}, {4.22692, 52.7253}, {4.22692, 52.7253}}));
-  connect(respiratorysystem1.phase, sympatheticsystem1.resp) annotation(Line(points = {{-25.7953, 58.287}, {-38.7097, 58.287}, {-38.7097, 52.0578}, {-38.7097, 52.0578}}));
-  connect(respiratorysystem1.phase, simplelung1.resp) annotation(Line(points = {{-25.7953, 58.287}, {-28.921, 58.287}, {-28.921, 71.4127}, {-14.683, 71.4127}, {-14.683, 76.7519}, {-14.683, 76.7519}}));
   connect(sinusnode1.signal, heart1.sinusSignal) annotation(Line(points = {{46.5183, 11.6351}, {46.7186, 11.6351}, {46.7186, -0.113053}, {46.6563, -0.113053}}));
   annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), experiment(StartTime = 0, StopTime = 10, Tolerance = 0.000001));
 end KotaniFullExample;

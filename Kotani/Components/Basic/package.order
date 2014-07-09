@@ -3,7 +3,8 @@ BloodSystem
 NerveSystem
 StaticBloodPressure
 LinearBloodPressure
-RespiratoryPhase
+RespirationInput
+RespirationOutput
 NerveInput
 NerveOutput
 RespiratorySystem
