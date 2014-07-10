@@ -1,17 +1,29 @@
 within Kotani.Examples;
 
 model KotaniFullExample
-  Kotani.Components.SimpleLung simplelung1 annotation(Placement(visible = true, transformation(origin = {-14.4605, 86.5406}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Kotani.Components.Heart heart1 annotation(Placement(visible = true, transformation(origin = {46.941, -9.78865}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Kotani.Components.SinusNode sinusnode1 annotation(Placement(visible = true, transformation(origin = {46.4961, 21.802}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  //parameter Real baro_activity = 2 "Initial baroreceptor activity";
+  parameter Real conc_cNe = 0.25 "Initial cardiac concentration of Norepinephrine";
+  parameter Real conc_vNe = 0.25 "Initial vascular concentration of Norepinephrine";
+  parameter Real hypertension = 0 "initial hypertensive factor";
+  parameter Real last_beat_p = 250 "Initial value for diastolic blood pressure";
+  parameter Real pacemaker = 0 "Initial pacemaker phase";
+  //parameter Real para_activity = 2 "Initial parasympathetic activity";
+  parameter Real pressure = 500 "Initial blood pressure";
+  //parameter Real respiratory_influence = 0.5 "initial respiratory influence";
+  parameter Real respiratory_phase = 0.5 "initial respiratory phase";
+  //parameter Real symp_activity = 0.2 "initial sympathetic activity";
+  //parameter Real windkessel_relax = 0 "initial windkessel relaxation";
+  Kotani.Components.SimpleLung simplelung1(initialR=respiratory_phase) annotation(Placement(visible = true, transformation(origin = {-14.4605, 86.5406}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Kotani.Components.Heart heart1(initialS=hypertension,initialPlast=last_beat_p) annotation(Placement(visible = true, transformation(origin = {46.941, -9.78865}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Kotani.Components.SinusNode sinusnode1(initialPhase=pacemaker) annotation(Placement(visible = true, transformation(origin = {46.4961, 21.802}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Kotani.Components.ParasympatheticSystem parasympatheticsystem1 annotation(Placement(visible = true, transformation(origin = {4.44939, 42.9366}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Kotani.Components.SympatheticSystem sympatheticsystem1 annotation(Placement(visible = true, transformation(origin = {-38.7097, 41.8242}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Kotani.Components.Baroreceptors baroreceptors1 annotation(Placement(visible = true, transformation(origin = {-73.1924, -16.9077}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Kotani.Components.Basic.BloodSystem bloodsystem1 annotation(Placement(visible = true, transformation(origin = {-21.802, -31.3682}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Kotani.Components.Basic.BloodSystem bloodsystem1(initialPressure=pressure) annotation(Placement(visible = true, transformation(origin = {-21.802, -31.3682}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Kotani.Components.NeurotransmitterEmission neurotransmitteremission1 annotation(Placement(visible = true, transformation(origin = {14.238, 13.3482}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Kotani.Components.HormoneEmission hormoneemission1 annotation(Placement(visible = true, transformation(origin = {-5.33924, 0.667451}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Kotani.Components.Basic.NeurotransmitterAmount neurotransmitteramount1 annotation(Placement(visible = true, transformation(origin = {26.5848, 18.2813}, extent = {{-2.87946, -2.87946}, {2.87946, 2.87946}}, rotation = 0)));
-  Kotani.Components.Basic.HormoneAmout hormoneamout1 annotation(Placement(visible = true, transformation(origin = {19.442, 2.65625}, extent = {{-3.10268, -3.10268}, {3.10268, 3.10268}}, rotation = 0)));
+  Kotani.Components.Basic.NeurotransmitterAmount neurotransmitteramount1(initialConcentration=conc_cNe) annotation(Placement(visible = true, transformation(origin = {26.5848, 18.2813}, extent = {{-2.87946, -2.87946}, {2.87946, 2.87946}}, rotation = 0)));
+  Kotani.Components.Basic.HormoneAmout hormoneamout1(initialConcentration=conc_vNe) annotation(Placement(visible = true, transformation(origin = {19.442, 2.65625}, extent = {{-3.10268, -3.10268}, {3.10268, 3.10268}}, rotation = 0)));
 equation
   connect(simplelung1.resp, parasympatheticsystem1.resp) annotation(Line(points = {{-14.4605, 76.7577}, {5.36673, 76.7577}, {5.36673, 52.9517}, {5.36673, 52.9517}}));
   connect(simplelung1.resp, sympatheticsystem1.resp) annotation(Line(points = {{-14.4605, 76.7577}, {-38.9982, 76.7577}, {-38.9982, 51.5206}, {-38.9982, 51.5206}}));
