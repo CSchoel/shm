@@ -1,6 +1,5 @@
 within Kotani.Examples;
 model BrokenHeartExample
-  Components.Basic.NerveSystem nerveSystem1 annotation(Placement(visible = true, transformation(origin = {50.3488,9.63327}, extent = {{-10,-10},{10,10}}, rotation = 0)));
   Components.Basic.LinearNerveSignal linearNerveSignal1 annotation(Placement(visible = true, transformation(origin = {51.5116,-15.0089}, extent = {{-10,-10},{10,10}}, rotation = 0)));
   Components.NeurotransmitterEmission neurotransmitterEmission1 annotation(Placement(visible = true, transformation(origin = {25.3041,66.4311}, extent = {{-10,-10},{10,10}}, rotation = 0)));
   Components.HormoneEmission hormoneEmission1 annotation(Placement(visible = true, transformation(origin = {70.7424,64.6422}, extent = {{-10,-10},{10,10}}, rotation = 0)));
@@ -14,10 +13,8 @@ equation
   connect(heart1.cvne,neurotransmitterEmission1.con) annotation(Line(points = {{13.1091,17.3752},{12.5693,52.4954},{24.7689,71.6011},{25.1341,71.6011}}));
   connect(bloodSystem1.vessel,heart1.artery) annotation(Line(points = {{26.2343,-48.4531},{14.7874,-48.4531},{14.7874,-15.5268},{14.7874,-15.5268}}));
   connect(heart1.sinusSignal,diracsignal1.signal) annotation(Line(points = {{-18.683,16.2959},{-1.47874,16.2959},{-1.47874,62.1072},{-1.36218,62.1072},{-1.36218,61.8668}}));
-  connect(linearNerveSignal1.nerve1,nerveSystem1.fiber) annotation(Line(points = {{51.5116,-15.0089},{49.7317,-15.0089},{49.7317,10.0179},{49.7317,10.0179}}));
-  connect(nerveSystem1.fiber,neurotransmitterEmission1.trigger) annotation(Line(points = {{49.3488,9.63327},{25.0447,9.63327},{25.0447,61.5385},{25.0447,61.5385}}));
-  connect(nerveSystem1.fiber,hormoneEmission1.trigger) annotation(Line(points = {{49.3488,9.63327},{70.8408,9.63327},{70.8408,59.3918},{70.8408,59.3918}}));
-  connect(linearNerveSignal1.nerve1,nerveSystem1.fiber) annotation(Line(points = {{5,-10},{10,-10},{55,-10},{55,15},{54,15}}, thickness = 0.0625), AutoRoute = false);
+  connect(linearNerveSignal1.nerve1,neurotransmitterEmission1.trigger) annotation(Line(points = {{49.3488,9.63327},{25.0447,9.63327},{25.0447,61.5385},{25.0447,61.5385}}));
+  connect(linearNerveSignal1.nerve1,hormoneEmission1.trigger) annotation(Line(points = {{49.3488,9.63327},{70.8408,9.63327},{70.8408,59.3918},{70.8408,59.3918}}));
   annotation(experiment(StartTime = 0, StopTime = 10, Tolerance = 0.000001));
 end BrokenHeartExample;
 
