@@ -22,7 +22,7 @@ model KotaniFullExample
   parameter Real para_fac_baro = 0.036 "sensitivity of parasympathetic system to baroreceptor activity";
   parameter Real para_fac_resp = 4.5e-3 "sensitivity of parasympathetic system to respiratory phase";
   parameter Real sinus_basic_duration = 0.6 "basic duration of the pacemaker phase cycle for zero neural activity";
-  parameter Real sinus_fac_cNe = 1.6 "sensitivity of the sinus node to concentration of cardiac Norepinephrine";
+  parameter Real sinus_fac_symp = 1.6 "sensitivity of the sinus node to concentration of cardiac Norepinephrine";
   parameter Real sinus_fac_para = 5.8 "sensitivity of the sinus node to parasympathetic neural activity";
   parameter Real sinus_cNe_sat_val = 2.0 "saturation value for the cardiac concentration of Norepinephrine";
   parameter Real sinus_cNe_sat_exp = 2.0 "saturation exponent for the cardiac concentration of Norepinephrine";
@@ -50,15 +50,15 @@ model KotaniFullExample
   parameter Real lung_Tresp = 3.5 "constant respiratory period without influence of baroreceptors";
   parameter Real lung_fac_baro = 0.2 "sensitivity of respiratory phase (during exhalation) to baroreceptor activity";
   parameter Real lung_baro_min = 1.3 "threshold when baroreceptor activity starts to influence respiratory phase (during exhalation)";
-  Kotani.Components.SimpleLung lung(initialR=respiratory_phase) "the Lung" annotation(Placement(visible = true, transformation(origin = {-14.4605, 86.5406}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Kotani.Components.Heart heart(initialS=hypertension,initialPlast=last_beat_p) "the heart" annotation(Placement(visible = true, transformation(origin = {46.941, -9.78865}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Kotani.Components.SinusNode sinus(initialPhase=pacemaker) "the sinus node" annotation(Placement(visible = true, transformation(origin = {46.4961, 21.802}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Kotani.Components.ParasympatheticSystem para "parasympathetic system" annotation(Placement(visible = true, transformation(origin = {4.44939, 42.9366}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Kotani.Components.SympatheticSystem symp "sympathetic system" annotation(Placement(visible = true, transformation(origin = {-38.7097, 41.8242}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Kotani.Components.Baroreceptors baro "baroreceptor" annotation(Placement(visible = true, transformation(origin = {-73.1924, -16.9077}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Kotani.Components.SimpleLung lung(initialR=respiratory_phase,Tresp=lung_Tresp,G=lung_fac_baro,nu_trig=lung_baro_min) "the Lung" annotation(Placement(visible = true, transformation(origin = {-14.4605, 86.5406}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Kotani.Components.Heart heart(initialS=hypertension,initialPlast=last_beat_p,Tsys=heart_Tsys,S0=heart_S0,facCcne=heart_fac_cNe,facCvne=heart_fac_vNe,facT=heart_fac_Tlast,maxS=heart_sat_val,satExpS=heart_sat_exp,tauv0=heart_Tzero_base,facCvneWind=heart_Tzero_fac_vNe,satExpCvne=heart_vNe_sat_exp,maxCvne=heart_vNe_sat_val) "the heart" annotation(Placement(visible = true, transformation(origin = {46.941, -9.78865}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Kotani.Components.SinusNode sinus(initialPhase=pacemaker,T0=sinus_basic_duration,sfsym=sinus_fac_symp,sfpara=sinus_fac_para,symDelay=cNe_delay,paraDelay=sinus_para_delay,paraSatexp=sinus_para_sat_exp,ccneSatexp=sinus_cNe_sat_exp,paraMax=sinus_para_sat_val,ccneMax=sinus_cNe_sat_val) "the sinus node" annotation(Placement(visible = true, transformation(origin = {46.4961, 21.802}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Kotani.Components.ParasympatheticSystem para(v0=para_basic_activity,baro_influence=para_fac_baro,resp_influence=para_fac_resp,scaling_factor=para_factor) "parasympathetic system" annotation(Placement(visible = true, transformation(origin = {4.44939, 42.9366}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Kotani.Components.SympatheticSystem symp(v0=symp_basic_activity,baro_influence=symp_fac_baro,resp_influence=symp_fac_resp) "sympathetic system" annotation(Placement(visible = true, transformation(origin = {-38.7097, 41.8242}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Kotani.Components.Baroreceptors baro(p0=baro_min_pressure,k1=baro_fac_pressure,k2=baro_fac_rate) "baroreceptor" annotation(Placement(visible = true, transformation(origin = {-73.1924, -16.9077}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Kotani.Components.Basic.BloodSystem blood(initialPressure=pressure) "main blood system" annotation(Placement(visible = true, transformation(origin = {-21.802, -31.3682}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Kotani.Components.NeurotransmitterEmission cNeEmit "emission of cardiac Norepinephrine" annotation(Placement(visible = true, transformation(origin = {14.238, 13.3482}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Kotani.Components.HormoneEmission vNeEmit "emission of vascular Norepinephrine" annotation(Placement(visible = true, transformation(origin = {-5.33924, 0.667451}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Kotani.Components.NeurotransmitterEmission cNeEmit(Tuptake=cNe_Tuptake,prodFac=cNe_fac_symp,triggerDelay=cNe_delay) "emission of cardiac Norepinephrine" annotation(Placement(visible = true, transformation(origin = {14.238, 13.3482}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Kotani.Components.HormoneEmission vNeEmit(Tuptake=vNe_Tuptake,prodFac=vNe_fac_symp,triggerDelay=vNe_delay,baseSignal=vNe_base_activity) "emission of vascular Norepinephrine" annotation(Placement(visible = true, transformation(origin = {-5.33924, 0.667451}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Kotani.Components.Basic.NeurotransmitterAmount cNeAmount(initialConcentration=conc_cNe) "amount of cardiac Norepinephrine" annotation(Placement(visible = true, transformation(origin = {26.5848, 18.2813}, extent = {{-2.87946, -2.87946}, {2.87946, 2.87946}}, rotation = 0)));
   Kotani.Components.Basic.HormoneAmout vNeAmount(initialConcentration=conc_vNe) "amount of vascular Norepinephrine" annotation(Placement(visible = true, transformation(origin = {19.442, 2.65625}, extent = {{-3.10268, -3.10268}, {3.10268, 3.10268}}, rotation = 0)));
 equation
