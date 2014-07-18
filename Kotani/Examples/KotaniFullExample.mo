@@ -3,12 +3,12 @@ within Kotani.Examples;
 model KotaniFullExample 
   "Full Kotani model with all components"
   //Ininitial values
-  parameter Real conc_cNe = 0.25 "Initial cardiac concentration of Norepinephrine";
-  parameter Real conc_vNe = 0.25 "Initial vascular concentration of Norepinephrine";
-  parameter Real hypertension = 0 "initial hypertensive factor";
-  parameter Real last_beat_p = 250 "Initial value for diastolic blood pressure";
+  parameter Real conc_cNe = 0.025 "Initial cardiac concentration of Norepinephrine";
+  parameter Real conc_vNe = 0.025 "Initial vascular concentration of Norepinephrine";
+  parameter Real hypertension = 10 "initial hypertensive factor";
+  parameter Real last_beat_p = 100 "Initial value for diastolic blood pressure";
   parameter Real pacemaker = 0 "Initial pacemaker phase";
-  parameter Real pressure = 500 "Initial blood pressure";
+  parameter Real pressure = 100 "Initial blood pressure";
   parameter Real respiratory_phase = 0.5 "initial respiratory phase";
   //Model parameters (Kotani 2005)
   parameter Real baro_fac_pressure = 0.02 "sensitivity of baroreceptors to blood pressure";
@@ -38,7 +38,8 @@ model KotaniFullExample
   parameter Real heart_fac_vNe = 20 "sensitivity of contractility to vascular concentration of Norepinephrine";
   parameter Real heart_fac_Tlast = 45 "sensitivity of contractility to duration of the previous heart beat period";
   parameter Real heart_sat_val = 70 "saturation value for contractility";
-  parameter Real heart_sat_exp = 2 "saturation exponent for contractility";
+  //heart_sat_exp = 2.0 in Kotani 2005
+  parameter Real heart_sat_exp = 2.5 "saturation exponent for contractility";
   parameter Real heart_Tzero_base = 2.8 "time until blood pressure (hypothetically) reaches zero during the diastole";
   parameter Real heart_Tzero_fac_vNe = 1.2 "sensitivity of Tzero to vascular concentration of Norepinephrine";
   parameter Real heart_vNe_sat_val = 1.0 "saturation value for vasculat concentration of Norepinephrine that can influence the diastole";
