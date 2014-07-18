@@ -31,7 +31,7 @@ model KotaniFullExample
   parameter Real cNe_delay = 1.65 "time taken for a neural signal from the sympathetic system to trigger the release of cardiac Norepinephrine";
   parameter Real sinus_para_delay = 0.5 "time taken for a neural signal from the parasympathetic system to reach the sinus node";
   parameter Real sinus_para_sat_val = 2.5 "saturation value for the parasympathetic neural activity at the sinus node";
-  parameter Real sinus_para_sat_exp = 2.5 "saturation exponent for the parasympathetic neural activity at the sinus node";
+  parameter Real sinus_para_sat_exp = 2.0 "saturation exponent for the parasympathetic neural activity at the sinus node";
   parameter Real heart_Tsys = 0.125 "duration of the systole";
   parameter Real heart_S0 = -13.8 "base value for contractility";
   parameter Real heart_fac_cNe = 10 "sensitivity of contractility to cardiac concentration of Norepinephrine";
