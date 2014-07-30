@@ -6,7 +6,7 @@ model Baroreceptors "Baroreceptors measuring blood pressure"
   Kotani.Components.Basic.BloodVessel artery annotation(Placement(visible = true, transformation(origin = {-3.0696,0.4341}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0), iconTransformation(origin = {-0.0,0.0}, extent = {{-100.0,-100.0},{100.0,100.0}}, rotation = 0)));
   Kotani.Components.Basic.NerveOutput signal annotation(Placement(visible = true, transformation(origin = {-1.8417,85.0801}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0), iconTransformation(origin = {0.0,100.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
 equation
-  signal.activation = (artery.pressure - p0) * k1 + artery.rate * k2; //TODO derive manually or connect output directly w/o NerveSystem in between
+  signal.activation = (artery.pressure - p0) * k1 + der(artery.pressure) * k2; //TODO derive manually or connect output directly w/o NerveSystem in between
   //we do not add or take anything to the flow
   artery.rate = 0;
   annotation(Icon(coordinateSystem(extent = {{-100.0,-100.0},{100.0,100.0}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10,10}), graphics = {Text(visible = true, origin = {-0.0,-73.1144}, fillPattern = FillPattern.Solid, extent = {{-100.0,-26.8856},{100.0,26.8856}}, textString = "%name", fontName = "Arial")}), Diagram(coordinateSystem(extent = {{-148.5,-105.0},{148.5,105.0}}, preserveAspectRatio = true, initialScale = 0.1, grid = {5,5})));
