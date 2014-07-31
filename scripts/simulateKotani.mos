@@ -1,0 +1,27 @@
+loadModel(Modelica);
+if Modelica.Utilities.Strings.find(getModelicaPath(),"Kotani") == 0 then
+  setModelicaPath(getModelicaPath()+";../src");
+end if;
+loadModel(Kotani);
+stopTime := 1000.0;
+simulationStep := 0.0001;
+setDebugFlags("initialization");
+simulate(
+  Kotani.Examples.KotaniFullExample,
+  stopTime=stopTime,
+  method="euler",
+  numberOfIntervals=integer(stopTime/simulationStep),
+  tolerance=1e-6,
+  fileNamePrefix="Kotani_full_1000",
+  outputFormat="csv",
+  variableFilter="^(blood.vessel.pressure"
+                 +"|sinus.phase"
+                 +"|baro.signal.activation"
+                 +"|para.signal.activation"
+                 +"|symp.signal.activation"
+                 +"|cNeAmount.con.concentration"
+                 +"|vNeAmount.con.concentration"
+                 +"|lung.resp.phase"
+                 +"|lung.r"
+                 +")$"
+);
