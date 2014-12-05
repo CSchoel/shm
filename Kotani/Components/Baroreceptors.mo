@@ -3,8 +3,8 @@ model Baroreceptors "Baroreceptors measuring blood pressure"
   parameter Real p0 = 50 "minimum blood pressure needed to generate signal";
   parameter Real k1 = 0.02 "sensitivity of baroreceptors to blood pressure level";
   parameter Real k2 = 0.00125 "sensitivity of baroreceptors to change in blood pressure";
-  Kotani.Components.Basic.BloodVessel artery annotation(Placement(visible = true, transformation(origin = {-3.0696,0.4341}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0), iconTransformation(origin = {-0.0,0.0}, extent = {{-100.0,-100.0},{100.0,100.0}}, rotation = 0)));
-  Kotani.Components.Basic.NerveOutput signal annotation(Placement(visible = true, transformation(origin = {-1.8417,85.0801}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0), iconTransformation(origin = {0.0,100.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
+  Kotani.Components.Basic.BloodVessel artery annotation(Placement(visible = true, transformation(origin = {-3.0696, 0.4341}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, -20}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+  Kotani.Components.Basic.NerveOutput signal annotation(Placement(visible = true, transformation(origin = {-1.8417, 85.0801}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {28, 74}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation
   signal.activation = (artery.pressure - p0) * k1 + der(artery.pressure) * k2; //TODO derive manually or connect output directly w/o NerveSystem in between
   //we do not add or take anything to the flow
