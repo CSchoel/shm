@@ -1,11 +1,12 @@
 within Kotani.Components.Basic;
 model HormoneAmout
   parameter Real initialConcentration = 0 "Initial hormone concentration";
-  Kotani.Components.Basic.HormoneConcentration con annotation(Placement(visible = true, transformation(origin = {-14.2857,19.1964}, extent = {{-10,-10},{10,10}}, rotation = 0), iconTransformation(origin = {1.45089,3.45982}, extent = {{-95.4241,-95.4241},{95.4241,95.4241}}, rotation = 0)));
+  Kotani.Components.Basic.HormoneConcentration con annotation(Placement(visible = true, transformation(origin = {0, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation
   con.rate = der(con.concentration);
   annotation(Diagram(coordinateSystem(extent = {{-100,-100},{100,100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2,2})), Icon(coordinateSystem(extent = {{-100,-100},{100,100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2,2}), graphics = {Rectangle(origin = {2.12054,-0.78125}, extent = {{-92.5223,95.2009},{92.5223,-95.2009}})}));
 initial equation
   con.concentration = initialConcentration;
+annotation(Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2}), graphics = {Rectangle(origin = {2.12054, -0.78125}, extent = {{-101.825, 100.21}, {97.5312, -99.1365}}), Ellipse(origin = {-67.6189, 48.302}, fillColor = {255, 255, 0}, fillPattern = FillPattern.Solid, extent = {{-15, 15}, {15, -15}}, endAngle = 360), Ellipse(origin = {-0.749463, 46.4773}, fillColor = {255, 255, 0}, fillPattern = FillPattern.Solid, extent = {{-15, 15}, {15, -15}}, endAngle = 360), Ellipse(origin = {57.1754, 62.8995}, fillColor = {255, 255, 0}, fillPattern = FillPattern.Solid, extent = {{-15, 15}, {15, -15}}, endAngle = 360), Ellipse(origin = {-10.4453, -4.36351}, fillColor = {255, 255, 0}, fillPattern = FillPattern.Solid, extent = {{-15, 15}, {15, -15}}, endAngle = 360), Ellipse(origin = {-56.2414, -36.9216}, fillColor = {255, 255, 0}, fillPattern = FillPattern.Solid, extent = {{-15, 15}, {15, -15}}, endAngle = 360), Ellipse(origin = {71.0931, -1.53703}, fillColor = {255, 255, 0}, fillPattern = FillPattern.Solid, extent = {{-15, 15}, {15, -15}}, endAngle = 360), Ellipse(origin = {36.7818, -53.7374}, fillColor = {255, 255, 0}, fillPattern = FillPattern.Solid, extent = {{-15, 15}, {15, -15}}, endAngle = 360), Ellipse(origin = {-18.3523, -69.8733}, fillColor = {255, 255, 0}, fillPattern = FillPattern.Solid, extent = {{-15, 15}, {15, -15}}, endAngle = 360)}));
 end HormoneAmout;
 
