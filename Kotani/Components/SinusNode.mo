@@ -1,9 +1,10 @@
 within Kotani.Components;
 model SinusNode "SinusNode"
-  Kotani.Components.Basic.NerveInput parasympathicus annotation(Placement(transformation(origin = {100,100}, extent = {{-10,-10},{10,10}}), iconTransformation(origin = {50,50}, extent = {{-10,-10},{10,10}})));
+  Kotani.Components.Basic.DiscreteSignal signal annotation(Placement(visible = true, transformation(origin = {0, -90}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Kotani.Components.Basic.NerveInput parasympathicus annotation(Placement(visible = true, transformation(origin = {40, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {40, 70}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Kotani.Components.Basic.NeurotransmitterConcentration ccne "Cardiac Concentration of Norepinephrine" annotation(Placement(visible = true, transformation(origin = {-40, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-40, 70}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Real phase "phase for integrate-and-fire, when this variable reaches a value greater than 1, the sinus node fires";
   Real rate "rate of the integrate-and-fire phase";
-  Kotani.Components.Basic.NeurotransmitterConcentration ccne "Cardiac Concentration of Norepinephrine" annotation(Placement(transformation(origin = {-139.9,9.9}, extent = {{-10,-10},{10,10}}), iconTransformation(origin = {-100,0}, extent = {{-10,-10},{10,10}})));
   parameter Real T0 = 0.6 "base rate at which sinus node fires without input from central nervous system";
   parameter Real sfsym = 1.6 "scaling factor for sympathetic influence on sinus node";
   parameter Real symDelay = 1.65 "time taken for sympathetic neural activity to trigger release of cardiac Norepinephrine";
@@ -18,7 +19,6 @@ model SinusNode "SinusNode"
   Kotani.Components.Basic.Saturation satCcne;
   Real fs "sympathetic influence on sinus node";
   Real fp "parasympathetic influence on sinus node";
-  Kotani.Components.Basic.DiscreteSignal signal annotation(Placement(visible = true, transformation(origin = {-1.33482,-86.0957}, extent = {{-10,-10},{10,10}}, rotation = 0), iconTransformation(origin = {0.222469,-101.669}, extent = {{-10,-10},{10,10}}, rotation = 0)));
   Boolean signal0(start = false, fixed = true) "switches values on each heartbeat (used to propagate heartbeat event)";
 initial equation
   phase = initialPhase;
@@ -41,5 +41,5 @@ equation
   signal.s = if change(signal0) then 1 else 0;
   //we do not change the input signals
   ccne.rate = 0;
-  annotation(Icon(coordinateSystem(grid = {10,10}), graphics = {Text(textString = "S", fillPattern = FillPattern.Solid, extent = {{-16.7204,-16.4585},{16.7204,16.4585}}, visible = true, origin = {-83.2796,83.5415}),Text(textString = "P", fillPattern = FillPattern.Solid, extent = {{-16.5365,-16.3527},{16.5365,16.3527}}, visible = true, origin = {83.4635,83.6473}),Line(points = {{41.765,44.267},{8.38,-18.204},{-1.91,27.731},{-48.235,-53.794}}, color = {128,128,0}, thickness = 1, visible = true, origin = {3.2,-14.1}),Line(points = {{16.054,3.333},{-8.957,-16.667},{-7.097,13.333}}, color = {128,128,0}, thickness = 1, visible = true, origin = {-36,-51.2}),Ellipse(fillColor = {255,255,255}, extent = {{-79.375,-79.375},{79.375,79.375}}, visible = true, origin = {0.8,-10.7})}), Diagram(coordinateSystem(grid = {10,10}), graphics = {Rectangle(lineColor = {0,0,0}, fillColor = {255,255,255}, fillPattern = FillPattern.Solid, extent = {{-85,80},{-25,35}})}), experiment(StopTime = 1, StartTime = 0));
+  annotation(experiment(StopTime = 1, StartTime = 0), Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {1, 1})), Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {1, 1}), graphics = {Ellipse(origin = {-0.158344, 0.48068}, fillColor = {255, 255, 255}, extent = {{-79.375, -79.375}, {79.375, 79.375}}, endAngle = 360), Line(origin = {-2.27393, 7.79068}, points = {{-71.3692, -24.1544}, {-38.0955, 24.8617}, {-38.0955, -25.2277}, {-7.68408, 24.8617}, {-7.68408, -25.2277}, {22.0118, 24.8617}, {22.0118, -23.7966}, {52.4233, 25.2195}, {52.4233, -24.5122}, {71.3857, 6.97263}}, thickness = 2), Line(origin = {-22.2939, -49.6393}, points = {{-18.4258, 25.7603}, {-18.4258, -3.9356}, {22.1482, -3.9356}, {22.2592, -21.3519}}, pattern = LinePattern.Dash, thickness = 1, arrow = {Arrow.None, Arrow.Filled}), Line(origin = {-32.8383, -21.0004}, points = {{5.44247, 5.65551}, {0.63654, -2.22572}, {0.17224, 3.65356}, {-4.67192, -4.67192}}, color = {255, 170, 0}, thickness = 1.5, arrow = {Arrow.None, Arrow.Filled}, arrowSize = 4), Line(origin = {5.25607, 42.6607}, points = {{-14.8479, 0}, {14.8479, 0}}, thickness = 1), Line(origin = {20.0961, 42.6336}, points = {{0, 5.72451}, {0, -5.72451}}, thickness = 1), Line(origin = {-9.6177, 42.645}, points = {{0, 5.72451}, {0, -5.72451}}, thickness = 1), Line(origin = {-18.929, 56.5985}, points = {{-16.192, 10.3216}, {16.192, -10.3216}}, thickness = 1, arrow = {Arrow.None, Arrow.Filled}), Line(origin = {20.1661, 56.4707}, points = {{9.35393, 9.41844}, {-9.35393, -9.41844}}, thickness = 1, arrow = {Arrow.None, Arrow.Filled}), Text(origin = {9.26117, 59.1162}, extent = {{-5.16, 4.45}, {10.9659, -9.09471}}, textString = "+"), Text(origin = {-6.47333, 58.0636}, extent = {{-5.16, 4.45}, {10.97, -9.09}}, textString = "-")}));
 end SinusNode;
