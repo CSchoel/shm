@@ -1,3 +1,7 @@
+//Should be run with OMShell.exe
+//assumes that working directory points to output directory that is a sibling of the source directory named 'src'
+//Reminder: change working directory with cd(..)
+//Warning: Will produce 2GB of data with current settings
 loadModel(Modelica);
 if Modelica.Utilities.Strings.find(getModelicaPath(),"Kotani") == 0 then
   setModelicaPath(getModelicaPath()+";../src");
