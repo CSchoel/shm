@@ -9,8 +9,8 @@ model Broaden "broadening function"
   output Real xbroad "broadened output";
   Real history[n] "history needed for broadening";
 protected
-  parameter Integer n = integer(ceil(len*resolution));
-  parameter Real stepsize = 1/resolution;
+  parameter Integer n = integer(ceil(len*resolution)) "length of arrays";
+  parameter Real stepsize = 1/resolution "step size";
 equation
   for i in 1:size(history,1) loop
     history[i] = delay(x,(i-1)*stepsize,(i-1)*stepsize);
