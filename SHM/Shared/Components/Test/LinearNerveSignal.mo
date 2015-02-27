@@ -6,7 +6,7 @@ model LinearNerveSignal "Linear rising nerve signal"
   parameter Real topval = 0 "value after ramp";
   SHM.Shared.Connectors.NerveOutput nerve1 "nerve fiber" annotation(Placement(visible = true, transformation(origin = {148.2445,1.5564}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0), iconTransformation(origin = {0.0,-0.0}, extent = {{-47.2263,-47.2263},{47.2263,47.2263}}, rotation = 0)));
 protected
-  Real rate = baseval/(t2-t1) "slope of ramp";
+  Real rate = (topval-baseval)/(t2-t1) "slope of ramp";
 equation
   if time < t1 then
     nerve1.activation = baseval;
