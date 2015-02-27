@@ -12,7 +12,8 @@ model SubstanceEmission "emission of a hormone or neurotransmitter"
 protected
   Real factor "helper variable for the variable part in the equation";
 equation
-  tau * con.rate = - con.concentration + tanh(k_ex * delay(excitation.activation,delay_ex,delay_ex)) * factor;
+  //negative sign needed because con.rate is a flow variable
+  - tau * con.rate = - con.concentration + tanh(k_ex * delay(excitation.activation,delay_ex,delay_ex)) * factor;
   if with_inhibition then
     factor = (1 - tanh(k_in * delay(inhibition.activation,delay_in,delay_in)));
   else
