@@ -1,18 +1,19 @@
 within SHM.SeidelThesis.Functions;
-function PEMean
-  input Integer resolution;
-  input Boolean minus = false;
-  output Real mean;
+function PEMean "Mean of the PhaseEffectiveness function"
+  input Integer resolution "how many calculation points to use";
+  input Boolean minus = false "if true, the formula with a minus from Seidel's thesis is used";
+  output Real mean "output value";
 protected
-  Real values[resolution+1];
-  Real stepsize;
-  Real sum;
+  Real stepsize "step size of discretization";
+  Real sum "sum of function values";
 algorithm
   stepsize := 1/resolution;
-  values := fill(0,resolution+1);
   sum := 0;
   for i in 0:resolution loop
     sum := sum + SHM.SeidelThesis.Functions.PhaseEffectiveness(i/resolution,minus);
   end for;
   mean := sum / (resolution+1);
+annotation(Documentation(info="<html>
+  <p>Calculates the mean of the phase effectiveness function over the interval [0,1].</p>
+</html>"));
 end PEMean;
