@@ -5,7 +5,7 @@ model Contraction "contraction model for the heart"
   parameter Real initial_T = 1 "initial value for T";
   parameter Real initial_t_last = 0 "initial value for last ventricular contraction time";
   parameter Real k_av_t = 0.78 "sensitivity of the atrioventricular conduction time to the time passed since the last ventricular conduction";
-  parameter Real T_av0 = 0.09 "base value for atrioventricular conduction time";
+  parameter Real T_avc0 = 0.09 "base value for atrioventricular conduction time";
   parameter Real tau_av = 0.11 "reference time for atrioventricular conduction time"; //TODO find better description
   discrete Real t_last "time of last contraction";
   discrete Real T_avc "atrioventricular conduction time (delay for sinus signal to trigger contraction)";
@@ -37,7 +37,7 @@ equation
     if pre(T_avc) > 0 then
       T_avc = pre(T_avc) "a sinus signal is already on the way, so we do not touch the conduction time";
     else
-      T_avc = T_av0 + k_av_t * exp(-T_passed/tau_av) "'enables' sinus_phase which will trigger contraction if it reaches 1 faster than av_phase";
+      T_avc = T_avc0 + k_av_t * exp(-T_passed/tau_av) "'enables' sinus_phase which will trigger contraction if it reaches 1 faster than av_phase";
     end if;
   elsewhen contraction then
     T_avc = 0 "'disables' sinus_phase after contraction until new sinus signal is received";

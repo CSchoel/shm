@@ -7,14 +7,14 @@ model Heart "Main heart model"
   SHM.Shared.Connectors.BloodVessel artery "connection to blood system";
   parameter Real T_refrac = 0.22 "refractory period that has to pass until a signal from the sinus node can take effect again";
   parameter Real T_av = 1.7 "time that can pass after the beginning of a systole until the av node initiates a contraction";
-  parameter Real T_av0 = 0.09 "base value for atrioventricular conduction time";
+  parameter Real T_avc0 = 0.09 "base value for atrioventricular conduction time";
   parameter Real tau_av = 0.11 "reference time for atrioventricular conduction time"; //TODO find better description
   parameter Real k_av_t = 0.78 "sensitivity of the atrioventricular conduction time to the time passed since the last ventricular conduction";
   parameter Real initial_T = T_hat "initial value for T";
   parameter Real initial_t_last = 0 "initial value for last ventricular contraction time";
   SHM.SeidelThesis.Components.Contraction contraction(
   	T_refrac=T_refrac,T_av=T_av,initial_T=initial_T,initial_t_last=initial_t_last,
-  	k_av_t=k_av_t,T_av0=T_av0,tau_av=tau_av
+  	k_av_t=k_av_t,T_avc0=T_avc0,tau_av=tau_av
   ) "contraction model used to calculate the actual time of ventricular contraction";
   parameter Real tau_sys = 0.125 "duration of systole";
   parameter Real S_0 = 110 "base value for contractility";
