@@ -4,7 +4,7 @@ model Lung "Lung model with simple sinus signal"
   parameter Real r_start = 0 "respiratory phase shift in seconds";
   SHM.Shared.Connectors.NerveOutput signal "generated nerve signal";
   SHM.Shared.Connectors.RespirationOutput resp "mechanical respiratory phase";
-  Real phi_r(start = 0) "internal respiratory phase";
+  Real phi_r(start = 0, fixed=true) "internal respiratory phase";
 equation
   der(phi_r) = 1/T_r;
   when phi_r > 1 then
