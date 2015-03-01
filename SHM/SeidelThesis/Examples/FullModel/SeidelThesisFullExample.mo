@@ -32,7 +32,7 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   	T_refrac=heart_T_refrac,T_av=heart_T_av,T_avc0=heart_T_avc0,tau_av=heart_tau_av,k_av_t=heart_k_av_t,
   	initial_T = heart_initial_T,initial_t_last=heart_initial_t_last,tau_sys=heart_tau_sys,S_0=heart_S_0,
   	k_S_vNe=heart_k_S_vNe,k_S_mresp=heart_k_S_mresp,T_hat=heart_T_hat,compliance=heart_compliance,
-  	tau_wind0=heart_tau_wind0,k_wind_rNe=heart_k_wind_rNe
+  	tau_wind0=heart_tau_wind0,k_wind_rNe=heart_k_wind_rNe,p_wind0=heart_p_wind0
   ) "the heart";
   SHM.Shared.Components.Compartments.BloodSystem blood(initialPressure=initial_p) "whole blood system of the body";
   
@@ -47,7 +47,7 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real sinus_k_sNe = 1.2 "sensitivity of sinus node to concentration of Norepinephrine";
   parameter Real sinus_k_sAc = 0.2 "sensitivity of sinus node to concentration of Acetylcholine";
   
-  parameter Real sNe_tau = 4 "time until concentration drops to zero without any nervous signal";
+  parameter Real sNe_tau = 2 "time until concentration drops to zero without any nervous signal";
   parameter Real sNe_k_ex = 0.014 "scaling factor for excitatory influence";
   parameter Real sNe_k_in = 0.006 "scaling factor for inhibitory influence";
   parameter Real sNe_delay_ex = 2 "time until excitatory signal triggers substance release";
@@ -59,30 +59,30 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real vNe_delay_in = 0.4 "time until inhibitory signal is recognized";
   parameter Real rNe_tau = 4 "time until concentration drops to zero without any nervous signal";
   parameter Real rNe_k_ex = 0.014 "scaling factor for excitatory influence";
-  parameter Real rNe_k_in = 0.006 "scaling factor for inhibitory influence";
-  parameter Real rNe_delay_ex = 2 "time until excitatory signal triggers substance release";
+  parameter Real rNe_k_in = 0 "scaling factor for inhibitory influence";
+  parameter Real rNe_delay_ex = 3 "time until excitatory signal triggers substance release";
   parameter Real rNe_delay_in = 0.4 "time until inhibitory signal is recognized";
-  parameter Real sAc_tau = 4 "time until concentration drops to zero without any nervous signal";
-  parameter Real sAc_k_ex = 0.014 "scaling factor for excitatory influence";
-  parameter Real sAc_delay_ex = 2 "time until excitatory signal triggers substance release";
+  parameter Real sAc_tau = 0.05 "time until concentration drops to zero without any nervous signal";
+  parameter Real sAc_k_ex = 0.005 "scaling factor for excitatory influence";
+  parameter Real sAc_delay_ex = sNe_delay_in "time until excitatory signal triggers substance release";
   
-  parameter Real sym_base_activity = 0 "base activity of the nervous system";
-  parameter Real sym_k_baro_resp = 1 "sensitivity to correlated signal of baroreceptors and respiratory neurons";
-  parameter Real sym_k_resp = 1 "sensitivity to respiratory neurons";
-  parameter Real para_base_activity = 0 "base activity of the nervous system";
-  parameter Real para_k_baro_resp = 1 "sensitivity to correlated signal of baroreceptors and respiratory neurons";
-  parameter Real para_k_resp = 1 "sensitivity to respiratory neurons";
+  parameter Real sym_base_activity = 50 "base activity of the nervous system";
+  parameter Real sym_k_baro_resp = 0.4 "sensitivity to correlated signal of baroreceptors and respiratory neurons";
+  parameter Real sym_k_resp = 30 "sensitivity to respiratory neurons";
+  parameter Real para_base_activity = 10 "base activity of the nervous system";
+  parameter Real para_k_baro_resp = 0.4 "sensitivity to correlated signal of baroreceptors and respiratory neurons";
+  parameter Real para_k_resp = 30 "sensitivity to respiratory neurons";
   
   parameter Real lung_T_r = 4 "respiratory period";
-  parameter Real lung_r_start = 0 "respiratory phase shift in seconds";
+  parameter Real lung_r_start = 0.16 "respiratory phase shift in seconds";
   
   parameter Real baro_p0 = 60 "minimum blood pressure needed to generate signal";
   parameter Real baro_kb = 0.06 "sensitivity of baroreceptors to blood pressure increase";
   parameter Real baro_sat_inflection = 120 "point of inflection for the saturation function";
   parameter Boolean baro_saturated = true "if true, saturation function is applied to raw baroreceptor signal";
   parameter Boolean baro_broadened = true "if true, boradening is applied to (saturated if saturated=true) baroreceptor signal";
-  parameter Real baro_broad_len = 0.11 "broadening length in seconds";
-  parameter Real baro_broad_res = 100 "broadening calculation steps per second";
+  parameter Real baro_broad_len = 3 "broadening length in seconds";
+  parameter Real baro_broad_res = 300 "broadening calculation steps per second";
   parameter Real baro_broad_eta = 0.15 "broadening eta";
   parameter Real baro_broad_sigma = 0.11 "broadening sigma";
   
@@ -101,6 +101,7 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real heart_compliance = 2 "arterial compliance in ml/mmHg";
   parameter Real heart_tau_wind0 = 1.3 "base value for windkessel relaxation";
   parameter Real heart_k_wind_rNe = 0.8 "sensitivity of windkessel relaxation to Norepinephrine in resistance vessels";
+  parameter Real heart_p_wind0 = 7 "minimum blood pressure that remains even if the heart would completely stop";
 equation
   connect(baro.artery,blood.vessel);
   connect(heart.artery,blood.vessel);
