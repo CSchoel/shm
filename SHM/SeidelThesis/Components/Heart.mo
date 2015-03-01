@@ -24,6 +24,7 @@ model Heart "Main heart model"
   parameter Real compliance = 2 "arterial compliance in ml/mmHg";
   parameter Real tau_wind0 = 1.3 "base value for windkessel relaxation";
   parameter Real k_wind_rNe = 0.8 "sensitivity of windkessel relaxation to Norepinephrine in resistance vessels";
+  parameter Real p_wind0 = 7 "minimum pressure that remains even if the heart totally stops";
   Real tau_wind "windkessel relaxation (time until blood pressure hypothetically drops to zero during systole)";
   discrete Real S "Contractility";
   Real pdia "diastolic blood pressure";
@@ -38,7 +39,7 @@ equation
   //rsys is a manual differentiation of the following equation from the kotani model
   //psys = plast + S/compliance * progress * exp(1 - progress);
   der(psys) = 1 / tau_sys * S/compliance * (1 - progress) * exp(1 - progress);
-  der(pdia) = -pdia / tau_wind;
+  der(pdia) = -(pdia-p_wind0) / tau_wind;
   tau_wind = tau_wind0 + k_wind_rNe * rNe.concentration;
   systole = time - contraction.t_last < tau_sys;
   when systole then
