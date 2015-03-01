@@ -13,6 +13,6 @@ equation
   connect(cAcEmit.excitation,para.nerve1);
   connect(cNeEmit.con,cNe.con);
   connect(cAcEmit.con,cAc.con);
-  connect(sinus.cNe,cNe.con);
-  connect(sinus.cAc,cAc.con);
+  connect(sinus.sNe,cNe.con);
+  connect(sinus.sAc,cAc.con);
 end SinusNodeExample;
