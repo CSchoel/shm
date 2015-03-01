@@ -25,6 +25,7 @@ model Heart "Main heart model"
   parameter Real tau_wind0 = 1.3 "base value for windkessel relaxation";
   parameter Real k_wind_rNe = 0.8 "sensitivity of windkessel relaxation to Norepinephrine in resistance vessels";
   parameter Real p_wind0 = 7 "minimum pressure that remains even if the heart totally stops";
+  parameter Real initial_S = S_0 "initial value for contractility";
   Real tau_wind "windkessel relaxation (time until blood pressure hypothetically drops to zero during systole)";
   discrete Real S "Contractility";
   Real pdia "diastolic blood pressure";
@@ -33,6 +34,7 @@ model Heart "Main heart model"
   Real progress "progress of systole (rising from 0 to 1 linearly)";
 initial equation
   psys = pdia "there is already a connection between one of these variables and artery.pressure";
+  S = initial_S;
 equation
   contraction.signal = sinus.s >= 1;
   progress = (time - contraction.t_last) / tau_sys;

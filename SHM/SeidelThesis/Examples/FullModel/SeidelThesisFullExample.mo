@@ -102,6 +102,7 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real heart_tau_wind0 = 1.3 "base value for windkessel relaxation";
   parameter Real heart_k_wind_rNe = 0.8 "sensitivity of windkessel relaxation to Norepinephrine in resistance vessels";
   parameter Real heart_p_wind0 = 7 "minimum blood pressure that remains even if the heart would completely stop";
+  parameter Real heart_initial_S = heart_S_0 "initial value for contractility";
 equation
   connect(baro.artery,blood.vessel);
   connect(heart.artery,blood.vessel);
