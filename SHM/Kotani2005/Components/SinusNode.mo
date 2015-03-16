@@ -33,7 +33,7 @@ equation
     reinit(phase, 0);
     signal0 = not pre(signal0);
   end when;
-  signal.s = if change(signal0) then 1 else 0;
+  signal.s = change(signal0);
   //we do not change the input signals
   ccne.rate = 0;
 annotation(Documentation(info="<html>

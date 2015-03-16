@@ -36,7 +36,7 @@ initial equation
   psys = pdia "there is already a connection between one of these variables and artery.pressure";
   S = initial_S;
 equation
-  contraction.signal = sinus.s >= 1;
+  contraction.signal = sinus.s;
   progress = (time - contraction.t_last) / tau_sys;
   //rsys is a manual differentiation of the following equation from the kotani model
   //psys = plast + S/compliance * progress * exp(1 - progress);
