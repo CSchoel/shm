@@ -1,8 +1,8 @@
 within SHM.SeidelThesis.Components;
 model Heart "Main heart model"
-  SHM.Shared.Connectors.RespirationInput mresp "mechanical respiratory influence";
-  SHM.Shared.Connectors.SubstanceConcentration vNe "concentration of Norepinephrine in the ventricles" annotation(Placement(visible = true, transformation(origin = {0, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  SHM.Shared.Connectors.SubstanceConcentration rNe "concentration of Norepinephrine in the resistance vessels";
+  SHM.Shared.Connectors.RespirationInput mresp "mechanical respiratory influence" annotation(Placement(visible = true, transformation(origin = {40, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {40, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  SHM.Shared.Connectors.SubstanceConcentration vNe "concentration of Norepinephrine in the ventricles" annotation(Placement(visible = true, transformation(origin = {0, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  SHM.Shared.Connectors.SubstanceConcentration rNe "concentration of Norepinephrine in the resistance vessels" annotation(Placement(visible = true, transformation(origin = {0, 80}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, 80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.Shared.Connectors.DiscreteSignal sinus "sinus node signal" annotation(Placement(visible = true, transformation(origin = {-40, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-50, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.Shared.Connectors.BloodVessel artery "connection to blood system" annotation(Placement(visible = true, transformation(origin = {40, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {52, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   parameter Real T_refrac = 0.22 "refractory period that has to pass until a signal from the sinus node can take effect again";
