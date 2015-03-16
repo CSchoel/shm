@@ -6,9 +6,9 @@ model SubstanceEmission "emission of a hormone or neurotransmitter"
   parameter Real delay_ex = 2 "time until excitatory signal triggers substance release";
   parameter Real delay_in = 0.4 "time until inhibitory signal is recognized";
   parameter Boolean with_inhibition = true "if true, this model has excitatory *and* inhibitory influence";
-  SHM.Shared.Connectors.NerveInput excitation "excitatory nerve input";
-  SHM.Shared.Connectors.NerveInput inhibition(activation = inhibition_signal) if with_inhibition "inhibitory nerve input";
-  SHM.Shared.Connectors.SubstanceConcentration con "concentration that is influenced by this component";
+  SHM.Shared.Connectors.NerveInput excitation "excitatory nerve input" annotation(Placement(visible = true, transformation(origin = {-100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  SHM.Shared.Connectors.NerveInput inhibition(activation = inhibition_signal) if with_inhibition "inhibitory nerve input" annotation(Placement(visible = true, transformation(origin = {-100, 40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  SHM.Shared.Connectors.SubstanceConcentration con "concentration that is influenced by this component" annotation(Placement(visible = true, transformation(origin = {100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Real inhibition_signal "inhibitory signal"; //needed because conditionally defined variables can only occur in definition
 protected
   Real factor "helper variable for the variable part in the equation";

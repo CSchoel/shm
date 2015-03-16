@@ -5,6 +5,8 @@ ANSPart
 SympatheticSystem
 ParasympatheticSystem
 SubstanceEmission
+HormoneEmission
+NeurotransmitterEmission
 SinusNode
 Heart
 Contraction
