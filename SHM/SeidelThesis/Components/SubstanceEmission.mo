@@ -7,15 +7,19 @@ model SubstanceEmission "emission of a hormone or neurotransmitter"
   parameter Real delay_in = 0.4 "time until inhibitory signal is recognized";
   parameter Boolean with_inhibition = true "if true, this model has excitatory *and* inhibitory influence";
   SHM.Shared.Connectors.NerveInput excitation "excitatory nerve input";
-  SHM.Shared.Connectors.NerveInput inhibition if with_inhibition "inhibitory nerve input";
+  SHM.Shared.Connectors.NerveInput inhibition(activation = inhibition_signal) if with_inhibition "inhibitory nerve input";
   SHM.Shared.Connectors.SubstanceConcentration con "concentration that is influenced by this component";
+  Real inhibition_signal "inhibitory signal"; //needed because conditionally defined variables can only occur in definition
 protected
   Real factor "helper variable for the variable part in the equation";
 equation
+  if not with_inhibition then
+    inhibition_signal = 0;
+  end if;
   //negative sign needed because con.rate is a flow variable
   - tau * con.rate = - con.concentration + tanh(k_ex * delay(excitation.activation,delay_ex,delay_ex)) * factor;
   if with_inhibition then
-    factor = (1 - tanh(k_in * delay(inhibition.activation,delay_in,delay_in)));
+    factor = (1 - tanh(k_in * delay(inhibition_signal,delay_in,delay_in)));
   else
     factor = 1;
   end if;
