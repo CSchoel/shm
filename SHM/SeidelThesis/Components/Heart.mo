@@ -38,7 +38,7 @@ initial equation
 equation
   contraction.signal = sinus.s;
   progress = (time - contraction.t_last) / tau_sys;
-  //rsys is a manual differentiation of the following equation from the kotani model
+  //der(psys) is a manual differentiation of the following equation from the kotani model
   //psys = plast + S/compliance * progress * exp(1 - progress);
   der(psys) = 1 / tau_sys * S/compliance * (1 - progress) * exp(1 - progress);
   der(pdia) = -(pdia-p_wind0) / tau_wind;
