@@ -4,11 +4,11 @@ model RectRampBloodPressure "blood pressure source that has a rising and falling
   parameter Real t2 = 2 "rising ramp end";
   parameter Real t3 = 3 "falling ramp start";
   parameter Real t4 = 4 "falling ramp end";
-  parameter Real value = 100 "height of ramp";
+  parameter Real h = 100 "height of ramp";
   SHM.Shared.Connectors.BloodVessel vessel "blood vessel that is affected by this signal" annotation(Placement(visible = true, transformation(origin = {-73.1495,-5.0}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0), iconTransformation(origin = {0.0,-0.0}, extent = {{-100.0,-100.0},{100.0,100.0}}, rotation = 0)));
 protected 
-  Real rise_rate = value/(t2-t1) "rising slope";
-  Real fall_rate = -value/(t4-t3) "falling slope";
+  Real rise_rate = h/(t2-t1) "rising slope";
+  Real fall_rate = -h/(t4-t3) "falling slope";
 equation
   if time >= t1 and time <= t2 then
     vessel.rate = -rise_rate;
