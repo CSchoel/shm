@@ -7,6 +7,6 @@ equation
   elseif time < 15 then
     cont.signal = sample(0,3);
   else
-    cont.signal = sample(0,0.2);
+    cont.signal = sample(0,0.05);
   end if;
 end ContractionExample;
