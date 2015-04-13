@@ -36,15 +36,15 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   ) "the heart" annotation(Placement(visible = true, transformation(origin = {0, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.Shared.Components.Compartments.BloodSystem blood(initialPressure=initial_p) "whole blood system of the body" annotation(Placement(visible = true, transformation(origin = {60, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   
-  parameter Real initial_p = 70 "initial blood pressure";
+  parameter Real initial_p = 100 "initial blood pressure";
   
-  parameter Real initial_sNe = 0 "initial postsynaptic concentration of Norepinephrine at the sinus node";
-  parameter Real initial_sAc = 0 "initial postsynaptic concentration of Acetylcholine at the sinus node";
-  parameter Real initial_vNe = 0 "initial vascular concentration of Norepinephrine at the ventricles";
-  parameter Real initial_rNe = 0 "initial vascular concentration of Norepinephrine at the resistance vessels";
+  parameter Real initial_sNe = 0.12 "initial postsynaptic concentration of Norepinephrine at the sinus node";
+  parameter Real initial_sAc = 0.5 "initial postsynaptic concentration of Acetylcholine at the sinus node";
+  parameter Real initial_vNe = 0.12 "initial vascular concentration of Norepinephrine at the ventricles";
+  parameter Real initial_rNe = 0.12 "initial vascular concentration of Norepinephrine at the resistance vessels";
   
   parameter Real sinus_T_0 = 0.9 "heart period for denervated heart";
-  parameter Real sinus_k_sNe = 1.2 "sensitivity of sinus node to concentration of Norepinephrine";
+  parameter Real sinus_k_sNe = 0.6 "sensitivity of sinus node to concentration of Norepinephrine";
   parameter Real sinus_k_sAc = 0.2 "sensitivity of sinus node to concentration of Acetylcholine";
   
   parameter Real sNe_tau = 2 "time until concentration drops to zero without any nervous signal";
@@ -67,10 +67,10 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real sAc_delay_ex = sNe_delay_in "time until excitatory signal triggers substance release";
   
   parameter Real sym_base_activity = 50 "base activity of the nervous system";
-  parameter Real sym_k_baro_resp = 0.4 "sensitivity to correlated signal of baroreceptors and respiratory neurons";
+  parameter Real sym_k_baro_resp = 0.38 "sensitivity to correlated signal of baroreceptors and respiratory neurons";
   parameter Real sym_k_resp = 30 "sensitivity to respiratory neurons";
   parameter Real para_base_activity = 10 "base activity of the nervous system";
-  parameter Real para_k_baro_resp = 0.4 "sensitivity to correlated signal of baroreceptors and respiratory neurons";
+  parameter Real para_k_baro_resp = 0.38 "sensitivity to correlated signal of baroreceptors and respiratory neurons";
   parameter Real para_k_resp = 30 "sensitivity to respiratory neurons";
   
   parameter Real lung_T_r = 4 "respiratory period";
@@ -81,17 +81,17 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real baro_sat_inflection = 120 "point of inflection for the saturation function";
   parameter Boolean baro_saturated = true "if true, saturation function is applied to raw baroreceptor signal";
   parameter Boolean baro_broadened = true "if true, boradening is applied to (saturated if saturated=true) baroreceptor signal";
-  parameter Real baro_broad_len = 3 "broadening length in seconds";
-  parameter Real baro_broad_res = 100 "broadening calculation steps per second";
-  parameter Real baro_broad_eta = 0.15 "broadening eta";
-  parameter Real baro_broad_sigma = 0.11 "broadening sigma";
+  parameter Real baro_broad_len = 0.1 "broadening length in seconds";
+  parameter Real baro_broad_res = 1000 "broadening calculation steps per second";
+  parameter Real baro_broad_eta = 0.01 "broadening eta";
+  parameter Real baro_broad_sigma = 0.001 "broadening sigma";
   
   parameter Real heart_T_refrac = 0.22 "refractory period that has to pass until a signal from the sinus node can take effect again";
   parameter Real heart_T_av = 1.7 "time that can pass after the beginning of a systole until the av node initiates a contraction";
   parameter Real heart_T_avc0 = 0.09 "base value for atrioventricular conduction time";
   parameter Real heart_tau_av = 0.11 "reference time for atrioventricular conduction time"; //TODO find better description
   parameter Real heart_k_av_t = 0.78 "sensitivity of the atrioventricular conduction time to the time passed since the last ventricular conduction";
-  parameter Real heart_initial_T = heart_T_hat "initial value for T";
+  parameter Real heart_initial_T = 1 "initial value for T";
   parameter Real heart_initial_t_last = 0 "initial value for last ventricular contraction time";
   parameter Real heart_tau_sys = 0.125 "duration of systole";
   parameter Real heart_S_0 = 110 "base value for contractility";
@@ -102,7 +102,7 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real heart_tau_wind0 = 1.3 "base value for windkessel relaxation";
   parameter Real heart_k_wind_rNe = 0.8 "sensitivity of windkessel relaxation to Norepinephrine in resistance vessels";
   parameter Real heart_p_wind0 = 7 "minimum blood pressure that remains even if the heart would completely stop";
-  parameter Real heart_initial_S = heart_S_0 "initial value for contractility";
+  parameter Real heart_initial_S = 120 "initial value for contractility";
 equation
   connect(baro.artery,blood.vessel) annotation(Line(points = {{50, -60}, {18.6047, -60}, {18.6047, -89.8032}, {-90.5188, -89.8032}, {-90.5188, 57.6029}, {-90.5188, 57.6029}}));
   connect(heart.artery,blood.vessel) annotation(Line(points = {{5.2, -52.4}, {49.7317, -52.4}, {49.7317, -60.1073}, {49.7317, -60.1073}}));
