@@ -12,9 +12,10 @@ model Heart "Main heart model"
   parameter Real k_av_t = 0.78 "sensitivity of the atrioventricular conduction time to the time passed since the last ventricular conduction";
   parameter Real initial_T = T_hat "initial value for T";
   parameter Real initial_t_last = 0 "initial value for last ventricular contraction time";
+  parameter Real initial_T_avc = 0.15 "initial value for atrioventricular conduction delay";
   SHM.SeidelThesis.Components.Contraction contraction(
-  	T_refrac=T_refrac,T_av=T_av,initial_T=initial_T,initial_t_last=initial_t_last,
-  	k_av_t=k_av_t,T_avc0=T_avc0,tau_av=tau_av
+  	T_refrac=T_refrac,T_av=T_av,initial_T=initial_T,initial_cont_last=initial_t_last,
+  	initial_T_avc=initial_T_avc,k_av_t=k_av_t,T_avc0=T_avc0,tau_av=tau_av
   ) "contraction model used to calculate the actual time of ventricular contraction";
   parameter Real tau_sys = 0.125 "duration of systole";
   parameter Real S_0 = 110 "base value for contractility";
@@ -37,13 +38,13 @@ initial equation
   S = initial_S;
 equation
   contraction.signal = sinus.s;
-  progress = (time - contraction.t_last) / tau_sys;
+  progress = (time - contraction.cont_last) / tau_sys;
   //der(psys) is a manual differentiation of the following equation from the kotani model
   //psys = plast + S/compliance * progress * exp(1 - progress);
   der(psys) = 1 / tau_sys * S/compliance * (1 - progress) * exp(1 - progress);
   der(pdia) = -(pdia-p_wind0) / tau_wind;
   tau_wind = tau_wind0 + k_wind_rNe * rNe.concentration;
-  systole = time - contraction.t_last < tau_sys;
+  systole = time - contraction.cont_last < tau_sys;
   when systole then
     S = S_0 + (k_S_vNe * vNe.concentration + k_S_mresp * mresp.phase) * (1 - (1 - min(1,contraction.T/T_hat))^2);
     reinit(psys,pdia);

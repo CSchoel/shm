@@ -32,7 +32,8 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   	T_refrac=heart_T_refrac,T_av=heart_T_av,T_avc0=heart_T_avc0,tau_av=heart_tau_av,k_av_t=heart_k_av_t,
   	initial_T = heart_initial_T,initial_t_last=heart_initial_t_last,tau_sys=heart_tau_sys,S_0=heart_S_0,
   	k_S_vNe=heart_k_S_vNe,k_S_mresp=heart_k_S_mresp,T_hat=heart_T_hat,compliance=heart_compliance,
-  	tau_wind0=heart_tau_wind0,k_wind_rNe=heart_k_wind_rNe,p_wind0=heart_p_wind0,initial_S=heart_initial_S
+  	tau_wind0=heart_tau_wind0,k_wind_rNe=heart_k_wind_rNe,p_wind0=heart_p_wind0,initial_S=heart_initial_S,
+  	initial_T_avc=heart_initial_T_avc
   ) "the heart" annotation(Placement(visible = true, transformation(origin = {0, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.Shared.Components.Compartments.BloodSystem blood(initialPressure=initial_p) "whole blood system of the body" annotation(Placement(visible = true, transformation(origin = {60, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   
@@ -92,7 +93,8 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real heart_tau_av = 0.11 "reference time for atrioventricular conduction time"; //TODO find better description
   parameter Real heart_k_av_t = 0.78 "sensitivity of the atrioventricular conduction time to the time passed since the last ventricular conduction";
   parameter Real heart_initial_T = 1 "initial value for T";
-  parameter Real heart_initial_t_last = 0 "initial value for last ventricular contraction time";
+  parameter Real heart_initial_t_last = -heart_initial_T "initial value for last ventricular contraction time";
+  parameter Real heart_initial_T_avc = 0.15 "initial value for atrioventricular conduction delay";
   parameter Real heart_tau_sys = 0.125 "duration of systole";
   parameter Real heart_S_0 = 110 "base value for contractility";
   parameter Real heart_k_S_vNe = 110 "sensitivity of contractility to Norepinephrine concentration in the ventricles";

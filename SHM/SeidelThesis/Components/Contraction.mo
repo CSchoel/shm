@@ -3,12 +3,12 @@ model Contraction "contraction model for the heart"
   parameter Real T_refrac = 0.9 "refractory period that has to pass until a signal from the sinus node can take effect again";
   parameter Real T_av = 1.7 "av-node cycle duration";
   parameter Real initial_T = 1 "initial value for T";
-  parameter Real initial_t_last = 0 "initial value for last ventricular contraction time";
+  parameter Real initial_cont_last = 0 "initial value for last ventricular contraction time";
   parameter Real k_av_t = 0.78 "sensitivity of the atrioventricular conduction time to the time passed since the last ventricular conduction";
   parameter Real T_avc0 = 0.09 "base value for atrioventricular conduction time";
   parameter Real tau_av = 0.11 "reference time for atrioventricular conduction time"; //TODO find better description
-  parameter Real initial_T_avc = 0 "initial value for atrioventricular conduction delay";
-  discrete Real t_last "time of last contraction";
+  parameter Real initial_T_avc = 0.15 "initial value for atrioventricular conduction delay";
+  discrete Real cont_last "time of last contraction";
   discrete Real T_avc "atrioventricular conduction time (delay for sinus signal to trigger contraction)";
   input Boolean signal "the sinus signal";
   output Boolean contraction "true when a contraction is triggered";
@@ -23,31 +23,31 @@ model Contraction "contraction model for the heart"
   Boolean signal_received_cont "expresses the same situation as signal_received, using only continuous variables (OpenModelica does not support discrete equation systems)";
   discrete Real sig_last "time of last received sinus signal";
 initial equation
-  t_last = initial_t_last;
-  sig_last = t_last;
-  refrac_countdown = 1;
+  cont_last = initial_cont_last;
+  sig_last = 0;
+  refrac_countdown = 0;
   sinus_phase = 0;
   av_phase = 0;
   T = initial_T;
   T_avc = initial_T_avc;
 equation
-  signal_received = sig_last > t_last;
-  signal_received_cont = sinus_phase < 1e-6 "recognize signal by rise of sinus_phase; dirty, but required for OpenModelica (no support for discrete equation systems)";
+  signal_received = sig_last > cont_last;
+  signal_received_cont = sinus_phase > 1e-6 "recognize signal by rise of sinus_phase; dirty, but required for OpenModelica (no support for discrete equation systems)";
   der(av_phase) = 1/T_av "av_phase has constant slope";
   der(refrac_countdown) = if refrac_countdown > 0 then -1/T_refrac else 0 "refrac_countdown just counts down to <= 0";
   der(sinus_phase) = if signal_received then 1/T_avc else 0 "sinus_phase has variable slope 1/T_avc";
   contraction = av_contraction or sinus_contraction "contraction can come from av-node or sinus node";
   av_contraction = av_phase >= 1 "av-node contracts when av_phase reaches 1";
   sinus_contraction = sinus_phase >= 1 "sinus node contracts when sinus_phase reaches 1";
-  T_passed = time - t_last;
+  T_passed = time - cont_last;
   //sinus signal is recognized if refractory period has passed and there is no other sinus signal already in effect
-  when signal_received_cont and signal and refrac_countdown <= 0 then
+  when not signal_received_cont and signal and refrac_countdown <= 0 then
     T_avc = T_avc0 + k_av_t * exp(-T_passed/tau_av) "'enables' sinus_phase which will trigger contraction if it reaches 1 faster than av_phase";
     sig_last = time "record timestamp of recognized sinus signal";
+    T = time-pre(sig_last); //TODO can also be done in contraction clause. which one is better? (currently we stick to Seidel's choice)
   end when;
   when contraction then
-    T = time-pre(t_last);
-    t_last = time "record timestamp of contraction";
+    cont_last = time "record timestamp of contraction";
     reinit(av_phase,0) "reset av_phase";
     reinit(sinus_phase,0) "reset sinus_phase";
     reinit(refrac_countdown,1) "reset refrac_countdown";
