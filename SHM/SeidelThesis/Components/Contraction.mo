@@ -7,6 +7,7 @@ model Contraction "contraction model for the heart"
   parameter Real k_av_t = 0.78 "sensitivity of the atrioventricular conduction time to the time passed since the last ventricular conduction";
   parameter Real T_avc0 = 0.09 "base value for atrioventricular conduction time";
   parameter Real tau_av = 0.11 "reference time for atrioventricular conduction time"; //TODO find better description
+  parameter Real initial_T_avc = 0 "initial value for atrioventricular conduction delay";
   discrete Real t_last "time of last contraction";
   discrete Real T_avc "atrioventricular conduction time (delay for sinus signal to trigger contraction)";
   input Boolean signal "the sinus signal";
@@ -24,11 +25,11 @@ model Contraction "contraction model for the heart"
 initial equation
   t_last = initial_t_last;
   sig_last = t_last;
-  refrac_countdown = 0;
+  refrac_countdown = 1;
   sinus_phase = 0;
   av_phase = 0;
   T = initial_T;
-  T_avc = 0;
+  T_avc = initial_T_avc;
 equation
   signal_received = sig_last > t_last;
   signal_received_cont = sinus_phase < 1e-6 "recognize signal by rise of sinus_phase; dirty, but required for OpenModelica (no support for discrete equation systems)";
@@ -49,7 +50,7 @@ equation
     t_last = time "record timestamp of contraction";
     reinit(av_phase,0) "reset av_phase";
     reinit(sinus_phase,0) "reset sinus_phase";
-    reinit(refrac_countdown,T_refrac) "reset refrac_countdown";
+    reinit(refrac_countdown,1) "reset refrac_countdown";
   end when;
 annotation(Documentation(info="<html>
   <p>Models the contraction of the heart as described in Seidel's thesis.</p>
