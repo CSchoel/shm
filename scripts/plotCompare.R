@@ -104,15 +104,17 @@ n <- 1000
 dataMo <- as.matrix(read.csv(nameMo))
 dataJ <- as.matrix(read.table(nameJ,header=T))
 dataJ[,"Pn"] <- dataJ[,"Pn"]*2 #adjust Pn to obtain S
+#limit part of the signal to take
+portion <- 1
+lenM <- length(dataMo[,1])*portion
+lenJ <- length(dataJ[,1])*portion
 #subsample: take only n samples
-lenM <- length(dataMo[,1])
-lenJ <- length(dataJ[,1])
+dataMo <- dataMo[1:lenM,]
+dataJ <- dataJ[1:lenJ,]
 facMo <- round(lenM/n)
 dataMo <- dataMo[seq(1,lenM,facMo),]
 facJ <- round(lenJ/n)
 dataJ <- dataJ[seq(1,lenJ,facJ),]
-dataMo <- dataMo[1:100,]
-dataJ <- dataJ[1:100,]
 #compare starting values
 compare.print.first(phinames,dataMo,dataJ)
 #call plot function
