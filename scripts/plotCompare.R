@@ -14,7 +14,9 @@ phinames <- c(
   "ny_b",
   "ny_b_broadened",
   "ny_r",
-  "tau_w"
+  "tau_w",
+  "ny_ss",
+  "ny_p"
 )
 names(phinames) <- c(
   "time",
@@ -30,7 +32,9 @@ names(phinames) <- c(
   "baro.sat_signal",
   "baro.signal.activation",
   "lung.signal.activation",
-  "heart.tau_wind"
+  "heart.tau_wind",
+  "sym.signal.activation",
+  "para.signal.activation"
 )
 compare.print.first <- function(phinames,dataMo,dataJ) {
   # Prints starting values for given variables and highlights differences
@@ -105,7 +109,7 @@ dataMo <- as.matrix(read.csv(nameMo))
 dataJ <- as.matrix(read.table(nameJ,header=T))
 dataJ[,"Pn"] <- dataJ[,"Pn"]*2 #adjust Pn to obtain S
 #limit part of the signal to take
-portion <- 1
+portion <- 0.1
 lenM <- length(dataMo[,1])*portion
 lenJ <- length(dataJ[,1])*portion
 #subsample: take only n samples
