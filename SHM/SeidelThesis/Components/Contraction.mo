@@ -1,5 +1,6 @@
 within SHM.SeidelThesis.Components;
 model Contraction "contraction model for the heart"
+  parameter String outfile = "heartbeats.csv";
   parameter Real T_refrac = 0.9 "refractory period that has to pass until a signal from the sinus node can take effect again";
   parameter Real T_av = 1.7 "av-node cycle duration";
   parameter Real initial_T = 1 "initial value for T";
@@ -31,6 +32,10 @@ initial equation
   T = initial_T;
   T_avc = initial_T_avc;
 equation
+  when terminal() then
+    Modelica.Utilities.Streams.print("Simulation stopped, closing "+outfile);
+    Modelica.Utilities.Streams.close(outfile);
+  end when;
   signal_received = sig_last > cont_last;
   signal_received_cont = sinus_phase > 1e-6 "recognize signal by rise of sinus_phase; dirty, but required for OpenModelica (no support for discrete equation systems)";
   der(av_phase) = 1/T_av "av_phase has constant slope";
@@ -45,6 +50,7 @@ equation
     T_avc = T_avc0 + k_av_t * exp(-T_passed/tau_av) "'enables' sinus_phase which will trigger contraction if it reaches 1 faster than av_phase";
     sig_last = time "record timestamp of recognized sinus signal";
     T = time-pre(sig_last); //TODO can also be done in contraction clause. which one is better? (currently we stick to Seidel's choice)
+    Modelica.Utilities.Streams.print(String(time)+" "+String(T),outfile);
   end when;
   when contraction then
     cont_last = time "record timestamp of contraction";
@@ -52,6 +58,10 @@ equation
     reinit(sinus_phase,0) "reset sinus_phase";
     reinit(refrac_countdown,1) "reset refrac_countdown";
   end when;
+initial algorithm
+  Modelica.Utilities.Streams.print("Simulation started, writing heartbeats to "+outfile);
+  Modelica.Utilities.Files.remove(outfile);
+  Modelica.Utilities.Streams.print("time T",outfile);
 annotation(Documentation(info="<html>
   <p>Models the contraction of the heart as described in Seidel's thesis.</p>
   <p>The model takes into account the following effects:</p>
