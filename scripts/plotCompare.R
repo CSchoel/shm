@@ -1,5 +1,6 @@
 #Author: Christopher Sch�lzel
 #Compares modelica output to SeidelThesis output
+library(stats)
 phinames <- c(
   "time",
   "c_s",
@@ -101,6 +102,29 @@ compare.plot.all <- function(phinames,dataMo,dataJ,combine=F,outdir="plots") {
     dev.off() #flush/close output file
   }
 }
+get.frequencies <- function(data,samples.per.second=1) {
+  N <- length(data)
+  frequencies <- (Mod(fft(data))/N)^2
+  #we have a real signal => values of frequencies are mirrored at N/2
+  xvals <- 1:(N/2)/N #cycles per sample
+  xvals <- samples.per.second * xvals
+  return(cbind(xvals, frequencies[1:(N/2)]))
+}
+compare.fft <- function(data1, data2, key1, key2, name1, name2, duration, outdir="plots") {
+  vector1 <- as.numeric(data1[,key1])
+  vector2 <- as.numeric(data2[,key2])
+  sps1 <- length(vector1)/duration
+  sps2 <- length(vector2)/duration
+  frequencies1 <- get.frequencies(vector1,samples.per.second=sps1)
+  frequencies2 <- get.frequencies(vector2,samples.per.second=sps2)
+  frequencies1 <- frequencies1[2:100,]
+  frequencies2 <- frequencies2[2:100,]
+  ylab <- expression("RR-Interval spectral density" ~~ ~~ group("[","s"^2,"]"))
+  plot(frequencies1,type="l",col="red",log="y",xlab="Frequency [Hz]",ylab=ylab)
+  lines(frequencies2,type="l",col="blue")
+  legend(x="topright",legend=c(name1,name2),lty=c(1,1),col=c("red","blue"))
+}
+
 nameMo <- "SHM_full_200_res.csv"
 nameJ <- "DeepThought.out"
 n <- 1000
@@ -108,6 +132,10 @@ n <- 1000
 dataMo <- as.matrix(read.csv(nameMo))
 dataJ <- as.matrix(read.table(nameJ,header=T))
 dataJ[,"Pn"] <- dataJ[,"Pn"]*2 #adjust Pn to obtain S
+
+#make frequency plots
+compare.fft(dataMo,dataJ,"heart.contraction.T",phinames["heart.contraction.T"],"SHM-M","SHM-C",200)
+
 #limit part of the signal to take
 portion <- 0.1
 lenM <- length(dataMo[,1])*portion
