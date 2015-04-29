@@ -102,6 +102,30 @@ compare.plot.all <- function(phinames,dataMo,dataJ,combine=F,outdir="plots") {
     dev.off() #flush/close output file
   }
 }
+data.resample <- function(data.src,ktime,from,to,step) {
+  span <- to - from
+  size.src <- length(data.src[,ktime])
+  time.steps <- seq(from,to,step)
+  size.dest <- length(time.steps)
+  data.dest <- matrix(,nrow=size.dest,ncol=length(data.src[1,]))
+  colnames(data.dest) <- colnames(data.src)
+  idx.src <- 1 #index in source file
+  for(idx.dest in 1:size.dest) {
+    t.dest <- time.steps[idx.dest]
+    while(idx.src <= size.src && data.src[idx.src,ktime] < t.dest) {
+      idx.src <- idx.src + 1
+    }
+    t.src <- data.src[idx.src,ktime]
+    fac.right <- (t.src - t.dest) / step
+    fac.left <- 1 - fac.right
+    if (idx.src+1 > size.src) {
+      data.dest[idx.dest,] <- data.src[idx.src]
+    } else {
+      data.dest[idx.dest,] <- data.src[idx.src,]*fac.left + data.src[idx.src+1,]*fac.right
+    }
+  }
+  return(data.dest)
+}
 get.frequencies <- function(data,samples.per.second=1) {
   N <- length(data)
   frequencies <- (Mod(fft(data))/N)^2
@@ -129,8 +153,8 @@ nameMo <- "SHM_full_200_res.csv"
 nameJ <- "DeepThought.out"
 n <- 1000
 #load csv as matrix
-dataMo <- as.matrix(read.csv(nameMo))
-dataJ <- as.matrix(read.table(nameJ,header=T))
+dataMo <- as.matrix(read.csv(nameMo,sep=",",dec=".",header=T))
+dataJ <- as.matrix(read.csv(nameJ,sep="\t",dec=".",header=T))
 dataJ[,"Pn"] <- dataJ[,"Pn"]*2 #adjust Pn to obtain S
 
 #make frequency plots
