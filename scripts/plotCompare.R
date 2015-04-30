@@ -136,6 +136,15 @@ get.frequencies <- function(data,samples.per.second=1) {
   return(cbind(xvals, frequencies[1:(N/2)]))
 }
 fft.convert <- function(data,kdata,ktime,sps) {
+  data.size <- length(data[,ktime])
+  duration <- data[data.size,ktime]-data[1,ktime]
+  data.rs <- data.resample(data1,0,duration,1/sps)
+  data.rs.size <- length(data[,ktime])
+  frequencies <- get.frequencies(data.rs[,kdata],samples.per.second=sps)
+  nfreq <- round(0.4*data.rs.size/sps)
+  frequencies <- frequencies[2:nfreq1,]
+  return(frequencies)
+}
 compare.fft <- function(data1, data2, key1, key2, ktime1, ktime2, name1, name2, sps, outdir="plots") {
   pdfheight <- 5
   pdfwidth <- 10
