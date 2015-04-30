@@ -135,19 +135,35 @@ get.frequencies <- function(data,samples.per.second=1) {
   xvals <- samples.per.second * xvals
   return(cbind(xvals, frequencies[1:(N/2)]))
 }
-compare.fft <- function(data1, data2, key1, key2, name1, name2, duration, outdir="plots") {
+fft.convert <- function(data,kdata,ktime,sps) {
+compare.fft <- function(data1, data2, key1, key2, ktime1, ktime2, name1, name2, sps, outdir="plots") {
+  pdfheight <- 5
+  pdfwidth <- 10
+  maxfreq <- 0.4
+  data1.rs <- data.resample(data1,0,duration,1/sps)
+  data2.rs <- data.resample(data2,0,duration,1/sps)
   vector1 <- as.numeric(data1[,key1])
   vector2 <- as.numeric(data2[,key2])
-  sps1 <- length(vector1)/duration
-  sps2 <- length(vector2)/duration
+  #determine length of data in seconds
+  duration1 <- data1[length(vector1),ktime1]-data1[1,ktime1]
+  duration2 <- data2[length(vector2),ktime2]-data2[1,ktime2]
+  sps1 <- length(vector1)/duration1
+  sps2 <- length(vector2)/duration2
+  print(paste(duration1," ",sps1," ",duration2," ",sps2))
   frequencies1 <- get.frequencies(vector1,samples.per.second=sps1)
   frequencies2 <- get.frequencies(vector2,samples.per.second=sps2)
-  frequencies1 <- frequencies1[2:100,]
-  frequencies2 <- frequencies2[2:100,]
+  nfreq1 <- round(0.4*length(vector1)/sps1)
+  nfreq2 <- round(0.4*length(vector2)/sps2)
+  frequencies1 <- frequencies1[2:nfreq1,]
+  frequencies2 <- frequencies2[2:nfreq2,]
+  pdf(file.path(outdir,paste("fft_",key1,".pdf")),width=pdfwidth,height=pdfheight)
+  
   ylab <- expression("RR-Interval spectral density" ~~ ~~ group("[","s"^2,"]"))
   plot(frequencies1,type="l",col="red",log="y",xlab="Frequency [Hz]",ylab=ylab)
   lines(frequencies2,type="l",col="blue")
   legend(x="topright",legend=c(name1,name2),lty=c(1,1),col=c("red","blue"))
+  dev.off()
+}
 }
 
 nameMo <- "SHM_full_200_res.csv"
