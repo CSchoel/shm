@@ -208,8 +208,8 @@ dataC <- as.matrix(read.csv(nameC,sep="\t",dec=".",header=T))
 dataC[,"Pn"] <- dataC[,"Pn"]*2 #adjust Pn to obtain S
 
 #load heartbeats files
-dataMo.beats <- as.matrix(read.table(nameMo.beats,header=T))
-dataC.beats <- as.matrix(read.table(nameC.beats,header=F))
+dataMo.beats <- as.matrix(read.csv(nameMo.beats,sep=" ",dec=".",header=T))
+dataC.beats <- as.matrix(read.csv(nameC.beats,sep="\t",dec=".",header=F))
 
 #compare starting values
 compare.print.first(phinames,dataMo,dataC)
