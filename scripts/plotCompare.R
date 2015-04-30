@@ -208,30 +208,39 @@ compare.beattimes <- function(data1,data2) {
   legend(x="bottom",legend=c(legend.diff,legend.sd),lty=c(1,1),col=c("black","blue"))
 }
 
-nameMo <- "SHM_full_200_res.csv"
-nameJ <- "DeepThought.out"
+nameMo <- "SHM_full_1000_res.csv" # "SHM_full_200_res.csv"
+nameC <- "DeepThought1000.out" # "DeepThought.out"
+nameMo.beats <- "heartbeats.csv"
+nameC.beats <- "DeepThought.out_per"
 n <- 1000
 #load csv as matrix
-dataMo <- as.matrix(read.csv(nameMo,sep=",",dec=".",header=T))
-dataJ <- as.matrix(read.csv(nameJ,sep="\t",dec=".",header=T))
-dataJ[,"Pn"] <- dataJ[,"Pn"]*2 #adjust Pn to obtain S
+cls <- rep("numeric",23)
+#ignore empty row stemming from additional comma at end of line in modelica output
+cls[23] <- "NULL"
+dataMo <- as.matrix(read.csv(nameMo,sep=",",dec=".",header=T,colClasses=cls))
+dataC <- as.matrix(read.csv(nameC,sep="\t",dec=".",header=T))
+dataC[,"Pn"] <- dataC[,"Pn"]*2 #adjust Pn to obtain S
 
-#make frequency plots
-compare.fft(dataMo,dataJ,"heart.contraction.T",phinames["heart.contraction.T"],"SHM-M","SHM-C",200)
+#load heartbeats files
+dataMo.beats <- as.matrix(read.table(nameMo.beats,header=T))
+dataC.beats <- as.matrix(read.table(nameC.beats,header=F))
 
-#limit part of the signal to take
-portion <- 0.1
-lenM <- length(dataMo[,1])*portion
-lenJ <- length(dataJ[,1])*portion
-#subsample: take only n samples
-dataMo <- dataMo[1:lenM,]
-dataJ <- dataJ[1:lenJ,]
-facMo <- round(lenM/n)
-dataMo <- dataMo[seq(1,lenM,facMo),]
-facJ <- round(lenJ/n)
-dataJ <- dataJ[seq(1,lenJ,facJ),]
 #compare starting values
 compare.print.first(phinames,dataMo,dataJ)
+
+#make frequency plots
+compare.fft(dataMo,dataC,"heart.contraction.T",phinames["heart.contraction.T"],"time","time","SHM-M","SHM-C",1000)
+
+#limit part of the signal to take
+from <-0# 980 #0
+to <- 20#999 #20
+step <- 0.01 #0.01
+dataMo2 <- data.resample(dataMo,"time",from,to,step)
+dataC2 <- data.resample(dataC,"time",from,to,step)
+
 #call plot function
-compare.plot.all(phinames,dataMo,dataJ,T)
-compare.plot.all(phinames,dataMo,dataJ,F)
+compare.plot.all(phinames,dataMo2,dataC2,T)
+compare.plot.all(phinames,dataMo2,dataC2,F)
+#compare.diff(dataMo2,dataC2,"time","time","blood.vessel.pressure",phinames["blood.vessel.pressure"])
+#compare.diff(dataMo2,dataC2,"time","time","heart.contraction.T",phinames["heart.contraction.T"])
+compare.beats(dataC.beats,dataMo.beats)
