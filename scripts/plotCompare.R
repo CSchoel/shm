@@ -212,7 +212,7 @@ dataMo.beats <- as.matrix(read.table(nameMo.beats,header=T))
 dataC.beats <- as.matrix(read.table(nameC.beats,header=F))
 
 #compare starting values
-compare.print.first(phinames,dataMo,dataJ)
+compare.print.first(phinames,dataMo,dataC)
 
 #make frequency plots
 compare.fft(dataMo,dataC,"heart.contraction.T",phinames["heart.contraction.T"],"time","time","SHM-M","SHM-C",1000)
