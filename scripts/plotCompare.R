@@ -135,36 +135,22 @@ get.frequencies <- function(data,samples.per.second=1) {
   xvals <- samples.per.second * xvals
   return(cbind(xvals, frequencies[1:(N/2)]))
 }
-fft.convert <- function(data,kdata,ktime,sps) {
+fft.convert <- function(data,kdata,ktime,sps,xmax) {
   data.size <- length(data[,ktime])
   duration <- data[data.size,ktime]-data[1,ktime]
-  data.rs <- data.resample(data1,0,duration,1/sps)
-  data.rs.size <- length(data[,ktime])
+  data.rs <- data.resample(data,ktime,0,duration,1/sps)
+  data.rs.size <- length(data.rs[,ktime])
   frequencies <- get.frequencies(data.rs[,kdata],samples.per.second=sps)
-  nfreq <- round(0.4*data.rs.size/sps)
-  frequencies <- frequencies[2:nfreq1,]
+  nfreq <- round(xmax*data.rs.size/sps)
+  frequencies <- frequencies[2:nfreq,]
   return(frequencies)
 }
 compare.fft <- function(data1, data2, key1, key2, ktime1, ktime2, name1, name2, sps, outdir="plots") {
   pdfheight <- 5
   pdfwidth <- 10
   maxfreq <- 0.4
-  data1.rs <- data.resample(data1,0,duration,1/sps)
-  data2.rs <- data.resample(data2,0,duration,1/sps)
-  vector1 <- as.numeric(data1[,key1])
-  vector2 <- as.numeric(data2[,key2])
-  #determine length of data in seconds
-  duration1 <- data1[length(vector1),ktime1]-data1[1,ktime1]
-  duration2 <- data2[length(vector2),ktime2]-data2[1,ktime2]
-  sps1 <- length(vector1)/duration1
-  sps2 <- length(vector2)/duration2
-  print(paste(duration1," ",sps1," ",duration2," ",sps2))
-  frequencies1 <- get.frequencies(vector1,samples.per.second=sps1)
-  frequencies2 <- get.frequencies(vector2,samples.per.second=sps2)
-  nfreq1 <- round(0.4*length(vector1)/sps1)
-  nfreq2 <- round(0.4*length(vector2)/sps2)
-  frequencies1 <- frequencies1[2:nfreq1,]
-  frequencies2 <- frequencies2[2:nfreq2,]
+  frequencies1 <- fft.convert(data1,key1,ktime1,sps,maxfreq)
+  frequencies2 <- fft.convert(data2,key2,ktime2,sps,maxfreq)
   pdf(file.path(outdir,paste("fft_",key1,".pdf")),width=pdfwidth,height=pdfheight)
   
   ylab <- expression("RR-Interval spectral density" ~~ ~~ group("[","s"^2,"]"))
