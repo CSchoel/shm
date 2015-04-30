@@ -173,6 +173,39 @@ compare.fft <- function(data1, data2, key1, key2, ktime1, ktime2, name1, name2, 
   legend(x="topright",legend=c(name1,name2),lty=c(1,1),col=c("red","blue"))
   dev.off()
 }
+compare.diff <- function(data1, data2, ktime1, ktime2, kdata1, kdata2) {
+  plot(data1[,ktime1],data1[,kdata1]-data2[,kdata2],type="l")
+  lines(data1[,ktime1],data1[,kdata1],type="l",col="blue")
+  lines(data2[,ktime2],data2[,kdata2],type="l",col="red")
+}
+compare.beats <- function(data1, data2,outdir="plots") {
+  pdfheight <- 5
+  pdfwidth <- 10
+  pdf(file.path(outdir,paste("beats_diff.pdf")),width=pdfwidth,height=pdfheight)
+  n.beats <- min(length(data1[,1]),length(data2[,1]))
+  sd1 <- sd(data1[,2])
+  pdat <- data2[1:n.beats,2]-data1[1:n.beats,2]
+  print(pdat)
+  print(sd1)
+  print(mean(pdat))
+  plot(1:n.beats,pdat,type="l",ylim=c(-sd1*1.1,sd1*1.1),,xlab="i [beat number]",ylab="time [s]")
+  lines(1:n.beats,abs(pdat),type="l",col="red")
+  lines(1:n.beats,rep(sd1,n.beats),type="l",col="blue")
+  lines(1:n.beats,rep(-sd1,n.beats),type="l",col="blue")
+  legend.diff <- expression(T[i]^M - T[i]^C ~~ " ")
+  legend.sd <- expression(""%+-%sigma(T^C))
+  legend(x="bottom",legend=c(legend.diff,legend.sd),lty=c(1,1),col=c("black","blue"))
+  dev.off()
+}
+compare.beattimes <- function(data1,data2) {
+  n.beats <- min(length(data1[,1]),length(data2[,1]))
+  sd1 <- sd(data1[,2])
+  plot(1:n.beats,data2[1:n.beats,1]-data1[1:n.beats,1],type="l",ylim=c(-sd1*1.1,sd1*1.1),,xlab="i [beat number]",ylab="time [s]")
+  lines(1:n.beats,rep(sd1,n.beats),type="l",col="blue")
+  lines(1:n.beats,rep(-sd1,n.beats),type="l",col="blue")
+  legend.diff <- expression(t[i]^M - t[i]^C ~~ " ")
+  legend.sd <- expression(""%+-%sigma(t^C))
+  legend(x="bottom",legend=c(legend.diff,legend.sd),lty=c(1,1),col=c("black","blue"))
 }
 
 nameMo <- "SHM_full_200_res.csv"
