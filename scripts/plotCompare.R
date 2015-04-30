@@ -115,22 +115,19 @@ data.resample <- function(data.src,ktime,from,to,step) {
     while(idx.src <= size.src && data.src[idx.src,ktime] < t.dest) {
       idx.src <- idx.src + 1
     }
-    if (idx.src+1 > size.src) {
+    if (idx.src-1 <= 0) {
       data.dest[idx.dest,] <- data.src[idx.src]
     } else {
       t.src <- data.src[idx.src,ktime]
-      dt.src <-  data.src[idx.src+1,ktime] - t.src
+      dt.src <- t.src - data.src[idx.src,ktime]
       if(dt.src == 0) {
         #TODO we should actually take the next value
         fac.right <- 0
       } else {
         fac.right <- (t.src - t.dest) / dt.src
       }
-      if(fac.right > 1) {
-        print(paste("fuck!",fac.right))
-      }
       fac.left <- 1 - fac.right
-      data.dest[idx.dest,] <- data.src[idx.src,]*fac.left + data.src[idx.src+1,]*fac.right
+      data.dest[idx.dest,] <- data.src[idx.src-1,]*fac.left + data.src[idx.src,]*fac.right
     }
   }
   return(data.dest)
