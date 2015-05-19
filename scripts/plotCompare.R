@@ -1,6 +1,7 @@
 #Author: Christopher Sch�lzel
 #Compares modelica output to SeidelThesis output
-library(stats)
+library(stats) #for fft
+library(plotrix) #for gap.plot
 phinames <- c(
   "time",
   "c_s",
@@ -37,18 +38,37 @@ names(phinames) <- c(
   "sym.signal.activation",
   "para.signal.activation"
 )
-compare.print.first <- function(phinames,dataMo,dataJ) {
+names.display <- rep(expression(c),length(phinames))
+names(names.display) <- names(phinames)
+names.display["time"] <- "t"
+names.display["sNe.con.concentration"] <- expression(c[sNe])
+names.display["vNe.con.concentration"] <- expression(c[vNe])
+names.display["rNe.con.concentration"] <- expression(c[rNe])
+names.display["sAc.con.concentration"] <- expression(c[sAc])
+names.display["sinus.phase"] <- "time"
+names.display["blood.vessel.pressure"] <- "p"
+names.display["heart.S"] <- expression(S[n])
+names.display["heart.contraction.T"] <- expression(paste(T[n],"[s]"))
+names.display["baro.sat_signal"] <- expression(nu[b])
+names.display["baro.signal.activation"] <- expression(nu[b])
+names.display["lung.signal.activation"] <- expression(nu[r])
+names.display["heart.tau_wind"] <- expression(tau[wind])
+names.display["sym.signal.activation"] <- expression(nu[s])
+names.display["para.signal.activation"] <- expression(nu[p])
+
+
+compare.print.first <- function(phinames,dataMo,dataC) {
   # Prints starting values for given variables and highlights differences
   # 
   # Args:
-  #   phinames: (named) vector of variablenames found in dataJ; the names(phinames)
+  #   phinames: (named) vector of variablenames found in dataC; the names(phinames)
   #             must contain the name of the corresponding variable in dataMo
   #   dataMo: modelica data as matrix
-  #   dataJ: java data as matrix
+  #   dataC: java data as matrix
   for(moname in names(phinames)) {
     phiname = phinames[moname]
     moval = as.numeric(dataMo[1,moname])
-    phival = dataJ[1,phiname]
+    phival = dataC[1,phiname]
     if(moval == phival) {
       print(sprintf("%s/%s = %.6f",phiname,moname,moval))
     } else {
@@ -56,14 +76,14 @@ compare.print.first <- function(phinames,dataMo,dataJ) {
     }
   }
 }
-compare.plot.all <- function(phinames,dataMo,dataJ,combine=F,outdir="plots") {
-  # Constructs a plot for all given variables from Modelica and Java data.
+compare.plot.all <- function(phinames,dataMo,dataC,combine=F,outdir="plots") {
+  # Constructs a plot for all given variables from Modelica and C data.
   #
   # Args:
-  #   phinames: (named) vector of variablenames found in dataJ; the names(phinames)
+  #   phinames: (named) vector of variablenames found in dataC; the names(phinames)
   #             must contain the name of the corresponding variable in dataMo
   #   dataMo: modelica data as matrix
-  #   dataJ: java data as matrix
+  #   dataC: java data as matrix
   #   combine: if TRUE, a single PDF (named "compare.pdf") will be created, otherwise 
   #           one PDF will be created for each variable (named "compare-<variable>.pdf")
   #   outdir: the directory where to place the plots
@@ -72,7 +92,7 @@ compare.plot.all <- function(phinames,dataMo,dataJ,combine=F,outdir="plots") {
   if(!file.exists(outdir)) dir.create(outdir) #create output directory if necessary
   #extract time for x-axis of all plots
   timeMo <- dataMo[,"time"]
-  timeJ <- dataJ[,"time"]
+  timeC <- dataC[,"time"]
   if (combine) {
     pdfname <- file.path(outdir,"compare.pdf")
     combinedheight <- (length(phinames)-1)*pdfheight
@@ -82,6 +102,7 @@ compare.plot.all <- function(phinames,dataMo,dataJ,combine=F,outdir="plots") {
   for(moname in names(phinames)) {
     if(moname == "time") next
     phiname = phinames[moname]
+    name.display <- names.display[moname]
     if(!combine) {
       pdfname <- sprintf("compare-%s%s.pdf",phiname,ifelse(phiname == "R","2",""))
       pdfname <- file.path(outdir,pdfname)
@@ -89,11 +110,67 @@ compare.plot.all <- function(phinames,dataMo,dataJ,combine=F,outdir="plots") {
     }
     print(sprintf("%10s -> %s",phiname,pdfname))
     #construct plot; modelica data will determine plot bounds
-    plot(timeMo,dataMo[,moname],type="l",col="red",xlab="time[s]",ylab=phiname)
+    plot(timeMo,dataMo[,moname],type="l",col="red",xlab="time[s]",ylab=expression(name.display))
     #add additional line with lines instead of plot
-    lines(timeJ,dataJ[,phiname],type="l",col="blue")
+    lines(timeC,dataC[,phiname],type="l",col="blue")
     #add legend in top right corner
-    legend(x="topright",legend=c("Modelica","C"),lty=c(1,1),col=c("red","blue"))
+    legend(x="topright",legend=c("Modelica","C"),lty=c(1,1),col=c("red","blue"),bg="white")
+    if(!combine) {
+      dev.off() #flush/close output file
+    }
+  }
+  if(combine) {
+    dev.off() #flush/close output file
+  }
+}
+compare.plot.all.gap <- function(phinames,dataMo,dataC,gap,combine=F,outdir="plots") {
+  # Constructs a plot for all given variables from Modelica and C data.
+  #
+  # Args:
+  #   phinames: (named) vector of variablenames found in dataC; the names(phinames)
+  #             must contain the name of the corresponding variable in dataMo
+  #   dataMo: modelica data as matrix
+  #   dataC: java data as matrix
+  #   combine: if TRUE, a single PDF (named "compare.pdf") will be created, otherwise 
+  #           one PDF will be created for each variable (named "compare-<variable>.pdf")
+  #   outdir: the directory where to place the plots
+  pdfheight <- 5
+  pdfwidth <- 10
+  if(!file.exists(outdir)) dir.create(outdir) #create output directory if necessary
+  #extract time for x-axis of all plots
+  timeMo <- dataMo[,"time"]
+  timeC <- dataC[,"time"]
+  cut.offset <- (max(timeMo)-gap[2] + gap[1]-min(timeMo))*0.025
+  gap[2] <- gap[2]-cut.offset
+  dataMo.cut <- dataMo[which(timeMo <= gap[1] | timeMo >= gap[2]+cut.offset),]
+  dataC.cut <- dataC[which(timeC <= gap[1] | timeC >= gap[2]+cut.offset),]
+  timeMo.cut <- dataMo.cut[,"time"]
+  timeC.cut <- dataC.cut[,"time"]
+  xtick.step <- 10^floor(log10((max(timeMo)-gap[2])/2))
+  xtick.gapr <- ceiling((gap[2]+cut.offset)/xtick.step)*xtick.step
+  xticks <- append(seq(min(timeMo),gap[1],xtick.step),seq(xtick.gapr,max(timeMo),xtick.step))
+  if (combine) {
+    pdfname <- file.path(outdir,"compare.pdf")
+    combinedheight <- (length(phinames)-1)*pdfheight
+    pdf(pdfname,width=pdfwidth,height=combinedheight)
+    par(mfrow=c(length(phinames)-1,1)) #set number of subplots by row
+  }
+  for(moname in names(phinames)) {
+    if(moname == "time") next
+    phiname = phinames[moname]
+    name.display <- names.display[moname]
+    if(!combine) {
+      pdfname <- sprintf("compare-%s%s.pdf",phiname,ifelse(phiname == "R","2",""))
+      pdfname <- file.path(outdir,pdfname)
+      pdf(pdfname,width=pdfwidth,height=pdfheight)
+    }
+    print(sprintf("%10s -> %s",phiname,pdfname))
+    #construct plot; modelica data will determine plot bounds
+    gap.plot(timeMo.cut,dataMo.cut[,moname],gap,gap.axis="x",type="l",col="red",xlab="time[s]",ylab=name.display,xtics=xticks)
+    #add additional line with lines instead of plot
+    gap.plot(timeC.cut,dataC.cut[,phiname],gap,gap.axis="x",type="l",col="blue",add=TRUE)
+    #add legend in top right corner
+    legend(x="topright",legend=c("Modelica","C"),lty=c(1,1),col=c("red","blue"),bg="white")
     if(!combine) {
       dev.off() #flush/close output file
     }
@@ -116,10 +193,10 @@ data.resample <- function(data.src,ktime,from,to,step) {
       idx.src <- idx.src + 1
     }
     if (idx.src-1 <= 0) {
-      data.dest[idx.dest,] <- data.src[idx.src]
+      data.dest[idx.dest,] <- data.src[idx.src,]
     } else {
       t.src <- data.src[idx.src,ktime]
-      dt.src <- t.src - data.src[idx.src,ktime]
+      dt.src <- t.src - data.src[idx.src-1,ktime] 
       if(dt.src == 0) {
         #TODO we should actually take the next value
         fac.right <- 0
@@ -134,7 +211,7 @@ data.resample <- function(data.src,ktime,from,to,step) {
 }
 get.frequencies <- function(data,samples.per.second=1) {
   N <- length(data)
-  frequencies <- (Mod(fft(data))/N)^2
+  frequencies <- (Mod(fft(data))/N) #add square if power is needed
   #we have a real signal => values of frequencies are mirrored at N/2
   xvals <- 1:(N/2)/N #cycles per sample
   xvals <- samples.per.second * xvals
@@ -156,12 +233,12 @@ compare.fft <- function(data1, data2, key1, key2, ktime1, ktime2, name1, name2, 
   maxfreq <- 0.4
   frequencies1 <- fft.convert(data1,key1,ktime1,sps,maxfreq)
   frequencies2 <- fft.convert(data2,key2,ktime2,sps,maxfreq)
-  pdf(file.path(outdir,paste("fft_",key1,".pdf")),width=pdfwidth,height=pdfheight)
+  pdf(file.path(outdir,sprintf("fft_%s.pdf",key1)),width=pdfwidth,height=pdfheight)
   
-  ylab <- expression("RR-Interval spectral density" ~~ ~~ group("[","s"^2,"]"))
+  ylab <- expression("RR-Interval spectral density" ~~ ~~ group("[","s","]"))
   plot(frequencies1,type="l",col="red",log="y",xlab="Frequency [Hz]",ylab=ylab)
   lines(frequencies2,type="l",col="blue")
-  legend(x="topright",legend=c(name1,name2),lty=c(1,1),col=c("red","blue"))
+  legend(x="topright",legend=c(name1,name2),lty=c(1,1),col=c("red","blue"),bg="white")
   dev.off()
 }
 compare.diff <- function(data1, data2, ktime1, ktime2, kdata1, kdata2) {
@@ -172,7 +249,7 @@ compare.diff <- function(data1, data2, ktime1, ktime2, kdata1, kdata2) {
 compare.beats <- function(data1, data2,outdir="plots") {
   pdfheight <- 5
   pdfwidth <- 10
-  pdf(file.path(outdir,paste("beats_diff.pdf")),width=pdfwidth,height=pdfheight)
+  pdf(file.path(outdir,"beats_diff.pdf"),width=pdfwidth,height=pdfheight)
   n.beats <- min(length(data1[,1]),length(data2[,1]))
   sd1 <- sd(data1[,2])
   pdat <- data2[1:n.beats,2]-data1[1:n.beats,2]
@@ -180,12 +257,12 @@ compare.beats <- function(data1, data2,outdir="plots") {
   print(sd1)
   print(mean(pdat))
   plot(1:n.beats,pdat,type="l",ylim=c(-sd1*1.1,sd1*1.1),,xlab="i [beat number]",ylab="time [s]")
-  lines(1:n.beats,abs(pdat),type="l",col="red")
+  #lines(1:n.beats,abs(pdat),type="l",col="red")
   lines(1:n.beats,rep(sd1,n.beats),type="l",col="blue")
   lines(1:n.beats,rep(-sd1,n.beats),type="l",col="blue")
   legend.diff <- expression(T[i]^M - T[i]^C ~~ " ")
   legend.sd <- expression(""%+-%sigma(T^C))
-  legend(x="bottom",legend=c(legend.diff,legend.sd),lty=c(1,1),col=c("black","blue"))
+  legend(x="bottom",legend=c(legend.diff,legend.sd),lty=c(1,1),col=c("black","blue"),bg="white")
   dev.off()
 }
 compare.beattimes <- function(data1,data2) {
@@ -196,7 +273,7 @@ compare.beattimes <- function(data1,data2) {
   lines(1:n.beats,rep(-sd1,n.beats),type="l",col="blue")
   legend.diff <- expression(t[i]^M - t[i]^C ~~ " ")
   legend.sd <- expression(""%+-%sigma(t^C))
-  legend(x="bottom",legend=c(legend.diff,legend.sd),lty=c(1,1),col=c("black","blue"))
+  legend(x="bottom",legend=c(legend.diff,legend.sd),lty=c(1,1),col=c("black","blue"),bg="white")
 }
 
 nameMo <- "SHM_full_1000_res.csv" # "SHM_full_200_res.csv"
@@ -220,18 +297,21 @@ dataC.beats <- as.matrix(read.csv(nameC.beats,sep="\t",dec=".",header=F))
 compare.print.first(phinames,dataMo,dataC)
 
 #make frequency plots
-compare.fft(dataMo,dataC,"heart.contraction.T",phinames["heart.contraction.T"],"time","time","SHM-M","SHM-C",1000)
+compare.fft(dataMo,dataC,"heart.contraction.T",phinames["heart.contraction.T"],"time","time","SHM-M","SHM-C",100)
 
 #limit part of the signal to take
 from <-0# 980 #0
-to <- 20#999 #20
+to <- 1000#999 #20
 step <- 0.01 #0.01
 dataMo2 <- data.resample(dataMo,"time",from,to,step)
 dataC2 <- data.resample(dataC,"time",from,to,step)
 
 #call plot function
-compare.plot.all(phinames,dataMo2,dataC2,T)
-compare.plot.all(phinames,dataMo2,dataC2,F)
+gap <- c(5,995)
+compare.plot.all.gap(phinames,dataMo2,dataC2,gap,T)
+compare.plot.all.gap(phinames,dataMo2,dataC2,gap,F)
+#compare.plot.all(phinames,dataMo2,dataC2,T)
+#compare.plot.all(phinames,dataMo2,dataC2,F)
 #compare.diff(dataMo2,dataC2,"time","time","blood.vessel.pressure",phinames["blood.vessel.pressure"])
 #compare.diff(dataMo2,dataC2,"time","time","heart.contraction.T",phinames["heart.contraction.T"])
 compare.beats(dataC.beats,dataMo.beats)
