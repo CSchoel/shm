@@ -7,16 +7,16 @@ if Modelica.Utilities.Strings.find(getModelicaPath(),"SHM") == 0 then
   setModelicaPath(getModelicaPath()+";../src");
 end if;
 loadModel(SHM);
-stopTime := 200.0;
+stopTime := 1000.0;
 simulationStep := 0.001;
 setDebugFlags("initialization");
 simulate(
   SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample,
   stopTime=stopTime,
-  method="rungekutta",
+  method="rungekutta", //rungekutta
   numberOfIntervals=integer(stopTime/simulationStep),
   tolerance=1e-6,
-  fileNamePrefix="SHM_full_200",
+  fileNamePrefix="SHM_full_1000",
   outputFormat="csv",
   variableFilter="^(sNe.con.concentration"
                  +"|vNe.con.concentration"
