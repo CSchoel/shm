@@ -11,10 +11,10 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   SHM.SeidelThesis.Components.ParasympatheticSystem para(
   	base_activity=para_base_activity,k_baro_resp=para_k_baro_resp,k_resp=para_k_resp
   ) "parasympathetic system" annotation(Placement(visible = true, transformation(origin = {60, 80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  SHM.SeidelThesis.Components.NeurotransmitterEmission sNeEmit(
+  SHM.SeidelThesis.Components.NeurotransmitterRelease sNeEmit(
   	tau=sNe_tau,k_ex=sNe_k_ex,k_in=sNe_k_in,delay_ex=sNe_delay_ex,delay_in=sNe_delay_in
   ) "emission of Norepinephrine at the sinus node" annotation(Placement(visible = true, transformation(origin = {-20, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  SHM.SeidelThesis.Components.NeurotransmitterEmission sAcEmit(
+  SHM.SeidelThesis.Components.NeurotransmitterRelease sAcEmit(
   	with_inhibition=false,tau=sAc_tau,k_ex=sAc_k_ex,delay_ex=sAc_delay_ex
   ) "emission of Acetylcholine at the sinus node" annotation(Placement(visible = true, transformation(origin = {60, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.SeidelThesis.Components.HormoneRelease vNeEmit(
