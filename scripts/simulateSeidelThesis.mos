@@ -3,7 +3,7 @@
 //Reminder: change working directory with cd(..)
 //Warning: Will produce 2GB of data with current settings
 loadModel(Modelica);
-if Modelica.Utilities.Strings.find(getModelicaPath(),"SHM") == 0 then
+if Modelica.Utilities.Strings.find(getModelicaPath(),";../src") == 0 then
   setModelicaPath(getModelicaPath()+";../src");
 end if;
 loadModel(SHM);
