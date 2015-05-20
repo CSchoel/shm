@@ -6,4 +6,5 @@ RespirationOutput
 HormoneConcentration
 NeurotransmitterConcentration
 SubstanceConcentration
-DiscreteSignal
+TriggerInput
+TriggerOutput

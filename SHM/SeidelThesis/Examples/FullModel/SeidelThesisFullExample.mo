@@ -82,7 +82,7 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real baro_sat_inflection = 120 "point of inflection for the baroreceptor saturation";
   parameter Boolean baro_saturated = true "if true, saturation function is applied to raw baroreceptor signal";
   parameter Boolean baro_broadened = true "if true, boradening is applied to (saturated if baro_saturated=true) baroreceptor signal";
-  parameter Real baro_broad_len = 0.1 "broadening length of baroreceptor signal in seconds";
+  parameter Real baro_broad_len = 0.7 "broadening length of baroreceptor signal in seconds";
   parameter Real baro_broad_res = 1000 "broadening calculation steps of baroreceptor signal per second";
   parameter Real baro_broad_eta = 0.01 "broadening eta for baroreceptors";
   parameter Real baro_broad_sigma = 0.001 "broadening sigma for baroreceptors";
