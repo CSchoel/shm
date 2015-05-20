@@ -2,8 +2,8 @@ Baroreceptors
 SympatheticSystem
 ParasympatheticSystem
 SimpleLung
-SubstanceEmission
+SubstanceRelease
 NeurotransmitterEmission
-HormoneEmission
+HormoneRelease
 SinusNode
 Heart

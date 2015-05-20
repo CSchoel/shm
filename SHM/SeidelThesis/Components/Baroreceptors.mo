@@ -2,7 +2,7 @@ within SHM.SeidelThesis.Components;
 model Baroreceptors "baroreceptors measuring blood pressure"
   parameter Real p0 = 60 "minimum blood pressure needed to generate signal";
   parameter Real kb = 0.06 "sensitivity of baroreceptors to blood pressure increase";
-  parameter Real sat_inflection = 120 "point of inflection for the saturation function";
+  parameter Real sat_inflection = 120 "point of inflection for the saturation function, maximum for signal value will be at 2 * (sat_inflection - p0)";
   parameter Boolean saturated = true "if true, saturation function is applied to raw baroreceptor signal";
   parameter Boolean broadened = true "if true, boradening is applied to (saturated if saturated=true) baroreceptor signal";
   parameter Real broad_len = 0.11 "broadening length in seconds";

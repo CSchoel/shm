@@ -1,6 +1,6 @@
 within SHM.Kotani2005.Components;
 model NeurotransmitterEmission "Emits a neurotransmitter based on a neural signal"
-  extends SubstanceEmission(triggerDelay = 1.65, prodFac = 0.7, Tuptake = 2);
+  extends SubstanceRelease(triggerDelay = 1.65, prodFac = 0.7, Tuptake = 2);
   redeclare SHM.Shared.Connectors.NerveInput trigger "nerve signal that triggers substance release" annotation(Placement(visible = true, transformation(origin = {-100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   redeclare SHM.Shared.Connectors.NeurotransmitterConcentration con "released substance concentration" annotation(Placement(visible = true, transformation(origin = {100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation

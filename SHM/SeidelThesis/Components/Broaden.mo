@@ -18,7 +18,7 @@ equation
   //xbroad = x;
   xbroad = (history * gvals) * stepsize;
 annotation(Documentation(info="<html>
-  <p>Models a broadening function.</p>
-  <p style=\"color:red;\">Currently (Open)Modelica cannot handle resolutions above 100 and will .</p>
+  <p>Models a broadening function (convolution of input with precalculated values of Green's function).</p>
+  <p style=\"color:red;\">Warning: Translation and simulation will be very slow for large values of len and/or resolution.</p>
 </html>"));
 end Broaden;

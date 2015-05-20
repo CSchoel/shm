@@ -4,8 +4,8 @@ Lung
 ANSPart
 SympatheticSystem
 ParasympatheticSystem
-SubstanceEmission
-HormoneEmission
+SubstanceRelease
+HormoneRelease
 NeurotransmitterEmission
 SinusNode
 Heart

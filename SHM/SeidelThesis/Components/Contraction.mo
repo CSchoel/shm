@@ -1,14 +1,14 @@
 within SHM.SeidelThesis.Components;
 model Contraction "contraction model for the heart"
-  parameter String outfile = "heartbeats.csv";
+  parameter String outfile = "heartbeats.csv" "output file name where RR-Intervals are saved";
   parameter Real T_refrac = 0.9 "refractory period that has to pass until a signal from the sinus node can take effect again";
   parameter Real T_av = 1.7 "av-node cycle duration";
+  parameter Real k_avc_t = 0.78 "sensitivity of the atrioventricular conduction time to the time passed since the last ventricular conduction";
+  parameter Real T_avc0 = 0.09 "base value for atrioventricular conduction time";
+  parameter Real tau_avc = 0.11 "reference time for atrioventricular conduction time"; //TODO find better description
   parameter Real initial_T = 1 "initial value for T";
   parameter Real initial_cont_last = 0 "initial value for last ventricular contraction time";
-  parameter Real k_av_t = 0.78 "sensitivity of the atrioventricular conduction time to the time passed since the last ventricular conduction";
-  parameter Real T_avc0 = 0.09 "base value for atrioventricular conduction time";
-  parameter Real tau_av = 0.11 "reference time for atrioventricular conduction time"; //TODO find better description
-  parameter Real initial_T_avc = 0.15 "initial value for atrioventricular conduction delay";
+  parameter Real initial_T_avc = 0.15 "initial value for atrioventricular conduction time";
   discrete Real cont_last "time of last contraction";
   discrete Real T_avc "atrioventricular conduction time (delay for sinus signal to trigger contraction)";
   input Boolean signal "the sinus signal";
@@ -47,7 +47,7 @@ equation
   T_passed = time - cont_last;
   //sinus signal is recognized if refractory period has passed and there is no other sinus signal already in effect
   when not signal_received_cont and signal and refrac_countdown <= 0 then
-    T_avc = T_avc0 + k_av_t * exp(-T_passed/tau_av) "'enables' sinus_phase which will trigger contraction if it reaches 1 faster than av_phase";
+    T_avc = T_avc0 + k_avc_t * exp(-T_passed/tau_avc) "'enables' sinus_phase which will trigger contraction if it reaches 1 faster than av_phase";
     sig_last = time "record timestamp of recognized sinus signal";
     T = time-pre(sig_last); //TODO can also be done in contraction clause. which one is better? (currently we stick to Seidel's choice)
     Modelica.Utilities.Streams.print(String(time)+" "+String(T),outfile);
@@ -59,6 +59,7 @@ equation
     reinit(refrac_countdown,1) "reset refrac_countdown";
   end when;
 initial algorithm
+  //initial algorithm required, because "when initial()" does not work if there are already initial equations
   Modelica.Utilities.Streams.print("Simulation started, writing heartbeats to "+outfile);
   Modelica.Utilities.Files.remove(outfile);
   Modelica.Utilities.Streams.print("time T",outfile);
@@ -68,6 +69,8 @@ annotation(Documentation(info="<html>
   <ul>
     <li>There is a refractory period of duration <b>T_refrac</b> after a contraction during which signals of the sinus node are ignored.
     <li>If no sinus-induced contraction occurs for a prolonged time span (namely <b>T_av</b>) the av-node initiates a contraction by itself.
+    <li>When a sinus signal is received, the upper heart contracts pumping the blood from the atrium into the ventricles. The systole does only
+    begin with the second contraction of the heart. The time period between these two events is called the &quot;atrioventricular conduction time&quot;.
   </ul>
   <p><i>Note: The formulas in this model differ from the formulas found in the c-implementation by Seidel because OpenModelica is currently
   not capable of handling discrete equation systems. Therefore it was necessary to introduce the continuous phases <b>av_phase</b>, 
