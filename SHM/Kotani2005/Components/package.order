@@ -3,7 +3,7 @@ SympatheticSystem
 ParasympatheticSystem
 SimpleLung
 SubstanceRelease
-NeurotransmitterEmission
+NeurotransmitterRelease
 HormoneRelease
 SinusNode
 Heart

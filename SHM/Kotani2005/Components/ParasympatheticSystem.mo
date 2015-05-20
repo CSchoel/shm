@@ -14,4 +14,3 @@ annotation(Documentation(info="<html>
   <p>Models the parasympathetic system as a function of neural input from respiratory centers and baroreceptors.</p>
 </html>"));
 end ParasympatheticSystem;
-
