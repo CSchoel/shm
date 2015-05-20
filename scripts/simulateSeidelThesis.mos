@@ -20,7 +20,7 @@ simulate(
   outputFormat="csv",
   variableFilter="^(sNe.con.concentration"
                  +"|vNe.con.concentration"
-                 +"|rNe.con.concentration"
+                 +"|wNe.con.concentration"
                  +"|sAc.con.concentration"
                  +"|sinus.phase"
                  +"|blood.vessel.pressure"

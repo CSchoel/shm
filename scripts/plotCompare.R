@@ -24,7 +24,7 @@ names(phinames) <- c(
   "time",
   "sNe.con.concentration",
   "vNe.con.concentration",
-  "rNe.con.concentration",
+  "wNe.con.concentration",
   "sAc.con.concentration",
   "sinus.phase",
   "blood.vessel.pressure",
@@ -43,7 +43,7 @@ names(names.display) <- names(phinames)
 names.display["time"] <- "t"
 names.display["sNe.con.concentration"] <- expression(c[sNe])
 names.display["vNe.con.concentration"] <- expression(c[vNe])
-names.display["rNe.con.concentration"] <- expression(c[rNe])
+names.display["wNe.con.concentration"] <- expression(c[wNe])
 names.display["sAc.con.concentration"] <- expression(c[sAc])
 names.display["sinus.phase"] <- "time"
 names.display["blood.vessel.pressure"] <- "p"
