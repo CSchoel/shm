@@ -10,7 +10,7 @@ protected
   Real ser "sum";
   Real y "counter";
 algorithm
-  //Implementation directly taken from Seidels Implementation in C
+  //Implementation directly taken from Seidel's Implementation in C
   y := x;
   tmp := x + 5.5;
   tmp := tmp - (x+0.5)*log(tmp);
