@@ -1,0 +1,39 @@
+setParameterValue(SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample, baro_broad_len, %1$.2f);
+res := simulate(
+  SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample,
+  stopTime=stopTime,
+  method="rungekutta", //rungekutta
+  numberOfIntervals=integer(stopTime/simulationStep),
+  tolerance=1e-6,
+  fileNamePrefix="SHM_full_%1$.2f",
+  outputFormat="csv",
+  variableFilter="^(sNe.con.concentration"
+                 +"|vNe.con.concentration"
+                 +"|wNe.con.concentration"
+                 +"|sAc.con.concentration"
+                 +"|sinus.phase"
+                 +"|blood.vessel.pressure"
+                 +"|heart.S"
+                 +"|heart.contraction.T_avc"
+                 +"|heart.contraction.T"
+                 +"|baro.base_signal"
+                 +"|baro.sat_signal"
+                 +"|baro.signal.activation"
+                 +"|lung.signal.activation"
+                 +"|heart.tau_wind"
+                 +"|sym.signal.activation"
+                 +"|para.signal.activation"
+                 +")$"
+);
+t_fe := res.timeFrontend;
+t_be := res.timeBackend;
+t_sc := res.timeSimCode;
+t_tp := res.timeTemplates;
+t_cp := res.timeCompile;
+t_sm := res.timeSimulation;
+t_to := res.timeTotal;
+Modelica.Utilities.Streams.print(
+  "%1$.2f "+String(t_fe)+" "+String(t_be)+" "+String(t_sc)+" "
+  +String(t_tp)+" "+String(t_cp)+" "+String(t_sm)+" "+String(t_to),
+  outfile
+);

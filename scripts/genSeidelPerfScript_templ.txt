@@ -1,0 +1,13 @@
+loadModel(Modelica);
+if Modelica.Utilities.Strings.find(getModelicaPath(),";../src") == 0 then
+  setModelicaPath(getModelicaPath()+";../src");
+end if;
+loadModel(SHM);
+stopTime := 1000.0;
+simulationStep := 0.001;
+outfile := "SeidelThesisFull_perf.csv";
+
+Modelica.Utilities.Files.remove(outfile); //clear outfile
+Modelica.Utilities.Streams.print("broad_len timeFrontent timeBackend timeSimCode timeTemplates timeCompile timeSimulation timeTotal",outfile);
+
+%1$s

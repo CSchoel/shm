@@ -1,0 +1,55 @@
+//Should be run with OMShell.exe
+//assumes that working directory points to output directory that is a sibling of the source directory named 'src'
+//Reminder: change working directory with cd(..)
+//Warning: Will produce 2GB of data with current settings
+loadModel(Modelica);
+if Modelica.Utilities.Strings.find(getModelicaPath(),";../src") == 0 then
+  setModelicaPath(getModelicaPath()+";../src");
+end if;
+loadModel(SHM);
+stopTime := 1000.0;
+simulationStep := 0.001;
+//setDebugFlags("initialization");
+bvals := {0.1, 0.2, 0.3, 0.4, 0.5, 1, 2, 3};
+x := 0;
+for b in bvals loop
+  setParameterValue(SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample, baro_broad_len, b);
+  res := simulate(
+    SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample,
+    stopTime=stopTime,
+    method="rungekutta", //rungekutta
+    numberOfIntervals=integer(stopTime/simulationStep),
+    tolerance=1e-6,
+    fileNamePrefix="SHM_full_"+b,
+    outputFormat="csv",
+    variableFilter="^(sNe.con.concentration"
+                   +"|vNe.con.concentration"
+                   +"|wNe.con.concentration"
+                   +"|sAc.con.concentration"
+                   +"|sinus.phase"
+                   +"|blood.vessel.pressure"
+                   +"|heart.S"
+                   +"|heart.contraction.T_avc"
+                   +"|heart.contraction.T"
+                   +"|baro.base_signal"
+                   +"|baro.sat_signal"
+                   +"|baro.signal.activation"
+                   +"|lung.signal.activation"
+                   +"|heart.tau_wind"
+                   +"|sym.signal.activation"
+                   +"|para.signal.activation"
+                   +")$"
+  );
+  t_fe := res.timeFrontend;
+  t_be := res.timeBackend;
+  t_sc := res.timeSimCode;
+  t_tp := res.timeTemplates;
+  t_cp := res.timeCompile;
+  t_sm := res.timeSimulation;
+  t_to := res.timeTotal;
+  Modelica.Utilities.Streams.print(
+    "0.10 "+String(t_fe)+" "+String(t_be)+" "+String(t_sc)+" "
+    +String(t_tp)+" "+String(t_cp)+" "+String(t_sm)+" "+String(t_to),
+    outfile
+  );
+end for;
