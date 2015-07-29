@@ -60,8 +60,8 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real vNe_delay_in = 0.4 "time until inhibitory signal from parasympathetic system is recognized at the ventricles";
   parameter Real wNe_tau = 4 "time until concentration of Norepinephrine at the windkessel Arteries drops to zero without any nervous signal";
   parameter Real wNe_k_ex = 0.014 "scaling factor for excitatory influence of sympathetic system on concentration of Norepinephrine in the Windkessel arteries";
-  parameter Real wNe_k_in = 0.006 "scaling factor for inhibitory influence of parasympathetic system on concentration of Norepinephrine in the Windkessel arteries";
-  parameter Real wNe_delay_ex = 2 "time until excitatory signal from sympathetic system triggers release of Norepinephrine at the Windkessel arteries";
+  parameter Real wNe_k_in = 0 "scaling factor for inhibitory influence of parasympathetic system on concentration of Norepinephrine in the Windkessel arteries";
+  parameter Real wNe_delay_ex = 3 "time until excitatory signal from sympathetic system triggers release of Norepinephrine at the Windkessel arteries";
   parameter Real wNe_delay_in = 0.4 "time until inhibitory signal from parasympathetic system is recognized at the Windkessel arteries";
   parameter Real sAc_tau = 0.05 "time until concentration of Acetylcholine at the sinus node drops to zero without any nervous signal";
   parameter Real sAc_k_ex = 0.005 "scaling factor for excitatory influence of parasympathetic system on sinoatrial concentration of Acetylcholine";
@@ -82,7 +82,7 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real baro_sat_inflection = 120 "point of inflection for the baroreceptor saturation";
   parameter Boolean baro_saturated = true "if true, saturation function is applied to raw baroreceptor signal";
   parameter Boolean baro_broadened = true "if true, boradening is applied to (saturated if baro_saturated=true) baroreceptor signal";
-  parameter Real baro_broad_len = 0.7 "broadening length of baroreceptor signal in seconds";
+  parameter Real baro_broad_len = 0.1 "broadening length of baroreceptor signal in seconds";
   parameter Real baro_broad_res = 1000 "broadening calculation steps of baroreceptor signal per second";
   parameter Real baro_broad_eta = 0.01 "broadening eta for baroreceptors";
   parameter Real baro_broad_sigma = 0.001 "broadening sigma for baroreceptors";
