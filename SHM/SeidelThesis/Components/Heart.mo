@@ -39,8 +39,6 @@ initial equation
 equation
   contraction.signal = sinus.s;
   progress = (time - contraction.cont_last) / tau_sys;
-  //der(psys) is a manual differentiation of the following equation from the SHM
-  //psys = plast + S/compliance * progress * exp(1 - progress);
   der(psys) = 1 / tau_sys * S/compliance * (1 - progress) * exp(1 - progress);
   der(pdia) = -(pdia-p_wind0) / tau_wind;
   tau_wind = tau_wind0 + k_wind_wNe * wNe.concentration;
