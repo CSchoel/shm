@@ -24,6 +24,6 @@ equation
     factor = 1;
   end if;
 annotation(Documentation(info="<html>
-  <p>Models the emission of a transmitter substance. The emission is triggered by an excitatory neural signal and can be inhibited by an inhibitory signal.</p>
+  <p>Models the release of a transmitter substance. The release is triggered by an excitatory neural signal and can be inhibited by an inhibitory signal.</p>
 </html>"));
 end SubstanceRelease;

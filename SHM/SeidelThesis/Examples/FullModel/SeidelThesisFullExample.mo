@@ -11,18 +11,18 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   SHM.SeidelThesis.Components.ParasympatheticSystem para(
   	base_activity=para_base_activity,k_baro_resp=para_k_baro_resp,k_resp=para_k_resp
   ) "parasympathetic system" annotation(Placement(visible = true, transformation(origin = {60, 80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  SHM.SeidelThesis.Components.NeurotransmitterRelease sNeEmit(
+  SHM.SeidelThesis.Components.NeurotransmitterRelease sNeRelease(
   	tau=sNe_tau,k_ex=sNe_k_ex,k_in=sNe_k_in,delay_ex=sNe_delay_ex,delay_in=sNe_delay_in
-  ) "emission of Norepinephrine at the sinus node" annotation(Placement(visible = true, transformation(origin = {-20, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  SHM.SeidelThesis.Components.NeurotransmitterRelease sAcEmit(
+  ) "release of Norepinephrine at the sinus node" annotation(Placement(visible = true, transformation(origin = {-20, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  SHM.SeidelThesis.Components.NeurotransmitterRelease sAcRelease(
   	with_inhibition=false,tau=sAc_tau,k_ex=sAc_k_ex,delay_ex=sAc_delay_ex
-  ) "emission of Acetylcholine at the sinus node" annotation(Placement(visible = true, transformation(origin = {60, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  SHM.SeidelThesis.Components.HormoneRelease vNeEmit(
+  ) "release of Acetylcholine at the sinus node" annotation(Placement(visible = true, transformation(origin = {60, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  SHM.SeidelThesis.Components.HormoneRelease vNeRelease(
   	tau=vNe_tau,k_ex=vNe_k_ex,k_in=vNe_k_in,delay_ex=vNe_delay_ex,delay_in=vNe_delay_in
-  ) "emission of Norepinephrine at the ventricles" annotation(Placement(visible = true, transformation(origin = {-20, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  SHM.SeidelThesis.Components.HormoneRelease wNeEmit(
+  ) "release of Norepinephrine at the ventricles" annotation(Placement(visible = true, transformation(origin = {-20, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  SHM.SeidelThesis.Components.HormoneRelease wNeRelease(
   	tau=wNe_tau,k_ex=wNe_k_ex,k_in=wNe_k_in,delay_ex=wNe_delay_ex,delay_in=wNe_delay_in
-  ) "emission of Norepinephrine at the Windkesel arteries" annotation(Placement(visible = true, transformation(origin = {-20, 40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  ) "release of Norepinephrine at the Windkesel arteries" annotation(Placement(visible = true, transformation(origin = {-20, 40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.Shared.Components.Compartments.NeurotransmitterAmount sNe(initialConcentration=initial_sNe) "postsynaptic concentration of Norepinephrine at the sinus node" annotation(Placement(visible = true, transformation(origin = {20, 40}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
   SHM.Shared.Components.Compartments.NeurotransmitterAmount sAc(initialConcentration=initial_sAc) "postsynaptic concentration of Acetylcholine at the sinus node" annotation(Placement(visible = true, transformation(origin = {60, 40}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
   SHM.Shared.Components.Compartments.HormoneAmount vNe(initialConcentration=initial_vNe) "vascular concentration of Norepinephrine at the ventricles" annotation(Placement(visible = true, transformation(origin = {20, 0}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
@@ -113,17 +113,17 @@ equation
   connect(lung.signal,sym.resp) annotation(Line(points = {{20, 72}, {-7.8712, 72}, {-7.8712, 81.932}, {-30.4114, 81.932}, {-30.4114, 81.932}}));
   connect(lung.signal,para.resp) annotation(Line(points = {{20, 72}, {70.1252, 72}, {70.1252, 82.2898}, {70.1252, 82.2898}}));
   connect(lung.resp,heart.mresp) annotation(Line(points = {{4, -62}, {13.399, -62}, {13.399, -55.0171}, {29.8432, -55.0171}, {29.8432, 77.5517}, {29.8432, 77.5517}}));
-  connect(sym.signal,sNeEmit.excitation) annotation(Line(points = {{-38, 70}, {-37.9249, 70}, {-37.9249, 59.3918}, {-30.0537, 59.3918}, {-30.0537, 59.3918}}));
-  connect(sym.signal,vNeEmit.excitation) annotation(Line(points = {{-38, 70}, {-37.9249, 70}, {-37.9249, 18.6047}, {-29.3381, 18.6047}, {-29.3381, 18.6047}}));
-  connect(sym.signal,wNeEmit.excitation) annotation(Line(points = {{-38, 70}, {-37.9249, 70}, {-37.9249, 39.356}, {-30.0537, 39.356}, {-30.0537, 39.356}}));
-  connect(para.signal,sAcEmit.excitation) annotation(Line(points = {{62, 70}, {42.2182, 70}, {42.2182, 59.7496}, {50.4472, 59.7496}, {50.4472, 59.7496}}));
-  connect(para.signal,sNeEmit.inhibition) annotation(Line(points = {{62, 70}, {-34.1065, 70}, {-34.1065, 63.9497}, {-30.8583, 63.9497}, {-30.8583, 63.9497}}));
-  connect(para.signal,vNeEmit.inhibition) annotation(Line(points = {{62, 70}, {-34.1065, 70}, {-34.1065, 23.9558}, {-30.0462, 23.9558}, {-30.0462, 23.9558}}));
-  connect(para.signal,wNeEmit.inhibition) annotation(Line(points = {{62, 70}, {-34.1065, 70}, {-34.1065, 43.4452}, {-30.0462, 43.4452}, {-30.0462, 43.4452}}));
-  connect(sNeEmit.con,sNe.con) annotation(Line(points = {{-10, 60}, {20.3936, 60}, {20, 50}, {20, 45}}));
-  connect(vNeEmit.con,vNe.con) annotation(Line(points = {{-10, 20}, {2.14669, 20}, {2.14669, 11.0912}, {20.3936, 11.0912}, {20.3936, 4.65116}, {20.3936, 4.65116}}));
-  connect(wNeEmit.con,wNe.con) annotation(Line(points = {{-10, 40}, {3.9356, 40}, {3.9356, 31.4848}, {20.0358, 31.4848}, {20.0358, 24.6869}, {20.0358, 24.6869}}));
-  connect(sAcEmit.con,sAc.con) annotation(Line(points = {{70, 60}, {75.4919, 60}, {75.4919, 45.0805}, {59.7496, 45.0805}, {59.7496, 45.0805}}));
+  connect(sym.signal,sNeRelease.excitation) annotation(Line(points = {{-38, 70}, {-37.9249, 70}, {-37.9249, 59.3918}, {-30.0537, 59.3918}, {-30.0537, 59.3918}}));
+  connect(sym.signal,vNeRelease.excitation) annotation(Line(points = {{-38, 70}, {-37.9249, 70}, {-37.9249, 18.6047}, {-29.3381, 18.6047}, {-29.3381, 18.6047}}));
+  connect(sym.signal,wNeRelease.excitation) annotation(Line(points = {{-38, 70}, {-37.9249, 70}, {-37.9249, 39.356}, {-30.0537, 39.356}, {-30.0537, 39.356}}));
+  connect(para.signal,sAcRelease.excitation) annotation(Line(points = {{62, 70}, {42.2182, 70}, {42.2182, 59.7496}, {50.4472, 59.7496}, {50.4472, 59.7496}}));
+  connect(para.signal,sNeRelease.inhibition) annotation(Line(points = {{62, 70}, {-34.1065, 70}, {-34.1065, 63.9497}, {-30.8583, 63.9497}, {-30.8583, 63.9497}}));
+  connect(para.signal,vNeRelease.inhibition) annotation(Line(points = {{62, 70}, {-34.1065, 70}, {-34.1065, 23.9558}, {-30.0462, 23.9558}, {-30.0462, 23.9558}}));
+  connect(para.signal,wNeRelease.inhibition) annotation(Line(points = {{62, 70}, {-34.1065, 70}, {-34.1065, 43.4452}, {-30.0462, 43.4452}, {-30.0462, 43.4452}}));
+  connect(sNeRelease.con,sNe.con) annotation(Line(points = {{-10, 60}, {20.3936, 60}, {20, 50}, {20, 45}}));
+  connect(vNeRelease.con,vNe.con) annotation(Line(points = {{-10, 20}, {2.14669, 20}, {2.14669, 11.0912}, {20.3936, 11.0912}, {20.3936, 4.65116}, {20.3936, 4.65116}}));
+  connect(wNeRelease.con,wNe.con) annotation(Line(points = {{-10, 40}, {3.9356, 40}, {3.9356, 31.4848}, {20.0358, 31.4848}, {20.0358, 24.6869}, {20.0358, 24.6869}}));
+  connect(sAcRelease.con,sAc.con) annotation(Line(points = {{70, 60}, {75.4919, 60}, {75.4919, 45.0805}, {59.7496, 45.0805}, {59.7496, 45.0805}}));
   connect(sinus.sAc,sAc.con) annotation(Line(points = {{-16, -33}, {50.1447, -33}, {50.1447, 47.7085}, {60.0924, 47.7085}, {60.0924, 45.0693}, {60.0924, 45.0693}}));
   connect(sinus.sNe,sNe.con) annotation(Line(points = {{-24, -33}, {-23.7528, -33}, {-23.7528, -26.3919}, {44.8663, -26.3919}, {44.8663, 47.7085}, {20.0985, 47.7085}, {20.0985, 45.0693}, {20.0985, 45.0693}}));
   connect(heart.vNe,vNe.con) annotation(Line(points = {{0, -68}, {0, -68}, {0, -74.1005}, {-37.1517, -74.1005}, {-37.1517, 7.91758}, {20.3015, 7.91758}, {20.3015, 5.07537}, {20.3015, 5.07537}}));
