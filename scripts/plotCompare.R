@@ -246,11 +246,11 @@ compare.diff <- function(data1, data2, ktime1, ktime2, kdata1, kdata2) {
   lines(data1[,ktime1],data1[,kdata1],type="l",col="blue")
   lines(data2[,ktime2],data2[,kdata2],type="l",col="red")
 }
-compare.beats <- function(data1, data2,outdir="plots") {
+compare.beats <- function(data1, data2,outdir="plots",nfirst=200) {
   pdfheight <- 5
   pdfwidth <- 10
   pdf(file.path(outdir,"beats_diff.pdf"),width=pdfwidth,height=pdfheight)
-  n.beats <- min(length(data1[,1]),length(data2[,1]))
+  n.beats <- min(length(data1[,1]),length(data2[,1]),nfirst)
   sd1 <- sd(data1[,2])
   pdat <- data2[1:n.beats,2]-data1[1:n.beats,2]
   print(pdat)
@@ -279,7 +279,7 @@ compare.beattimes <- function(data1,data2) {
 nameMo <- "SHM_full_1000_res.csv" # "SHM_full_200_res.csv"
 nameC <- "DeepThought1000.out" # "DeepThought.out"
 nameMo.beats <- "heartbeats.csv"
-nameC.beats <- "DeepThought.out_per"
+nameC.beats <- "DeepThought1000.out_per" #"DeepThought.out_per"
 n <- 1000
 #load csv as matrix
 cls <- rep("numeric",23)
