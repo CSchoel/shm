@@ -45,7 +45,7 @@ names.display["sNe.con.concentration"] <- expression(c[sNe])
 names.display["vNe.con.concentration"] <- expression(c[vNe])
 names.display["wNe.con.concentration"] <- expression(c[wNe])
 names.display["sAc.con.concentration"] <- expression(c[sAc])
-names.display["sinus.phase"] <- "time"
+names.display["sinus.phase"] <- expression(phi)
 names.display["blood.vessel.pressure"] <- "p"
 names.display["heart.S"] <- expression(S[n])
 names.display["heart.contraction.T"] <- expression(paste(T[n],"[s]"))
