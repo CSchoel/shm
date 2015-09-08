@@ -140,7 +140,7 @@ compare.plot.all.gap <- function(phinames,dataMo,dataC,gap,combine=F,outdir="plo
   #extract time for x-axis of all plots
   timeMo <- dataMo[,"time"]
   timeC <- dataC[,"time"]
-  cut.offset <- (max(timeMo)-gap[2] + gap[1]-min(timeMo))*0.025
+  cut.offset <- (max(timeMo)-gap[2] + gap[1]-min(timeMo))*0.02
   gap[2] <- gap[2]-cut.offset
   dataMo.cut <- dataMo[which(timeMo <= gap[1] | timeMo >= gap[2]+cut.offset),]
   dataC.cut <- dataC[which(timeC <= gap[1] | timeC >= gap[2]+cut.offset),]
@@ -149,6 +149,7 @@ compare.plot.all.gap <- function(phinames,dataMo,dataC,gap,combine=F,outdir="plo
   xtick.step <- 10^floor(log10((max(timeMo)-gap[2])/2))
   xtick.gapr <- ceiling((gap[2]+cut.offset)/xtick.step)*xtick.step
   xticks <- append(seq(min(timeMo),gap[1],xtick.step),seq(xtick.gapr,max(timeMo),xtick.step))
+  xticks.grid <- append(seq(min(timeMo),gap[1],xtick.step),seq(gap[1]+cut.offset,gap[1]+cut.offset+max(timeMo)-gap[2],xtick.step))
   if (combine) {
     pdfname <- file.path(outdir,"compare.pdf")
     combinedheight <- (length(phinames)-1)*pdfheight
@@ -166,8 +167,9 @@ compare.plot.all.gap <- function(phinames,dataMo,dataC,gap,combine=F,outdir="plo
     }
     print(sprintf("%10s -> %s",phiname,pdfname))
     #construct plot; modelica data will determine plot bounds
-    gap.plot(timeMo.cut,dataMo.cut[,moname],gap,gap.axis="x",type="l",col="red",xlab="time[s]",ylab=name.display,xtics=xticks)
-    #add additional line with lines instead of plot
+    #to get grid lines add this parameter: panel.first={abline(v=xticks.grid, untf=FALSE, lty=3); grid(0,NULL)}
+    gap.plot(timeMo.cut,dataMo.cut[,moname],gap,gap.axis="x",type="l",col="red",xlab="time[s]",ylab=name.display,xtics=xticks, xaxs="i")
+    #add additional line
     gap.plot(timeC.cut,dataC.cut[,phiname],gap,gap.axis="x",type="l",col="blue",add=TRUE)
     #add legend in top right corner
     legend(x="topright",legend=c("Modelica","C"),lty=c(1,1),col=c("red","blue"),bg="white")
@@ -234,10 +236,11 @@ compare.fft <- function(data1, data2, key1, key2, ktime1, ktime2, name1, name2, 
   frequencies1 <- fft.convert(data1,key1,ktime1,sps,maxfreq)
   frequencies2 <- fft.convert(data2,key2,ktime2,sps,maxfreq)
   pdf(file.path(outdir,sprintf("fft_%s.pdf",key1)),width=pdfwidth,height=pdfheight)
-  
+  xticks <- seq(0,maxfreq,0.05)
   ylab <- expression("RR-Interval spectral density" ~~ ~~ group("[","s","]"))
-  plot(frequencies1,type="l",col="red",log="y",xlab="Frequency [Hz]",ylab=ylab)
+  plot(frequencies1,type="l",col="red",log="y",xlab="Frequency [Hz]",ylab=ylab,xlim=c(0,maxfreq),xaxs="i",xaxt="n")
   lines(frequencies2,type="l",col="blue")
+  axis(side=1, at=xticks)
   legend(x="topright",legend=c(name1,name2),lty=c(1,1),col=c("red","blue"),bg="white")
   dev.off()
 }
@@ -256,7 +259,7 @@ compare.beats <- function(data1, data2,outdir="plots",nfirst=200) {
   print(pdat)
   print(sd1)
   print(mean(pdat))
-  plot(1:n.beats,pdat,type="l",ylim=c(-sd1*1.1,sd1*1.1),,xlab="i [beat number]",ylab="time [s]")
+  plot(1:n.beats,pdat,type="l",xlim=c(1, n.beats), ylim=c(-sd1*1.1,sd1*1.1),,xlab="i [beat number]",ylab="time [s]",panel.first= {grid()},xaxs="i",yaxs="i")
   #lines(1:n.beats,abs(pdat),type="l",col="red")
   lines(1:n.beats,rep(sd1,n.beats),type="l",col="blue")
   lines(1:n.beats,rep(-sd1,n.beats),type="l",col="blue")
@@ -268,6 +271,7 @@ compare.beats <- function(data1, data2,outdir="plots",nfirst=200) {
 compare.beattimes <- function(data1,data2) {
   n.beats <- min(length(data1[,1]),length(data2[,1]))
   sd1 <- sd(data1[,2])
+  #xaxs = "i" removes margin from x axis
   plot(1:n.beats,data2[1:n.beats,1]-data1[1:n.beats,1],type="l",ylim=c(-sd1*1.1,sd1*1.1),,xlab="i [beat number]",ylab="time [s]")
   lines(1:n.beats,rep(sd1,n.beats),type="l",col="blue")
   lines(1:n.beats,rep(-sd1,n.beats),type="l",col="blue")
