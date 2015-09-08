@@ -1,5 +1,4 @@
 within SHM.Kotani2005.Examples.FullModel;
-
 model KotaniFullDenervated "Full Kotani model with all components"
   //Ininitial values
   parameter Real conc_cNe = 0.025 "Initial cardiac concentration of Norepinephrine";
@@ -61,8 +60,12 @@ model KotaniFullDenervated "Full Kotani model with all components"
   SHM.Shared.Components.Compartments.BloodSystem blood(initialPressure = pressure) "main blood system" annotation(Placement(visible = true, transformation(origin = {60, -20}, extent = {{-15, -15}, {15, 15}}, rotation = 0)));
   SHM.Kotani2005.Components.Baroreceptors baro(p0 = baro_min_pressure, k1 = baro_fac_pressure, k2 = baro_fac_rate) "baroreceptor" annotation(Placement(visible = true, transformation(origin = {60, 20}, extent = {{-15, -15}, {15, 15}}, rotation = 0)));
   SHM.Kotani2005.Components.SimpleLung lung(initialR = respiratory_phase, Tresp = lung_Tresp, G = lung_fac_baro, nu_trig = lung_baro_min) "the Lung" annotation(Placement(visible = true, transformation(origin = {60, 80}, extent = {{-15, -15}, {15, 15}}, rotation = 0)));
+  SHM.Shared.Components.Test.StaticNerveSignal staticnervesignal2 annotation(Placement(visible = true, transformation(origin = {20, 40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  SHM.Shared.Components.Test.StaticNerveSignal staticnervesignal1 annotation(Placement(visible = true, transformation(origin = {-90, 58}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation
-  connect(para.signal, sinus.parasympathicus) annotation(Line(points = {{3.35317, 63.2341}, {3.41065, 63.2341}, {3.41065, -9.32245}, {-13.87, -9.32245}, {-13.87, -9.32245}}));
+  connect(staticnervesignal2.nerve, sinus.parasympathicus) annotation(Line(points = {{30, 40}, {33.2737, 40}, {33.2737, 5.72451}, {-2.14669, 5.72451}, {-2.14669, -9.30233}, {-13.9535, -9.30233}, {-13.9535, -9.30233}}));
+  connect(staticnervesignal1.nerve, vNeEmit.trigger) annotation(Line(points = {{-80, 58}, {-34.347, 58}, {-34.347, 51.5206}, {-35.0626, 51.5206}, {-35.0626, 51.5206}}));
+  connect(staticnervesignal1.nerve, cNeEmit.trigger) annotation(Line(points = {{-80, 58}, {-78.3542, 58}, {-78.3542, 39.356}, {-75.4919, 39.356}, {-75.4919, 39.356}}));
   connect(lung.resp, symp.resp) annotation(Line(points = {{60, 65.3256}, {17.508, 65.3256}, {17.508, 57.7537}, {-27.2852, 57.7537}, {-27.2852, 83.4473}, {-42.7468, 83.4473}, {-42.7468, 83.4473}}));
   connect(lung.resp, para.resp) annotation(Line(points = {{60, 65.3256}, {17.508, 65.3256}, {17.508, 82.3104}, {17.508, 82.3104}}));
   connect(baro.signal, lung.baro) annotation(Line(points = {{64.2, 31.1}, {94.3614, 31.1}, {94.3614, 98.9089}, {47.2944, 98.9089}, {47.2944, 85.9484}, {47.2944, 85.9484}}));
@@ -76,7 +79,5 @@ equation
   connect(cNeAmount.con, sinus.ccne) annotation(Line(points = {{-60, 16.6613}, {-60.0275, 16.6613}, {-60.0275, 19.327}, {-40.0183, 19.327}, {-40.0183, -9.54982}, {-26.1483, -9.54982}, {-26.1483, -9.54982}}));
   connect(vNeEmit.con, vNeAmount.con) annotation(Line(points = {{-14, 25}, {-20.0092, 25}, {-20.0092, 16.8259}, {-20.0092, 16.8259}}));
   connect(cNeEmit.con, cNeAmount.con) annotation(Line(points = {{-45, 40}, {-44.7932, 40}, {-44.7932, 24.5567}, {-60.0275, 24.5567}, {-60.0275, 16.3711}, {-60.0275, 16.3711}}));
-  connect(symp.signal, cNeEmit.trigger) annotation(Line(points = {{-56.5645, 62.8226}, {-81.4009, 62.8226}, {-81.4009, 39.7909}, {-75.0343, 39.7909}, {-75.0343, 39.7909}}));
-  connect(symp.signal, vNeEmit.trigger) annotation(Line(points = {{-56.5645, 62.8226}, {-35.2434, 62.8226}, {-35.2434, 52.0693}, {-35.2434, 52.0693}}));
   annotation(Documentation(info = "Full Kotani model with standard parameters."), Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), experiment(StartTime = 0, StopTime = 10, Tolerance = 0.000001));
 end KotaniFullDenervated;
