@@ -1,0 +1,13 @@
+OMPython notes (last updated: 3.10.2016, last verified: 3.10.2016):
+- OMPython needs omniORBpy
+  - omniORBpy only works with Python 2.7
+  - Windows binaries available for all but the latest version
+    - binaries are built for 64bit processors => Python 2.7 must also be 64bit version
+    - only omniORBpy binaries needed (already includes omniORB binaries)
+  - "Stubs" in OMPython are Version 3.0 => omniORBpy version 3.7 required
+  - omniORBpy binaries must be in PATH (to find necessary dll)
+  - two entries to PYTHONPATH needed to find omniORBpy modules (%TOP% points to install dir of omniORBpy):
+    - %TOP%\lib\python
+    - %TOP%\lib\x86_win32
+- currently (3.10.2016) OMPython requires a system variable called USER (content can be any string)
+	- normal system variable for linux systems, but has to be set manually for windows
