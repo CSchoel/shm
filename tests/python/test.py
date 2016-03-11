@@ -87,13 +87,38 @@ class TestSHMModel(unittest.TestCase):
 		self.assertTrue(self.loaded)
 		self.assertNotIn("failed", self.simres["messages"].lower())
 		self.assertIn("Simulation stopped", self.simres["messages"])
-	def test_map(self):
-		mbp = np.mean(self.session.getResults("blood.vessel.pressure"))
-		# normal MAP: 70 - 105
-		# is already elevated in the model => shift upper range to 120
-		self.assertGreater(mbp, 70)
-		self.assertLess(mbp, 120) # TODO reduce to 105 when model is fixed
-		print "MAP: %.3f" % mbp
+	def test_pressure(self):
+		# cut off first 10 seconds
+		bp = self.data_pressure[10000:,1]
+		bp_mean = np.mean(bp)
+		bp_max = np.max(bp)
+		bp_min = np.min(bp)
+		bp_std = np.std(bp)
+		
+		# normal MAP: 70 - 105 mmHg
+		# is already elevated in the model => shift upper range to 110
+		self.assertGreater(bp_mean, 70)
+		self.assertLess(bp_mean, 110) # TODO reduce to 105 when model is fixed
+		
+		# normal diastolic pressure: 60 - 90 mmHg
+		self.assertGreater(bp_min, 60)
+		self.assertLess(bp_min, 90)
+
+		# normal systolic pressure: 100 - 140 mmHg
+		self.assertGreater(bp_max, 100)
+		self.assertLess(bp_max, 150) # TODO reduce to 140 when model is fixed
+
+		# normal standard deviation: 14 - 24 mmHg (taken from model run in base state)
+		self.assertGreater(bp_std, 14)
+		self.assertLess(bp_std, 24)
+
+		stat_line = "%20s %7.3f %7.3f"
+		print "%20s %7s %7s" % ("test parameter", "value", "base")
+		print stat_line % ("MAP", bp_mean, 106.842)
+		print stat_line % ("min pressure", bp_min, 74.979)
+		print stat_line % ("max pressure", bp_max, 140.912)
+		print stat_line % ("standard deviation", bp_std, 18.639)
+		
 
 outdir = "../../../test-output"
 if __name__ == '__main__':
