@@ -71,6 +71,9 @@ outdir = "../../../test-output"
 
 if __name__ == '__main__':
 	if os.path.exists(outdir):
-		shutil.rmtree(outdir)
+		try:
+			shutil.rmtree(outdir)
+		except Exception as e:
+			print "WARNING: result directory could not be deleted (%s)" % e
 	unittest.main()
 
