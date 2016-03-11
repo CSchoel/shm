@@ -13,15 +13,18 @@ def enquote(s):
 class MyFancyOMCSession(OMPython.OMCSession):
 	def __init__(self):
 		OMPython.OMCSession.__init__(self)
+		self.debug = False
 	def appendToMoPath(self, path):
-		self.sendAndPrint("setModelicaPath(getModelicaPath()+\";%s\")" % path)
-	def sendAndPrint(self, command):
-	  print ">", command
-	  res = self.sendExpression(command)
-	  print res
-	  return res
+		self.send("setModelicaPath(getModelicaPath()+\";%s\")" % path)
+	def send(self, command):
+		if self.debug:
+			print ">", command
+		res = self.sendExpression(command)
+		if self.debug:
+			print res
+		return res
 	def loadModel(self, name):
-		res = self.sendAndPrint("loadModel(%s)" % name)
+		res = self.send("loadModel(%s)" % name)
 		return res
 	def simulate(self, model, startTime=0, stopTime=1, 
 							 method="dassl", dt = 0.001, tolerance=1e-6, 
@@ -42,10 +45,10 @@ class MyFancyOMCSession(OMPython.OMCSession):
 		elif not (variableFilter is None):
 			params["variableFilter"] = enquote(variableFilter)
 		cmd = "simulate(%s, %s)" % (model, ", ".join(map(lambda x: "%s=%s" % x, params.items())))
-		return self.sendAndPrint(cmd)
+		return self.send(cmd)
 	def cd(self, path=None):
 		cmd = "cd()" if path is None else "cd(%s)" % enquote(path)
-		self.sendAndPrint(cmd)
+		self.send(cmd)
 
 
 class TestSHMModel(unittest.TestCase):
