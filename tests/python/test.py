@@ -5,6 +5,7 @@ import OMPython
 import unittest
 import os
 import shutil
+import numpy as np
 
 def enquote(s):
 	return "\"%s\"" % s
@@ -40,6 +41,7 @@ class MyFancyOMCSession(OMPython.OMCSession):
 			"fileNamePrefix": enquote(fileNamePrefix),
 			"outputFormat": enquote(outputFormat),
 		}
+		self.outputFormat = outputFormat
 		if not (variables is None):
 			params["variableFilter"] = enquote("^("+"|".join(variables)+")$")
 		elif not (variableFilter is None):
@@ -49,6 +51,13 @@ class MyFancyOMCSession(OMPython.OMCSession):
 	def cd(self, path=None):
 		cmd = "cd()" if path is None else "cd(%s)" % enquote(path)
 		self.send(cmd)
+	def getResults(self, *varnames):
+		if self.outputFormat == "csv":
+			raise "unable to retrieve results from CSV-file, choose outputFormat=\"mat\" instead"
+		cmd = "readSimulationResult(currentSimulationResult,{%s})" % ", ".join(varnames)
+		return np.array(self.send(cmd))
+	def closeResultFile(self):
+		self.send("closeSimulationResultFile()")
 
 
 class TestSHMModel(unittest.TestCase):
