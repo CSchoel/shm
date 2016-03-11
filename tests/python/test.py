@@ -118,7 +118,26 @@ class TestSHMModel(unittest.TestCase):
 		print stat_line % ("min pressure", bp_min, 74.979)
 		print stat_line % ("max pressure", bp_max, 140.912)
 		print stat_line % ("standard deviation", bp_std, 18.639)
-		
+	def test_heart_rate(self):
+		# skip all heart beats that occured in the first 10 seconds
+		hr = self.data_hrv[np.where(self.data_hrv[:,0] > 10)]
+		dt = 90 # 90 seconds of data left
+		bpm = len(hr)*60.0/dt
+		rr_max = np.max(hr[:,1])
+		rr_min = np.min(hr[:,1])
+		rr_std = np.std(hr[:,1])
+
+		# normal resting heart rate: 60 - 100 bpm
+		self.assertGreater(bpm, 60)
+		self.assertLess(bpm, 100)
+		stat_line = "%20s %7.3f %7.3f"
+		print "%20s %7s %7s" % ("test parameter", "value", "base")
+		print stat_line % ("heart rate", bpm, 0)
+		print stat_line % ("min RR", rr_min, 0)
+		print stat_line % ("max RR", rr_max, 0)
+		print stat_line % ("std RR", rr_std, 0)
+
+
 
 outdir = "../../../test-output"
 if __name__ == '__main__':
