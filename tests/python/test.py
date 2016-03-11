@@ -55,7 +55,9 @@ class MyFancyOMCSession(OMPython.OMCSession):
 		if self.outputFormat == "csv":
 			raise "unable to retrieve results from CSV-file, choose outputFormat=\"mat\" instead"
 		cmd = "readSimulationResult(currentSimulationResult,{%s})" % ", ".join(varnames)
-		return np.array(self.send(cmd))
+		# readSimulationResults returns array with variable as the first index and time as second
+		# => transpose to get array of data rows with time as first index
+		return np.array(self.send(cmd)).T
 	def closeResultFile(self):
 		self.send("closeSimulationResultFile()")
 
