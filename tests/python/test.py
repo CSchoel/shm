@@ -29,7 +29,7 @@ class MyFancyOMCSession(OMPython.OMCSession):
 	def simulate(self, model, startTime=0, stopTime=1, 
 							 method="dassl", dt = 0.001, tolerance=1e-6, 
 							 fileNamePrefix="simulation_output", 
-							 outputFormat="csv", variables=None, 
+							 outputFormat="mat", variables=None, 
 							 variableFilter=None):
 		params = {
 			"startTime": startTime,
