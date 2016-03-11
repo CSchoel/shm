@@ -67,6 +67,8 @@ class TestSHMModel(unittest.TestCase):
 	loaded = None
 	outdir = None
 	simres = None
+	data_pressure = None
+	data_hrv = None
 
 	@classmethod
 	def setUpClass(cls):
@@ -79,6 +81,8 @@ class TestSHMModel(unittest.TestCase):
 			os.makedirs(cls.outdir)
 		cls.session.cd(outdir)
 		cls.simres = cls.session.simulate("SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample", stopTime=100)
+		cls.data_pressure = cls.session.getResults("time", "blood.vessel.pressure")
+		cls.data_hrv = np.loadtxt(os.path.join(outdir,"heartbeats.csv"),skiprows=1)
 	def test_simulate(self):
 		self.assertTrue(self.loaded)
 		self.assertNotIn("failed", self.simres["messages"].lower())
