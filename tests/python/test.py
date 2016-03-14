@@ -83,6 +83,10 @@ class TestSHMModel(unittest.TestCase):
 		cls.simres = cls.session.simulate("SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample", stopTime=100)
 		cls.data_pressure = cls.session.getResults("time", "blood.vessel.pressure")
 		cls.data_hrv = np.loadtxt(os.path.join(outdir,"heartbeats.csv"),skiprows=1)
+	@classmethod
+	def tearDownClass(cls):
+		# close session
+		del cls.session
 	def test_simulate(self):
 		self.assertTrue(self.loaded)
 		self.assertNotIn("failed", self.simres["messages"].lower())
