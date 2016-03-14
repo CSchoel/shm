@@ -6,6 +6,9 @@ import unittest
 import os
 import shutil
 import numpy as np
+import sys
+import matplotlib.pyplot as plt
+import scipy.io
 
 def enquote(s):
 	return "\"%s\"" % s
@@ -52,12 +55,14 @@ class MyFancyOMCSession(OMPython.OMCSession):
 		cmd = "cd()" if path is None else "cd(%s)" % enquote(path)
 		self.send(cmd)
 	def getResults(self, *varnames):
-		if self.outputFormat == "csv":
+		if self.outputFormat != "mat":
 			raise "unable to retrieve results from CSV-file, choose outputFormat=\"mat\" instead"
-		cmd = "readSimulationResult(currentSimulationResult,{%s})" % ", ".join(varnames)
-		# readSimulationResults returns array with variable as the first index and time as second
-		# => transpose to get array of data rows with time as first index
-		return np.array(self.send(cmd)).T
+		resFile = self.send("currentSimulationResult")
+		print resFile
+		# FIXME find out which matlab file version is used by OpenModelica
+		data = scipy.io.loadmat(resFile)
+		print data.keys()
+		return data
 	def closeResultFile(self):
 		self.send("closeSimulationResultFile()")
 
@@ -122,6 +127,14 @@ class TestSHMModel(unittest.TestCase):
 		print stat_line % ("min pressure", bp_min, 74.979)
 		print stat_line % ("max pressure", bp_max, 140.912)
 		print stat_line % ("standard deviation", bp_std, 18.639)
+	def test_pressure_hist(self):
+		pass
+		#vals,bins = np.histogram(self.data_pressure,np.arange(60,140,10))
+		#f = plt.figure(figsize=(4,1))
+		#ax = f.add_subplot(111)
+		#ax.bar(bins[:-1]+2.5, vals, 5)
+		#plt.savefig(os.path.join(self.outdir, "pressure_hist.png"))
+		#plt.close(f)
 	def test_heart_rate(self):
 		# skip all heart beats that occured in the first 10 seconds
 		hr = self.data_hrv[np.where(self.data_hrv[:,0] > 10)]
