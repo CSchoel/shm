@@ -12,7 +12,9 @@ import DyMat
 
 def enquote(s):
 	return "\"%s\"" % s
-	
+
+def rmse(x,y):
+	return np.sqrt(((x-y)**2).mean())
 
 class MyFancyOMCSession(OMPython.OMCSession):
 	def __init__(self):
@@ -124,14 +126,35 @@ class TestSHMModel(unittest.TestCase):
 		print stat_line % ("min pressure", bp_min, 74.979)
 		print stat_line % ("max pressure", bp_max, 140.912)
 		print stat_line % ("standard deviation", bp_std, 18.639)
+	def plot_hist(self, bins, vals, outfile, val, unit, expected=None):
+		f = plt.figure(figsize=(10,5))
+		ax = f.add_subplot(111)
+		xvals = bins[:-1] 
+		bin_width = bins[1]-bins[0]
+		ax.bar(xvals, vals, bin_width, label="actual")
+		if not (expected is None) :
+			diff = vals-expected
+			diff_plus = diff.copy()
+			diff_plus[np.where(diff_plus < 0)] = 0
+			ax.bar(xvals, -diff_plus, bin_width, vals, color=[[0,1,0,0.5]])
+			diff_minus = diff.copy()
+			diff_minus[np.where(diff_minus > 0)] = 0
+			ax.bar(xvals, -diff_minus, bin_width, vals, color=[[1,0,0,0.5]])
+		ax.set_title("%s histogram" % val.title())
+		ax.set_xlabel("%s [%s]" % (val,unit))
+		ax.set_ylabel("% data points")
+		plt.savefig(os.path.join(self.outdir, outfile))
+		plt.close(f)
 	def test_pressure_hist(self):
-		pass
-		#vals,bins = np.histogram(self.data_pressure,np.arange(60,140,10))
-		#f = plt.figure(figsize=(4,1))
-		#ax = f.add_subplot(111)
-		#ax.bar(bins[:-1]+2.5, vals, 5)
-		#plt.savefig(os.path.join(self.outdir, "pressure_hist.png"))
-		#plt.close(f)
+		vals,bins = np.histogram(self.data_pressure[:,1],np.arange(60,140,10))
+		vals = np.array(vals,dtype=float) / len(self.data_pressure)
+		expected = np.array([0,0.06,0.18,0.17,0.15,0.14,0.14])
+		error = rmse(vals, expected)
+		self.plot_hist(bins, vals, "pressure_hist.png", "pressure", "mmHg", expected)
+		# TODO tolerance is chosen very low to not produce false positive test results
+		# TODO probably needs to be increased when this test fails repeatedly (look at the plot!)
+		self.assertLess(error, 0.005)
+		print "RMSE pressure histogram: %7.3f" % error
 	def test_heart_rate(self):
 		# skip all heart beats that occured in the first 10 seconds
 		hr = self.data_hrv[np.where(self.data_hrv[:,0] > 10)]
@@ -150,9 +173,16 @@ class TestSHMModel(unittest.TestCase):
 		print stat_line % ("min RR", rr_min, 0)
 		print stat_line % ("max RR", rr_max, 0)
 		print stat_line % ("std RR", rr_std, 0)
-
-
-
+	def test_rr_hist(self):
+		vals,bins = np.histogram(self.data_hrv[:,1],np.arange(0.5,2.0,0.1))
+		vals = np.array(vals, dtype=float) / len(self.data_hrv)
+		expected = np.array([0,0,0,0,0.68,0.32,0,0,0,0,0,0,0,0])
+		self.plot_hist(bins, vals, "rr_hist.png", "RR-interval", "s", expected)
+		error = rmse(vals, expected)
+		# TODO tolerance is chosen very low to not produce false positive test results
+		# TODO probably needs to be increased when this test fails repeatedly (look at the plot!)
+		self.assertLess(error, 0.005)
+		print "RMSE RR-interval histogram: %7.3f" % error
 outdir = "../../../test-output"
 if __name__ == '__main__':
 	if os.path.exists(outdir):
