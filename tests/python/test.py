@@ -8,7 +8,7 @@ import shutil
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
-import scipy.io
+import DyMat
 
 def enquote(s):
 	return "\"%s\"" % s
@@ -58,11 +58,8 @@ class MyFancyOMCSession(OMPython.OMCSession):
 		if self.outputFormat != "mat":
 			raise "unable to retrieve results from CSV-file, choose outputFormat=\"mat\" instead"
 		resFile = self.send("currentSimulationResult")
-		print resFile
-		# FIXME find out which matlab file version is used by OpenModelica
-		data = scipy.io.loadmat(resFile)
-		print data.keys()
-		return data
+		data = DyMat.DyMatFile(resFile)
+		return data.getVarArray(varnames).T
 	def closeResultFile(self):
 		self.send("closeSimulationResultFile()")
 
@@ -86,7 +83,7 @@ class TestSHMModel(unittest.TestCase):
 			os.makedirs(cls.outdir)
 		cls.session.cd(outdir)
 		cls.simres = cls.session.simulate("SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample", stopTime=100)
-		cls.data_pressure = cls.session.getResults("time", "blood.vessel.pressure")
+		cls.data_pressure = cls.session.getResults("blood.vessel.pressure")
 		cls.data_hrv = np.loadtxt(os.path.join(outdir,"heartbeats.csv"),skiprows=1)
 	@classmethod
 	def tearDownClass(cls):
