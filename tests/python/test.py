@@ -155,6 +155,18 @@ class TestSHMModel(unittest.TestCase):
 		# TODO probably needs to be increased when this test fails repeatedly (look at the plot!)
 		self.assertLess(error, 0.005)
 		print "RMSE pressure histogram: %7.3f" % error
+	def test_ftt(self):
+		n = len(self.data_hrv)
+		freq = (np.absolute(np.fft.fft(self.data_hrv))/n)**2
+		xvals = np.arange(n/2, dtype=float)/n
+		freq = freq[0:n/2]
+		sps = 1
+		xvals *= sps
+		f = plt.figure(figsize=(10,5))
+		ax = f.add_subplot(111)
+		ax.plot(xvals, freq)
+		plt.savefig(os.path.join(self.outdir, "test_fft.png"))
+		plt.close(f)
 	def test_heart_rate(self):
 		# skip all heart beats that occured in the first 10 seconds
 		hr = self.data_hrv[np.where(self.data_hrv[:,0] > 10)]
