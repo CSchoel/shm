@@ -156,10 +156,11 @@ class TestSHMModel(unittest.TestCase):
 		self.assertLess(error, 0.005)
 		print "RMSE pressure histogram: %7.3f" % error
 	def test_ftt(self):
+		# TODO resampling? maybe with numpy.interp
 		n = len(self.data_hrv)
-		freq = (np.absolute(np.fft.fft(self.data_hrv))/n)**2
+		freq = (np.absolute(np.fft.fft(self.data_hrv[:,1]))/n)**2
 		xvals = np.arange(n/2, dtype=float)/n
-		freq = freq[0:n/2]
+		freq = freq[1:n/2+1]
 		sps = 1
 		xvals *= sps
 		f = plt.figure(figsize=(10,5))
