@@ -166,14 +166,16 @@ class TestSHMModel(unittest.TestCase):
 	def test_ftt(self):
 		n = len(self.data_hrv)
 		freq = (np.absolute(np.fft.fft(self.data_hrv[:,1]))/n)**2
-		xvals = np.arange(n/2, dtype=float)/n
-		freq = freq[1:n/2+1]
-		sps = 1
+		sps = 1.0 * len(self.data_hrv) / self.data_hrv[-1,0]
+		nfreq = round(0.4 * len(self.data_hrv) / sps) 
+		freq = freq[:nfreq]
+		xvals = np.fft.fftfreq(len(freq))[:nfreq]
 		xvals *= sps
 		f = plt.figure(figsize=(10,5))
 		ax = f.add_subplot(111)
-		ax.plot(xvals, freq)
+		ax.plot(xvals[5:], freq[5:])
 		plt.savefig(os.path.join(self.outdir, "test_fft.png"))
+		#plt.show()
 		plt.close(f)
 	def test_heart_rate(self):
 		# skip all heart beats that occured in the first 10 seconds
