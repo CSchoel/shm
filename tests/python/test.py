@@ -9,12 +9,18 @@ import numpy as np
 import sys
 import matplotlib.pyplot as plt
 import DyMat
+import scipy.interpolate as it
 
 def enquote(s):
 	return "\"%s\"" % s
 
 def rmse(x,y):
 	return np.sqrt(((x-y)**2).mean())
+
+def resample_nearest(x,y,n):
+	nx = np.arange(n,dtype=float) / n * x[-1]
+	ny = it.interp1d(x,y,"nearest")(nx)
+	return np.dstack((nx, ny)).reshape((n,2))
 
 class MyFancyOMCSession(OMPython.OMCSession):
 	def __init__(self):
@@ -86,7 +92,9 @@ class TestSHMModel(unittest.TestCase):
 		cls.session.cd(outdir)
 		cls.simres = cls.session.simulate("SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample", stopTime=100)
 		cls.data_pressure = cls.session.getResults("blood.vessel.pressure")
-		cls.data_hrv = np.loadtxt(os.path.join(outdir,"heartbeats.csv"),skiprows=1)
+		#cls.data_hrv = np.loadtxt(os.path.join(outdir,"heartbeats.csv"),skiprows=1)
+		tmp_hrv = cls.session.getResults("heart.contraction.T")
+		cls.data_hrv = resample_nearest(tmp_hrv[:,0], tmp_hrv[:,1], 100000) # 1000 datapoints per second
 	@classmethod
 	def tearDownClass(cls):
 		# close session
@@ -156,7 +164,6 @@ class TestSHMModel(unittest.TestCase):
 		self.assertLess(error, 0.005)
 		print "RMSE pressure histogram: %7.3f" % error
 	def test_ftt(self):
-		# TODO resampling? maybe with numpy.interp
 		n = len(self.data_hrv)
 		freq = (np.absolute(np.fft.fft(self.data_hrv[:,1]))/n)**2
 		xvals = np.arange(n/2, dtype=float)/n
