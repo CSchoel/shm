@@ -172,7 +172,7 @@ class TestSHMModel(unittest.TestCase):
 		xvals = np.fft.fftfreq(n,d=1.0/sps)[:nfreq]
 		f = plt.figure(figsize=(10,5))
 		ax = f.add_subplot(111)
-		ax.plot(xvals[5:], freq[5:])
+		ax.plot(xvals[1:], freq[1:])
 		plt.savefig(os.path.join(self.outdir, "test_fft.png"))
 		#plt.show()
 		plt.close(f)
