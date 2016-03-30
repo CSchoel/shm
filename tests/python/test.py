@@ -169,8 +169,7 @@ class TestSHMModel(unittest.TestCase):
 		sps = 1.0 * len(self.data_hrv) / self.data_hrv[-1,0]
 		nfreq = round(0.4 * len(self.data_hrv) / sps) 
 		freq = freq[:nfreq]
-		xvals = np.fft.fftfreq(len(freq))[:nfreq]
-		xvals *= sps
+		xvals = np.fft.fftfreq(n,d=1.0/sps)[:nfreq]
 		f = plt.figure(figsize=(10,5))
 		ax = f.add_subplot(111)
 		ax.plot(xvals[5:], freq[5:])
