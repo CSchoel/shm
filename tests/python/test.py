@@ -165,7 +165,7 @@ class TestSHMModel(unittest.TestCase):
 		print "RMSE pressure histogram: %7.3f" % error
 	def test_ftt(self):
 		n = len(self.data_hrv)
-		freq = (np.absolute(np.fft.fft(self.data_hrv[:,1]))/n)**2
+		freq = np.absolute(np.fft.fft(self.data_hrv[:,1]))/n
 		sps = 1.0 * len(self.data_hrv) / self.data_hrv[-1,0]
 		nfreq = round(0.4 * len(self.data_hrv) / sps) 
 		freq = freq[:nfreq]
