@@ -79,6 +79,7 @@ class TestSHMModel(unittest.TestCase):
 	simres = None
 	data_pressure = None
 	data_hrv = None
+	data_hrv_cont = None
 
 	@classmethod
 	def setUpClass(cls):
@@ -92,9 +93,9 @@ class TestSHMModel(unittest.TestCase):
 		cls.session.cd(outdir)
 		cls.simres = cls.session.simulate("SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample", stopTime=100)
 		cls.data_pressure = cls.session.getResults("blood.vessel.pressure")
-		#cls.data_hrv = np.loadtxt(os.path.join(outdir,"heartbeats.csv"),skiprows=1)
+		cls.data_hrv = np.loadtxt(os.path.join(outdir,"heartbeats.csv"),skiprows=1)
 		tmp_hrv = cls.session.getResults("heart.contraction.T")
-		cls.data_hrv = resample_nearest(tmp_hrv[:,0], tmp_hrv[:,1], 100000) # 1000 datapoints per second
+		cls.data_hrv_cont = resample_nearest(tmp_hrv[:,0], tmp_hrv[:,1], 100000) # 1000 datapoints per second
 	@classmethod
 	def tearDownClass(cls):
 		# close session
@@ -163,19 +164,36 @@ class TestSHMModel(unittest.TestCase):
 		# TODO probably needs to be increased when this test fails repeatedly (look at the plot!)
 		self.assertLess(error, 0.005)
 		print "RMSE pressure histogram: %7.3f" % error
-	def test_ftt(self):
-		n = len(self.data_hrv)
-		freq = np.absolute(np.fft.fft(self.data_hrv[:,1]))/n
-		sps = 1.0 * len(self.data_hrv) / self.data_hrv[-1,0]
-		nfreq = round(0.4 * len(self.data_hrv) / sps) 
-		freq = freq[:nfreq]
-		xvals = np.fft.fftfreq(n,d=1.0/sps)[:nfreq]
+	def plot_fft(self, freq, xvals, expected):
 		f = plt.figure(figsize=(10,5))
 		ax = f.add_subplot(111)
-		ax.plot(xvals[1:], freq[1:])
-		plt.savefig(os.path.join(self.outdir, "test_fft.png"))
-		#plt.show()
+		ax.plot(xvals[1:], freq[1:], label="actual")
+		ax.plot(xvals[1:], expected, label="expected")
+		ax.set_xlabel("frequency [Hz]")
+		ax.set_ylabel("RR-interval spectral density [s]")
+		ax.set_title("RR-interval spectral density")
+		ax.legend()
+		plt.savefig(os.path.join(self.outdir, "fft_full.png"))
 		plt.close(f)
+	def test_ftt(self):
+		n = len(self.data_hrv_cont)
+		freq = np.absolute(np.fft.fft(self.data_hrv_cont[:,1]))/n
+		t_max = self.data_hrv_cont[-1,0]
+		sps = 1.0 * n / t_max # sampling frequency (samples/s)
+		f_max = 0.4 # maximum frequency that is interesting for us
+		nfreq = round(f_max * t_max) # number of samples to take
+		freq = freq[:nfreq]
+		xvals = np.fft.fftfreq(n,d=1.0/sps)[:nfreq]
+		expected = np.array([
+			0.000026, 0.000032, 0.000085, 0.000216, 0.000332, 0.000486, 0.000627, 0.000709,
+			0.000698, 0.000629, 0.000549, 0.000466, 0.000395, 0.000332, 0.000291, 0.000249,
+			0.000225, 0.000198, 0.000186, 0.000162, 0.000138, 0.000123, 0.000106, 0.000113,
+			0.021758, 0.000103, 0.000149, 0.000070, 0.000079, 0.000080, 0.000071, 0.000067,
+			0.000077, 0.000093, 0.000099, 0.000102, 0.000098, 0.000092, 0.000088])
+		self.plot_fft(freq, xvals, expected)
+		err = rmse(freq[1:],expected)
+		print "RMSE RR-interval spectral density: %.9f" % err
+		self.assertLess(err,0.000001) # TODO adjust tolerance
 	def test_heart_rate(self):
 		# skip all heart beats that occured in the first 10 seconds
 		hr = self.data_hrv[np.where(self.data_hrv[:,0] > 10)]
