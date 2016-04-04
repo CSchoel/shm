@@ -192,6 +192,14 @@ class TestSHMModel(unittest.TestCase):
 			0.000077, 0.000093, 0.000099, 0.000102, 0.000098, 0.000092, 0.000088])
 		self.plot_fft(freq, xvals, expected)
 		err = rmse(freq[1:],expected)
+
+		# very low frequency component (vlf)
+		# - not recommended by task force of ESC and NASPE => not implemented
+		#vlf = 0
+
+		# low frequency component (lf)
+		# high frequency component (hf)
+
 		print "RMSE RR-interval spectral density: %.9f" % err
 		self.assertLess(err,0.000001) # TODO adjust tolerance
 	def test_heart_rate(self):
@@ -203,9 +211,48 @@ class TestSHMModel(unittest.TestCase):
 		rr_min = np.min(hr[:,1])
 		rr_std = np.std(hr[:,1])
 
+		# TODO make a general print function
+
+		# standard deviation of nn-inverval (sdnn)
+		sdnn = rr_std
+		# standard deviation of average (over 5 minutes) NN interval (sdann)
+		# - estimate for changes in heart rate due to cycles longer than 5 min
+		# - cannot be used here, because we only simulate 100 seconds
+		#sdann = 0     
+
+		# root mean squared successive differences (rmssd)
+		rmssd = 0
+
+		# proportion of number of successive interval differences greater than 50 ms (pnn50)
+		# - not recommended by task force of ESC and NASPE => not implemented
+		# pnn50 = 0
+
+		# HRV triangular index (ti)
+		# - number of NN-intervals / number of NN-intervals in maximal bin of histogram
+		# - typical bin size: 1/128 s
+		ti = 0
+
+		# triangular interpolation of NN interval histogram (TINN)
+		# - not recommended by task force of ESC and NASPE => not implemented
+		#tinn = 0
+
+		# sample entropy (SampEn)
+		# - -log(p(sim_next|sim_last_m))  (sim_nex = next point is similar, sim_last_m = last m points are similar)
+
+		# Lyapunov Exponent
+
+		# Hurst Exponent
+
+		# Correlation Dimension
+
+		# Detrended Fluctuation Analysis
+
+		# TODO calculate values for human sample data?
+
 		# normal resting heart rate: 60 - 100 bpm
 		self.assertGreater(bpm, 60)
 		self.assertLess(bpm, 100)
+		# TODO more actual tests!
 		stat_line = "%20s %7.3f %7.3f"
 		print "%20s %7s %7s" % ("test parameter", "value", "base")
 		print stat_line % ("heart rate", bpm, 0)
