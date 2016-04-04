@@ -222,6 +222,21 @@ class TestSHMModel(unittest.TestCase):
 		# TODO probably needs to be increased when this test fails repeatedly (look at the plot!)
 		self.assertLess(error, 0.005)
 		print "RMSE RR-interval histogram: %7.3f" % error
+	def test_poincare(self):
+		poincare = np.dstack((self.data_hrv[:-1,1],self.data_hrv[1:,1])).reshape((len(self.data_hrv)-1,2))
+		ax1 = np.array([-1,1])
+		ax2 = np.array([1,1])
+		sd = lambda x : np.std(np.dot(poincare, x) / np.linalg.norm(x))
+		sd2 = sd(ax2)
+		sd1 = sd(ax1)
+		print "Poincare SD1: %.3f" % sd1
+		print "Poincare SD2: %.3f" % sd2
+		# TODO adjust values
+		self.assertGreater(sd1,0.02)
+		self.assertLess(sd1,0.05)
+		
+		self.assertGreater(sd2,0.02)
+		self.assertLess(sd2,0.05)
 outdir = "../../../test-output"
 if __name__ == '__main__':
 	if os.path.exists(outdir):
