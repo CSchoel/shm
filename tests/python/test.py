@@ -1,6 +1,8 @@
 #!python2.7
 #^ shebang used by pylauncher to identify python version to use (python2.7 64 bit)
 
+from __future__ import print_function
+
 import OMPython
 import unittest
 import os
@@ -10,6 +12,7 @@ import sys
 import matplotlib.pyplot as plt
 import DyMat
 import scipy.interpolate as it
+import re
 
 def enquote(s):
 	return "\"%s\"" % s
@@ -30,10 +33,10 @@ class MyFancyOMCSession(OMPython.OMCSession):
 		self.send("setModelicaPath(getModelicaPath()+\";%s\")" % path)
 	def send(self, command):
 		if self.debug:
-			print ">", command
+			print(">", command)
 		res = self.sendExpression(command)
 		if self.debug:
-			print res
+			print(res)
 		return res
 	def loadModel(self, name):
 		res = self.send("loadModel(%s)" % name)
@@ -100,10 +103,17 @@ class TestSHMModel(unittest.TestCase):
 	def tearDownClass(cls):
 		# close session
 		del cls.session
+	def printt(self, name, fmt, value, base):
+		match = re.match(r"%(\d*)(.*)", fmt)
+		if match :
+			fmt = "%%%s%s" % (12, match.group(2))
+		stat_line = "%%40s %s %s" % (fmt, fmt)
+		print(stat_line % (name, value, base))
 	def test_simulate(self):
 		self.assertTrue(self.loaded)
 		self.assertNotIn("failed", self.simres["messages"].lower())
 		self.assertIn("Simulation stopped", self.simres["messages"])
+		self.printt("simulation time", "%.3f", self.simres["timeSimulation"], 19.889)
 	def test_pressure(self):
 		# cut off first 10 seconds
 		bp = self.data_pressure[10000:,1]
@@ -111,6 +121,11 @@ class TestSHMModel(unittest.TestCase):
 		bp_max = np.max(bp)
 		bp_min = np.min(bp)
 		bp_std = np.std(bp)
+
+		self.printt("MAP", "%.3f", bp_mean, 106.842)
+		self.printt("min pressure", "%.3f", bp_min, 74.979)
+		self.printt("max pressure", "%.3f", bp_max, 140.912)
+		self.printt("standard deviation", "%.3f", bp_std, 18.639)
 		
 		# normal MAP: 70 - 105 mmHg
 		# is already elevated in the model => shift upper range to 110
@@ -128,13 +143,6 @@ class TestSHMModel(unittest.TestCase):
 		# normal standard deviation: 14 - 24 mmHg (taken from model run in base state)
 		self.assertGreater(bp_std, 14)
 		self.assertLess(bp_std, 24)
-
-		stat_line = "%20s %7.3f %7.3f"
-		print "%20s %7s %7s" % ("test parameter", "value", "base")
-		print stat_line % ("MAP", bp_mean, 106.842)
-		print stat_line % ("min pressure", bp_min, 74.979)
-		print stat_line % ("max pressure", bp_max, 140.912)
-		print stat_line % ("standard deviation", bp_std, 18.639)
 	def plot_hist(self, bins, vals, outfile, val, unit, expected=None):
 		f = plt.figure(figsize=(10,5))
 		ax = f.add_subplot(111)
@@ -160,10 +168,10 @@ class TestSHMModel(unittest.TestCase):
 		expected = np.array([0,0.06,0.18,0.17,0.15,0.14,0.14])
 		error = rmse(vals, expected)
 		self.plot_hist(bins, vals, "pressure_hist.png", "pressure", "mmHg", expected)
+		self.printt("RMSE pressure histogram", "%.3f", error, 0.002)
 		# TODO tolerance is chosen very low to not produce false positive test results
 		# TODO probably needs to be increased when this test fails repeatedly (look at the plot!)
 		self.assertLess(error, 0.005)
-		print "RMSE pressure histogram: %7.3f" % error
 	def plot_fft(self, freq, xvals, expected):
 		f = plt.figure(figsize=(10,5))
 		ax = f.add_subplot(111)
@@ -200,7 +208,7 @@ class TestSHMModel(unittest.TestCase):
 		# low frequency component (lf)
 		# high frequency component (hf)
 
-		print "RMSE RR-interval spectral density: %.9f" % err
+		self.printt("RMSE RR-interval spectral density", "%.9f", err, 0.000000292)
 		self.assertLess(err,0.000001) # TODO adjust tolerance
 	def test_heart_rate(self):
 		# skip all heart beats that occured in the first 10 seconds
@@ -211,7 +219,10 @@ class TestSHMModel(unittest.TestCase):
 		rr_min = np.min(hr[:,1])
 		rr_std = np.std(hr[:,1])
 
-		# TODO make a general print function
+		self.printt("heart rate", "%.3f", bpm, 61.333)
+		self.printt("min RR", "%.3f", rr_min, 0.930)
+		self.printt("max RR", "%.3f", rr_max, 1.029)
+		self.printt("std RR", "%.3f", rr_std, 0.034)
 
 		# standard deviation of nn-inverval (sdnn)
 		sdnn = rr_std
@@ -253,22 +264,17 @@ class TestSHMModel(unittest.TestCase):
 		self.assertGreater(bpm, 60)
 		self.assertLess(bpm, 100)
 		# TODO more actual tests!
-		stat_line = "%20s %7.3f %7.3f"
-		print "%20s %7s %7s" % ("test parameter", "value", "base")
-		print stat_line % ("heart rate", bpm, 0)
-		print stat_line % ("min RR", rr_min, 0)
-		print stat_line % ("max RR", rr_max, 0)
-		print stat_line % ("std RR", rr_std, 0)
+		
 	def test_rr_hist(self):
 		vals,bins = np.histogram(self.data_hrv[:,1],np.arange(0.5,2.0,0.1))
 		vals = np.array(vals, dtype=float) / len(self.data_hrv)
 		expected = np.array([0,0,0,0,0.68,0.32,0,0,0,0,0,0,0,0])
 		self.plot_hist(bins, vals, "rr_hist.png", "RR-interval", "s", expected)
 		error = rmse(vals, expected)
+		self.printt("RMSE RR-interval histogram", "%.3f", error, 0.001)
 		# TODO tolerance is chosen very low to not produce false positive test results
 		# TODO probably needs to be increased when this test fails repeatedly (look at the plot!)
 		self.assertLess(error, 0.005)
-		print "RMSE RR-interval histogram: %7.3f" % error
 	def test_poincare(self):
 		poincare = np.dstack((self.data_hrv[:-1,1],self.data_hrv[1:,1])).reshape((len(self.data_hrv)-1,2))
 		ax1 = np.array([-1,1])
@@ -276,8 +282,9 @@ class TestSHMModel(unittest.TestCase):
 		sd = lambda x : np.std(np.dot(poincare, x) / np.linalg.norm(x))
 		sd2 = sd(ax2)
 		sd1 = sd(ax1)
-		print "Poincare SD1: %.3f" % sd1
-		print "Poincare SD2: %.3f" % sd2
+		self.printt("Poincare SD1", "%.3f", sd1, 0.034)
+		self.printt("Poincare SD2", "%.3f", sd2, 0.035)
+		
 		# TODO adjust values
 		self.assertGreater(sd1,0.02)
 		self.assertLess(sd1,0.05)
@@ -290,6 +297,6 @@ if __name__ == '__main__':
 		try:
 			shutil.rmtree(outdir)
 		except Exception as e:
-			print "WARNING: result directory could not be deleted (%s)" % e
+			print("WARNING: result directory could not be deleted (%s)" % e)
 	unittest.main()
 
