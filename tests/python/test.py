@@ -238,11 +238,6 @@ class TestSHMModel(unittest.TestCase):
 		# - not recommended by task force of ESC and NASPE => not implemented
 		# pnn50 = 0
 
-		# HRV triangular index (ti)
-		# - number of NN-intervals / number of NN-intervals in maximal bin of histogram
-		# - typical bin size: 1/128 s
-		ti = 0
-
 		# triangular interpolation of NN interval histogram (TINN)
 		# - not recommended by task force of ESC and NASPE => not implemented
 		#tinn = 0
@@ -271,7 +266,19 @@ class TestSHMModel(unittest.TestCase):
 		expected = np.array([0,0,0,0,0.68,0.32,0,0,0,0,0,0,0,0])
 		self.plot_hist(bins, vals, "rr_hist.png", "RR-interval", "s", expected)
 		error = rmse(vals, expected)
+
+		# HRV triangular index (ti)
+		# - number of NN-intervals / number of NN-intervals in maximal bin of histogram
+		# - typical bin size: 1/128 s
+		vals2, bins2 = np.histogram(self.data_hrv[:,1],np.arange(0.0,1.5,1.0/128))
+		ti = 1.0*len(self.data_hrv)/np.max(vals2)
+
+		# TODO set limits
+		self.assertGreater(ti, 0.1)
+		self.assertLess(ti,0.3)
+		
 		self.printt("RMSE RR-interval histogram", "%.3f", error, 0.001)
+		self.printt("HRV triangular index","%.3f", ti, 0) # TODO set base value
 		# TODO tolerance is chosen very low to not produce false positive test results
 		# TODO probably needs to be increased when this test fails repeatedly (look at the plot!)
 		self.assertLess(error, 0.005)
