@@ -2,6 +2,7 @@
 #^ shebang used by pylauncher to identify python version to use (python2.7 64 bit)
 
 from __future__ import print_function
+from builtins import range
 
 import OMPython
 import unittest
@@ -24,6 +25,43 @@ def resample_nearest(x,y,n):
 	nx = np.arange(n,dtype=float) / n * x[-1]
 	ny = it.interp1d(x,y,"nearest")(nx)
 	return np.dstack((nx, ny)).reshape((n,2))
+
+def sampen(data, emb_dim, tolerance, dist="chebychev"):
+	n = len(data)
+
+	# build matrix of "template vectors" 
+	# (all consecutive subsequences of length m)
+	# x0 x1 x2 x3 ... xm-1
+	# x1 x2 x3 x4 ... xm
+	# x2 x3 x4 x5 ... xm+1
+	# ...
+	# x_n-m-1     ... xn-1
+
+	# since we need two of these matrices for m = emb_dim and m = emb_dim +1, 
+	# we build one that is large enough => shape (emb_dim+1, n-emb_dim)
+	tVecs = np.zeros((n - emb_dim + 1, emb_dim + 1))
+	for i in range(tVecs.shape[0]):
+		v = data[i:i+tVecs.shape[1]]
+		tVecs[i,:len(v)] = v 
+	counts = []
+	for m in [emb_dim, emb_dim+1]:
+		counts.append(0)
+		# get the matrix that we need for the current m
+		tVecsM = tVecs[:n-m+1,:m]
+		# successively calculate distances between each pair of template vectors
+		for i in range(len(tVecsM)-1):
+			diff = tVecsM[i+1:] - tVecsM[i]
+			if dist == "chebychev":
+				dsts = np.max(np.abs(diff),axis=1)
+			elif dist == "euler":
+				dsts = np.norm(diff, axis=1)
+			else :
+				raise "unknown distance function: %s" % dist
+			# count how many distances are smaller than the tolerance
+			counts[-1] += np.sum(dsts < tolerance)
+	print(counts)
+	return -np.log(1.0*counts[1]/counts[0])
+
 
 class MyFancyOMCSession(OMPython.OMCSession):
 	def __init__(self):
