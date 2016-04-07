@@ -39,7 +39,12 @@ def sampen(data, emb_dim, tolerance, dist="chebychev"):
 
 	# since we need two of these matrices for m = emb_dim and m = emb_dim +1, 
 	# we build one that is large enough => shape (emb_dim+1, n-emb_dim)
-	tVecs = np.zeros((n - emb_dim + 1, emb_dim + 1))
+
+	# note that we ignore the last possible template vector with length emb_dim, 
+	# because this vector has no corresponding vector of length m+1 and thus does 
+	# not count towards the conditional probability
+	# (otherwise first dimension would be n-emb_dim+1 and not n-emb_dim)
+	tVecs = np.zeros((n - emb_dim, emb_dim + 1))
 	for i in range(tVecs.shape[0]):
 		v = data[i:i+tVecs.shape[1]]
 		tVecs[i,:len(v)] = v 
