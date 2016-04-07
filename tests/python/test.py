@@ -46,8 +46,7 @@ def sampen(data, emb_dim, tolerance, dist="chebychev"):
 	# (otherwise first dimension would be n-emb_dim+1 and not n-emb_dim)
 	tVecs = np.zeros((n - emb_dim, emb_dim + 1))
 	for i in range(tVecs.shape[0]):
-		v = data[i:i+tVecs.shape[1]]
-		tVecs[i,:len(v)] = v 
+		tVecs[i,:] = data[i:i+tVecs.shape[1]]
 	counts = []
 	for m in [emb_dim, emb_dim+1]:
 		counts.append(0)
