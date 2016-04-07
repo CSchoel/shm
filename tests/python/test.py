@@ -63,7 +63,6 @@ def sampen(data, emb_dim, tolerance, dist="chebychev"):
 				raise "unknown distance function: %s" % dist
 			# count how many distances are smaller than the tolerance
 			counts[-1] += np.sum(dsts < tolerance)
-	print(counts)
 	return -np.log(1.0*counts[1]/counts[0])
 
 
