@@ -287,6 +287,9 @@ class TestSHMModel(unittest.TestCase):
 
 		# sample entropy (SampEn)
 		# - -log(p(sim_next|sim_last_m))  (sim_nex = next point is similar, sim_last_m = last m points are similar)
+		saen = sampen(hr[:,1])
+
+		self.printt("sample entropy", "%.3f", saen, 0)
 
 		# Lyapunov Exponent
 
