@@ -26,7 +26,9 @@ def resample_nearest(x,y,n):
 	ny = it.interp1d(x,y,"nearest")(nx)
 	return np.dstack((nx, ny)).reshape((n,2))
 
-def sampen(data, emb_dim, tolerance, dist="chebychev"):
+def sampen(data, emb_dim=2, tolerance=None, dist="chebychev"):
+	if tolerance is None:
+		tolerance = 0.2*np.std(data)
 	n = len(data)
 
 	# build matrix of "template vectors" 
