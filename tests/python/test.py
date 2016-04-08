@@ -317,8 +317,8 @@ class TestSHMModel(unittest.TestCase):
 		ti = 1.0*len(self.data_hrv)/np.max(vals2)
 
 		# TODO set limits
-		self.assertGreater(ti, 0.1)
-		self.assertLess(ti,0.3)
+		self.assertGreater(ti, 4)
+		self.assertLess(ti,6)
 		
 		self.printt("RMSE RR-interval histogram", "%.3f", error, 0.001)
 		self.printt("HRV triangular index","%.3f", ti, 0) # TODO set base value
