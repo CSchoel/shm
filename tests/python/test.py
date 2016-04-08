@@ -273,7 +273,7 @@ class TestSHMModel(unittest.TestCase):
 		#sdann = 0     
 
 		# root mean squared successive differences (rmssd)
-		rmssd = rmsd(hr[1:]-hr[:-1])
+		rmssd = rmse(hr[1:,1],hr[:-1,1])
 
 		# proportion of number of successive interval differences greater than 50 ms (pnn50)
 		# - not recommended by task force of ESC and NASPE => not implemented
