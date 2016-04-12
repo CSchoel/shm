@@ -15,6 +15,80 @@ import DyMat
 import scipy.interpolate as it
 import re
 
+def lyap(data, emb_dim=10, matrix_dim=4, r=None, tau=1):
+	n = len(data)
+	if r is None:
+		r = 0.2*np.std(data)
+	if (emb_dim - 1) % (matrix_dim - 1) != 0:
+		raise "emb_dim - 1 must be divisible by matrix_dim - 1!"
+	m = (emb_dim - 1) / (matrix_dim - 1) 
+	# construct orbit as matrix (e = emb_dim)
+	# x0 x1 x2 ... xe-1
+	# x1 x2 x3 ... xe
+	# x2 x3 x4 ... xe+1
+	# ...
+	
+	# note: we need to be able to step m points further for the beta vector
+	#       => maximum start index is n - emb_dim - m
+	orbit = np.array([data[i:i+emb_dim] for i in range(n - emb_dim + 1 - m)])
+	old_Q = np.identity(matrix_dim)
+	lexp = np.zeros(matrix_dim)
+	k = 0
+	for i in range(len(orbit)):
+		# find neighbors for each vector in the orbit using the chebychev distance
+		diffs = np.max(np.abs(orbit - orbit[i]), axis=1)
+		cond = diffs < r
+		# TODO necessary?
+		cond[i] = False # do not count the distance between the vector and itself
+		indices = np.where(cond)[0]
+		if len(indices) == 0:
+			raise ValueError("vector at index %d has no neighbors, maybe you need to increase r" % i)
+		# TODO limit number of indices?
+
+		# build matrix X for linear least squares (d_M = matrix_dim)
+		# x_j1 - x_i   x_j1+m - x_i+m   ...   x_j1+(d_M-1)m - x_i+(d_M-1)m
+		# x_j2 - x_i   x_j2+m - x_i+m   ...   x_j2+(d_M-1)m - x_i+(d_M-1)m
+		# ...
+
+		# note: emb_dim = (d_M - 1) * m + 1
+		mat_X = np.array([data[j:j+emb_dim:m] for j in indices])
+		mat_X -= data[i:i+emb_dim:m]
+		
+		# build vector beta for linear least squares
+		# x_j1+(d_M)m - x_i+(d_M)m
+		# x_j2+(d_M)m - x_i+(d_M)m
+		# ...
+		vec_beta = data[indices + matrix_dim * m] - data[i + matrix_dim * m]
+
+		# perform linear least squares
+		a,_,_,_ = np.linalg.lstsq(mat_X, vec_beta)
+		# build matrix L
+		# 0  1  0  ... 0
+		# 0  0  1  ... 0
+		# ...
+		# 0  0  0  ... 1
+		# a1 a2 a3 ... a_(d_M)
+		mat_T = np.zeros((matrix_dim, matrix_dim))
+		mat_T[:-1,1:] = np.identity(matrix_dim-1)
+		mat_T[-1] = a
+
+		# QR-decomposition of T * old_Q
+		mat_Q, mat_R = np.linalg.qr(np.dot(mat_T, old_Q))
+		old_Q = mat_Q
+		# TODO inforce positive diagonal on R ... whatever that means
+
+		# successively build sum for lyapunov exponents
+		print(np.diag(mat_R))
+		lexp += np.log(np.diag(mat_R))
+		k += 1
+	# normalize exponents over number of individual mat_Rs
+	lexp /= k
+	# normalize with respect to tau
+	lexp /= tau
+	# take m into account
+	lexp /= m
+	return lexp
+
 def enquote(s):
 	return "\"%s\"" % s
 
