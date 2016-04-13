@@ -74,11 +74,19 @@ def lyap(data, emb_dim=10, matrix_dim=4, r=None, tau=1):
 
 		# QR-decomposition of T * old_Q
 		mat_Q, mat_R = np.linalg.qr(np.dot(mat_T, old_Q))
+		# force diagonal of R to be positive (if QR = A then also QLL'R = A with L' = L^-1)
+		sign_diag = np.sign(np.diag(mat_R))
+		sign_diag[np.where(sign_diag == 0)] = 1
+		sign_diag = np.diag(sign_diag)
+		mat_Q = np.dot(mat_Q, sign_diag)
+		mat_R = np.dot(sign_diag, mat_R)
+		
+		# TODO tolerance value may not be applicable for matrices with very large values
+		assert np.sum(np.abs(np.dot(mat_Q, mat_R) - np.dot(mat_T, old_Q))) < 1e-10
+
 		old_Q = mat_Q
-		# TODO inforce positive diagonal on R ... whatever that means
 
 		# successively build sum for lyapunov exponents
-		print(np.diag(mat_R))
 		lexp += np.log(np.diag(mat_R))
 		k += 1
 	# normalize exponents over number of individual mat_Rs
