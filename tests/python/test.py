@@ -33,7 +33,6 @@ def lyap(data, emb_dim=10, matrix_dim=4, r=None, tau=1):
 	orbit = np.array([data[i:i+emb_dim] for i in range(n - emb_dim + 1 - m)])
 	old_Q = np.identity(matrix_dim)
 	lexp = np.zeros(matrix_dim)
-	k = 0
 	for i in range(len(orbit)):
 		# find neighbors for each vector in the orbit using the chebychev distance
 		diffs = np.max(np.abs(orbit - orbit[i]), axis=1)
@@ -90,9 +89,8 @@ def lyap(data, emb_dim=10, matrix_dim=4, r=None, tau=1):
 
 		# successively build sum for lyapunov exponents
 		lexp += np.log(np.diag(mat_R))
-		k += 1
 	# normalize exponents over number of individual mat_Rs
-	lexp /= k
+	lexp /= len(orbit)
 	# normalize with respect to tau
 	lexp /= tau
 	# take m into account
