@@ -97,6 +97,35 @@ def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 	lexp /= m
 	return lexp
 
+def test_lyap():
+	rvalues = np.arange(2, 4, 0.01)
+	lambdas = []
+	lambdas_est = []
+	maps = []
+	logistic = lambda x : r * x * (1 - x)
+	for r in rvalues:
+		x = 0.1
+		result = []
+		full_data = [x]
+		# ignore first 100 values for bifurcation plot
+		for t in range(100):
+			x = logistic(x)
+			result.append(np.log(abs(r-2*r*x)))
+			full_data.append(x)
+		lambdas.append(np.mean(result))
+		for t in range(20):
+			x = logistic(x)
+			maps.append(x)
+			full_data.append(x)
+		lambdas_est.append(np.max(lyap(np.array(full_data), emb_dim=22, matrix_dim=4)))
+	plt.plot(rvalues, lambdas, "b-")
+	plt.plot(rvalues, lambdas_est, color="#00AAAA")
+	plt.plot(rvalues, np.zeros(len(rvalues)), "g--")
+	xvals = np.repeat(rvalues, 20)
+	plt.plot(xvals, maps, "ro", alpha=0.1)
+	plt.ylim((-2,2))
+	plt.show()
+
 def enquote(s):
 	return "\"%s\"" % s
 
