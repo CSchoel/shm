@@ -15,13 +15,15 @@ import DyMat
 import scipy.interpolate as it
 import re
 
-def lyap(data, emb_dim=10, matrix_dim=4, r=None, tau=1):
+def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 	n = len(data)
-	if r is None:
-		r = 0.2*np.std(data)
 	if (emb_dim - 1) % (matrix_dim - 1) != 0:
 		raise "emb_dim - 1 must be divisible by matrix_dim - 1!"
 	m = (emb_dim - 1) / (matrix_dim - 1) 
+	if min_nb is None:
+		# minimal number of neighbors as suggested by Eckmann et al.
+		min_nb = min(2 * matrix_dim, matrix_dim + 4)
+
 	# construct orbit as matrix (e = emb_dim)
 	# x0 x1 x2 ... xe-1
 	# x1 x2 x3 ... xe
@@ -36,12 +38,14 @@ def lyap(data, emb_dim=10, matrix_dim=4, r=None, tau=1):
 	for i in range(len(orbit)):
 		# find neighbors for each vector in the orbit using the chebychev distance
 		diffs = np.max(np.abs(orbit - orbit[i]), axis=1)
-		cond = diffs < r
-		# TODO necessary?
-		cond[i] = False # do not count the distance between the vector and itself
-		indices = np.where(cond)[0]
-		# TODO increase r automatically as suggested by Eckmann (start value + update function (default) or list of predefined values)
-		# idea: why do we not just take the x nearest neighbors?
+		diffs[i] = float('inf') # ensure that we do not count the difference of the vector to itself
+		indices = np.argsort(diffs)
+		idx = indices[min_nb-1] # index of the min_nb-nearest neighbor
+		r = diffs[idx] # corresponding distance
+		# there may be more than min_nb vectors at distance r (if multiple vectors have a distance of exactly r)
+		# => update index accordingly
+		indices = np.where(diffs <= r)[0]
+		
 		if len(indices) == 0:
 			raise ValueError("vector at index %d has no neighbors, maybe you need to increase r" % i)
 		# TODO limit number of indices?
