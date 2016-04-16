@@ -41,6 +41,8 @@ def lyap(data, emb_dim=10, matrix_dim=4, r=None, tau=1):
 		# TODO necessary?
 		cond[i] = False # do not count the distance between the vector and itself
 		indices = np.where(cond)[0]
+		# TODO increase r automatically as suggested by Eckmann (start value + update function (default) or list of predefined values)
+		# idea: why do we not just take the x nearest neighbors?
 		if len(indices) == 0:
 			raise ValueError("vector at index %d has no neighbors, maybe you need to increase r" % i)
 		# TODO limit number of indices?
