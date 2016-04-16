@@ -32,7 +32,7 @@ def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 	
 	# note: we need to be able to step m points further for the beta vector
 	#       => maximum start index is n - emb_dim - m
-	orbit = np.array([data[i:i+emb_dim] for i in range(n - emb_dim + 1 - m)])
+	orbit = np.array([data[i:i+emb_dim] for i in range(n - emb_dim + 1 - m)], dtype=float)
 	old_Q = np.identity(matrix_dim)
 	lexp = np.zeros(matrix_dim)
 	for i in range(len(orbit)):
