@@ -46,10 +46,6 @@ def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 		# => update index accordingly
 		indices = np.where(diffs <= r)[0]
 		
-		if len(indices) == 0:
-			raise ValueError("vector at index %d has no neighbors, maybe you need to increase r" % i)
-		# TODO limit number of indices?
-
 		# build matrix X for linear least squares (d_M = matrix_dim)
 		# x_j1 - x_i   x_j1+m - x_i+m   ...   x_j1+(d_M-1)m - x_i+(d_M-1)m
 		# x_j2 - x_i   x_j2+m - x_i+m   ...   x_j2+(d_M-1)m - x_i+(d_M-1)m
