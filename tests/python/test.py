@@ -16,6 +16,22 @@ import scipy.interpolate as it
 import re
 
 def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
+	# TODO more detailed description of the algorithm / lyapunov exponent
+	"""
+	Estimates the lyapunov exponents for the given data using the algorithm of Eckmann et al..
+
+	Args:
+		data (iterable): list/array of (scalar) data points
+
+	Kwargs:
+		emb_dim (int): embedding dimension
+		matrix_dim (int): matrix dimension (emb_dim - 1 must be divisible by matrix_dim - 1)
+		min_nb (int): minimal number of neighbors (default: min(2 * matrix_dim, matrix_dim + 4))
+		tau (float): step size of the data in seconds
+
+	Returns:
+		array of matrix_dim lyapunov exponents
+	"""
 	n = len(data)
 	if (emb_dim - 1) % (matrix_dim - 1) != 0:
 		raise "emb_dim - 1 must be divisible by matrix_dim - 1!"
@@ -142,6 +158,22 @@ def resample_nearest(x,y,n):
 	return np.dstack((nx, ny)).reshape((n,2))
 
 def sampen(data, emb_dim=2, tolerance=None, dist="chebychev"):
+	# TODO more verbose description of sample entropy
+	"""
+	Computes the sample entropy of the given data.
+
+	Args:
+		data (iterable): the list/array of data points
+
+	Kwargs:
+		emb_dim (int): the embedding dimension (length of vectors to compare)
+		tolerance (float): distance threshold for two template vectors to be considered equal (default: 0.2 * std(data))
+		dist (string): distance function used to calculate the distance between template vectors, can be 'euler' or 
+		               'chebychev'
+
+	Returns: the sample entropy of the data (negative logarithm of ratio between similar template 
+	         vectors of length emb_dim + 1 and emb_dim)
+	"""
 	if tolerance is None:
 		tolerance = 0.2*np.std(data)
 	n = len(data)
