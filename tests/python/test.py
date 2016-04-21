@@ -20,6 +20,12 @@ def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 	"""
 	Estimates the lyapunov exponents for the given data using the algorithm of Eckmann et al..
 
+	Recommendations for parameter settings by Eckmann et al.:
+		* long recording time improves accuracy, small tau does not
+		* use large values for emb_dim
+		* matrix_dim should be 'somewhat larger than the expected number of positive lyapunov exponents'
+		* min_nb = min(2 * matrix_dim, matrix_dim + 4)
+
 	Args:
 		data (iterable): list/array of (scalar) data points
 
@@ -99,7 +105,7 @@ def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 		mat_R = np.dot(sign_diag, mat_R)
 		
 		# TODO tolerance value may not be applicable for matrices with very large values
-		assert np.sum(np.abs(np.dot(mat_Q, mat_R) - np.dot(mat_T, old_Q))) < 1e-10
+		# assert np.sum(np.abs(np.dot(mat_Q, mat_R) - np.dot(mat_T, old_Q))) < 1e-10
 
 		old_Q = mat_Q
 
@@ -145,6 +151,15 @@ def test_lyap():
 	plt.plot(xvals, maps, "ro", alpha=0.1)
 	plt.ylim((-2,2))
 	plt.show()
+
+test_lyap()
+data = [1,2,4,5,6,6,1,5,1,2,4,5,6,6,1,5,1,2,4,5,6,6,1,5]
+#data = np.random.random((100,)) * 10
+#data = np.concatenate([np.arange(100)] * 3)
+# TODO random numbers should give positive exponents, what is happening here?
+l = lyap(np.array(data), emb_dim=7, matrix_dim=3)
+print(l)
+exit()
 
 def enquote(s):
 	return "\"%s\"" % s
@@ -491,6 +506,7 @@ class TestSHMModel(unittest.TestCase):
 		
 		self.assertGreater(sd2,0.02)
 		self.assertLess(sd2,0.05)
+
 outdir = "../../../test-output"
 if __name__ == '__main__':
 	if os.path.exists(outdir):
