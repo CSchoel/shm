@@ -10,7 +10,7 @@ m <- 120
 n <- length(rvals)
 lexp <- array(0, n)
 start_value <- 0.1
-emb_dim <- 5
+emb_dim <- 2
 for(j in 1:n) {
   r <- rvals[j]
   data <- array(0, m)
@@ -18,5 +18,6 @@ for(j in 1:n) {
   for(i in 2:m) {
     data[i] <- logistic(data[i-1], r)
   }
-  lexp[j] <- lyap_k(data, m=emb_dim, d=step_size, s=20, t=40, ref=50, k=2, eps=0.1)
+  all <- length(data)-emb_dim
+  lexp[j] <- lyap_k(data, m=emb_dim, d=1, s=50, t=0, ref=all, k=2, eps=0.1)
 }
