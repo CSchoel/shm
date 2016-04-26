@@ -140,17 +140,6 @@ def test_lyap():
 	plt.ylim((-2,2))
 	plt.show()
 
-test_lyap()
-data = [1,2,4,5,6,6,1,5,1,2,4,5,6,6,1,5,1,2,4,5,6,6,1,5]
-#data = np.random.random((100,)) * 10
-#data = np.concatenate([np.arange(100)] * 3)
-# TODO random numbers should give positive exponents, what is happening here?
-l = lyap(np.array(data), emb_dim=7, matrix_dim=3)
-print(l)
-exit()
-
-
-
 def sampen(data, emb_dim=2, tolerance=None, dist="chebychev"):
 	# TODO more verbose description of sample entropy
 	"""
@@ -207,3 +196,46 @@ def sampen(data, emb_dim=2, tolerance=None, dist="chebychev"):
 			# count how many distances are smaller than the tolerance
 			counts[-1] += np.sum(dsts < tolerance)
 	return -np.log(1.0*counts[1]/counts[0])
+
+
+def binary_n(total_N, min_n=50):
+	max_exp = np.log2(1.0 * total_N / min_n)
+	max_exp = int(np.floor(max_exp))
+	return [int(round(1.0*total_N/(2**i))) for i in range(1, max_exp+1)]
+
+def rs(data, n):
+	total_N = len(data)
+	data = data[:total_N - (total_N % n)] # make data divisible by n
+	seqs = np.reshape(data, (total_N/n, n))
+	means = np.mean(seqs,axis=1)
+	y = seqs - means.reshape((len(seqs), 1))
+	y = np.cumsum(y, axis=1)
+	r = np.max(y,axis=1) - np.min(y, axis=1)
+	s = np.std(seqs,axis=1)
+	return np.mean(r/s)
+
+
+def hurst_rs(data, nvals=None):
+	total_N = len(data)
+	if nvals is None:
+		nvals = binary_n(total_N, 50)
+	rsvals = [rs(data, n) for n in nvals]
+	poly = np.polyfit(np.log(nvals), np.log(rsvals), 1)
+	return poly[0]
+
+if __name__ == "__main__":
+	#test_lyap()
+	#data = [1,2,4,5,6,6,1,5,1,2,4,5,6,6,1,5,1,2,4,5,6,6,1,5]
+	#data = np.random.random((100,)) * 10
+	#data = np.concatenate([np.arange(100)] * 3)
+	# TODO random numbers should give positive exponents, what is happening here?
+	#l = lyap(np.array(data), emb_dim=7, matrix_dim=3)
+	#print(l)
+	#exit()
+
+	# TODO why does this not work for the brownian motion?
+	n = 10000
+	#data = np.arange(n) # should give result 1
+	#data = np.cumsum(np.random.randn(n)) # brownian motion, should give result 0.5
+	data = np.random.randn(n) # should give result 0
+	print(hurst_rs(data, nvals = binary_n(len(data), 2)))
