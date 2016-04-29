@@ -289,7 +289,7 @@ def corr_dim(data, emb_dim, rvals=None):
 		slope of the line fittet to log(r) vs log(C(r)) as estimate of correlation dimension
 	"""
 	# TODO what are good values for r?
-	# TODO 
+	# TODO do this for multiple values of emb_dim?
 	if rvals is None:
 		rvals = np.arange(0.1,0.5,0.01) * np.std(data)
 	dist = lambda x, y: np.max(np.abs(x - y), axis=1)
