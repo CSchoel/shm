@@ -307,6 +307,35 @@ def corr_dim(data, emb_dim, rvals=None):
 	plt.show()
 	return poly[0]
 
+def dfa(data, nvals= None):
+	"""
+	Performs a detrended fluctuation analysis on the given data
+
+	Args:
+		data (array of float): time series
+	Kwargs:
+		nvals (iterable of int): subseries sizes at which to calculate fluctuation
+	"""
+	total_N = len(data)
+	if nvals is None:
+		nvals = binary_n(total_N, 50)
+	fluctuations = []
+	for n in nvals:
+		d = data[:total_N % n]
+		d = data.reshape((total_N/n, n))
+		sums = np.cumsum(d, axis=1)
+		x = np.arange(n)
+		poly = np.array([np.polyfit(x, sums[i], 1) for i in range(len(sums))])
+		# calculate root mean square fluctuation
+		print(sums.shape, poly.shape)
+		f_m = (sums - poly[:,0] * np.repeat([x], len(sums),axis=0) + poly[:,1]) ** 2
+		f_m = np.sqrt(np.sum(f, axis=1) / n)
+		f_n = np.sum(f_m) / len(f_m)
+		fluctuations.append(f_n)
+	fluctuations = np.array(fluctuations)
+	poly = np.polyfit(np.log(nvals), np.log(fluctuations))
+	return poly[0]
+
 def test_lyap2():
 	#test_lyap()
 	data = [1,2,4,5,6,6,1,5,1,2,4,5,6,6,1,5,1,2,4,5,6,6,1,5]
@@ -330,7 +359,12 @@ def test_corr():
 	data = np.arange(n)
 	print(corr_dim(data, 4))
 
+def test_dfa():
+	n = 1000
+	data = np.arange(n)
+	print(dfa(data))
+
 if __name__ == "__main__":
-	test_corr()
+	test_dfa()
 
 	
