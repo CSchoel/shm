@@ -200,28 +200,78 @@ def sampen(data, emb_dim=2, tolerance=None, dist="chebychev"):
 
 
 def binary_n(total_N, min_n=50):
+	"""
+	Creates a list of values by successively halving the total length total_N
+	until the resulting value is less than min_n.
+
+	Non-integer results are rounded down.
+
+	Creates a list of values total_N/2^1, total_N/2^2, total_N/2^3, ... until total_N/2^i < min_n
+
+	Args:
+		total_N (int): total length
+	Kwargs:
+		min_n (int): minimal length after division
+
+	Returns:
+		list of integers: total_N/2, total_N/4, total_N/8, ... until total_N/2^i < min_n
+	"""
 	max_exp = np.log2(1.0 * total_N / min_n)
 	max_exp = int(np.floor(max_exp))
 	return [int(np.floor(1.0*total_N/(2**i))) for i in range(1, max_exp+1)]
 
 def rs(data, n):
+	"""
+	Calculates an individual R/S value in the rescaled range approach for a given n.
+
+	Note: This is just a helper function for hurs_rs and should not be called directly.
+
+	Args:	
+		data (array of float): time series
+		n (float): size of the subseries in which data should be split
+	"""
 	total_N = len(data)
-	data = data[:total_N - (total_N % n)] # make data divisible by n
+	# cut values at the end of data to make the array divisible by n
+	data = data[:total_N - (total_N % n)]
+	# split remaining data into subsequences of length n
 	seqs = np.reshape(data, (total_N/n, n))
+	# calculate means of subsequences
 	means = np.mean(seqs,axis=1)
+	# normalize subsequences by substracting mean
 	y = seqs - means.reshape((total_N/n,1))
+	# build cumulative sum of subsequences
 	y = np.cumsum(y, axis=1)
+	# find ranges
 	r = np.max(y,axis=1) - np.min(y, axis=1)
+	# find standard deviation
 	s = np.std(seqs,axis=1)
+	# return mean of r/s along subsequence index
 	return np.mean(r/s)
 
 
 def hurst_rs(data, nvals=None):
+	"""
+	Calculates the hurst exponent by a standard rescaled range (R/S) approach.
+
+	Args:
+		data (array of float): time series
+	Kwargs:
+		nvals (iterable of int): sizes of subseries to use
+
+	Returns:
+		float: estimated Hurst exponent using (R/S)
+	"""
 	total_N = len(data)
 	if nvals is None:
 		nvals = binary_n(total_N, 50)
+	# get individual values for (R/S)_n
 	rsvals = [rs(data, n) for n in nvals]
+	# fit a line to the logarithm of the obtained (R/S)_n
 	poly = np.polyfit(np.log(nvals), np.log(rsvals), 1)
+	# return line slope
+	# TODO remove
+	plt.plot(np.log(nvals), np.log(rsvals))
+	plt.show()
 	return poly[0]
 
 if __name__ == "__main__":
