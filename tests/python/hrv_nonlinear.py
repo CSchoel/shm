@@ -23,7 +23,7 @@ def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 		tau (float): step size of the data in seconds
 
 	Returns:
-		array of matrix_dim lyapunov exponents
+		float array: array of matrix_dim lyapunov exponents
 	"""
 	n = len(data)
 	if (emb_dim - 1) % (matrix_dim - 1) != 0:
@@ -154,7 +154,8 @@ def sampen(data, emb_dim=2, tolerance=None, dist="chebychev"):
 		dist (string): distance function used to calculate the distance between template vectors, can be 'euler' or 
 		               'chebychev'
 
-	Returns: the sample entropy of the data (negative logarithm of ratio between similar template 
+	Returns: 
+		float: the sample entropy of the data (negative logarithm of ratio between similar template 
 	         vectors of length emb_dim + 1 and emb_dim)
 	"""
 	if tolerance is None:
