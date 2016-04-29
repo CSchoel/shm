@@ -202,7 +202,7 @@ def sampen(data, emb_dim=2, tolerance=None, dist="chebychev"):
 def binary_n(total_N, min_n=50):
 	max_exp = np.log2(1.0 * total_N / min_n)
 	max_exp = int(np.floor(max_exp))
-	return [int(round(1.0*total_N/(2**i))) for i in range(1, max_exp+1)]
+	return [int(np.floor(1.0*total_N/(2**i))) for i in range(1, max_exp+1)]
 
 def rs(data, n):
 	total_N = len(data)
