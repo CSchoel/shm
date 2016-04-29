@@ -275,6 +275,39 @@ def hurst_rs(data, nvals=None):
 	return poly[0]
 
 if __name__ == "__main__":
+def corr_dim(data, emb_dim, rvals=None):
+	# TODO more verbose description of correlation dimension
+	"""
+	Calculates the correlation dimension with tge Grassberger-Procaccia algorithm
+
+	Args:
+		data (array of float): time series of data points
+		emb_dim (int): embedding dimension
+	Kwargs:
+		rvals (iterable of float): list of values to use for calculating individual C(r) values
+
+	Returns:
+		slope of the line fittet to log(r) vs log(C(r)) as estimate of correlation dimension
+	"""
+	# TODO what are good values for r?
+	# TODO 
+	if rvals is None:
+		rvals = np.arange(0.1,0.5,0.01) * np.std(data)
+	dist = lambda x, y: np.max(np.abs(x - y), axis=1)
+	n = len(data)
+	orbit = np.array([data[i:i+emb_dim] for i in range(n - emb_dim + 1)])
+	dists = np.array([dist(orbit, orbit[i]) for i in range(len(orbit))])
+	csums = []
+	for r in rvals:
+		s = 1.0 / (n * (n-1)) * np.sum(dists < r)
+		csums.append(s)
+	csums = np.array(csums)
+	poly = np.polyfit(np.log(rvals), np.log(csums), 1)
+	# TODO remove
+	plt.plot(np.log(rvals), np.log(csums))
+	plt.show()
+	return poly[0]
+
 	#test_lyap()
 	#data = [1,2,4,5,6,6,1,5,1,2,4,5,6,6,1,5,1,2,4,5,6,6,1,5]
 	#data = np.random.random((100,)) * 10
