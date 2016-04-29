@@ -209,7 +209,7 @@ def rs(data, n):
 	data = data[:total_N - (total_N % n)] # make data divisible by n
 	seqs = np.reshape(data, (total_N/n, n))
 	means = np.mean(seqs,axis=1)
-	y = seqs - means.reshape((len(seqs), 1))
+	y = seqs - means.reshape((total_N/n,1))
 	y = np.cumsum(y, axis=1)
 	r = np.max(y,axis=1) - np.min(y, axis=1)
 	s = np.std(seqs,axis=1)
