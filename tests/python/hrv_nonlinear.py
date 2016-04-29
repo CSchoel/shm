@@ -274,7 +274,6 @@ def hurst_rs(data, nvals=None):
 	plt.show()
 	return poly[0]
 
-if __name__ == "__main__":
 def corr_dim(data, emb_dim, rvals=None):
 	# TODO more verbose description of correlation dimension
 	"""
@@ -308,18 +307,30 @@ def corr_dim(data, emb_dim, rvals=None):
 	plt.show()
 	return poly[0]
 
+def test_lyap2():
 	#test_lyap()
-	#data = [1,2,4,5,6,6,1,5,1,2,4,5,6,6,1,5,1,2,4,5,6,6,1,5]
-	#data = np.random.random((100,)) * 10
-	#data = np.concatenate([np.arange(100)] * 3)
+	data = [1,2,4,5,6,6,1,5,1,2,4,5,6,6,1,5,1,2,4,5,6,6,1,5]
+	data = np.random.random((100,)) * 10
+	data = np.concatenate([np.arange(100)] * 3)
 	# TODO random numbers should give positive exponents, what is happening here?
-	#l = lyap(np.array(data), emb_dim=7, matrix_dim=3)
-	#print(l)
-	#exit()
+	l = lyap(np.array(data), emb_dim=7, matrix_dim=3)
+	print(l)
 
+def test_hurst():
 	# TODO why does this not work for the brownian motion?
 	n = 10000
-	#data = np.arange(n) # should give result 1
+	data = np.arange(n) # should give result 1
 	#data = np.cumsum(np.random.randn(n)) # brownian motion, should give result 0.5
-	data = np.random.randn(n) # should give result 0
-	print(hurst_rs(data, nvals = binary_n(len(data), 2)))
+	#data = np.random.randn(n) # should give result 0
+	data = np.sin(np.arange(n,dtype=float) / (n-1) * np.pi * 100)
+	print(hurst_rs(data, nvals = binary_n(len(data), 50)))
+
+def test_corr():
+	n = 1000
+	data = np.arange(n)
+	print(corr_dim(data, 4))
+
+if __name__ == "__main__":
+	test_corr()
+
+	
