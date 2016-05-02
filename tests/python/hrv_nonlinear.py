@@ -321,16 +321,22 @@ def dfa(data, nvals= None):
 		nvals = binary_n(total_N, 50)
 	fluctuations = []
 	for n in nvals:
+		# subdivide data into chunks of size n
 		d = data[:total_N % n]
 		d = data.reshape((total_N/n, n))
-		sums = np.cumsum(d, axis=1)
+		# calculate a "walk" from the data by taking the cumulative sum of subsequences
+		# TODO do we get the same result with less computations when we take the cumulative 
+		# sum only once at the beginning for the whole sequence?
+		walk = np.cumsum(d, axis=1)
 		x = np.arange(n)
-		poly = np.array([np.polyfit(x, sums[i], 1) for i in range(len(sums))])
-		# calculate root mean square fluctuation
-		print(sums.shape, poly.shape)
-		f_m = (sums - poly[:,0] * np.repeat([x], len(sums),axis=0) + poly[:,1]) ** 2
-		f_m = np.sqrt(np.sum(f, axis=1) / n)
-		f_n = np.sum(f_m) / len(f_m)
+		# calculate local trends as polynomes
+		poly = np.array([np.polyfit(x, walk[i], 1) for i in range(len(walk))])
+		print(walk.shape, poly.shape)
+		trend = poly[:,0] * np.repeat([x], len(walk),axis=0) + poly[:,1]
+		# calculate variance ("fluctuation") of original walk (walk) around trend
+		flucs = np.sqrt(np.sum((walk - trend) ** 2, axis=1) / n)
+		# calculate mean fluctuation over all subsequences
+		f_n = np.sum(flucs) / len(flucs)
 		fluctuations.append(f_n)
 	fluctuations = np.array(fluctuations)
 	poly = np.polyfit(np.log(nvals), np.log(fluctuations))
