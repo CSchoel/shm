@@ -3,15 +3,57 @@ import matplotlib.pyplot as plt
 
 
 def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
-	# TODO more detailed description of the algorithm / lyapunov exponent
 	"""
-	Estimates the lyapunov exponents for the given data using the algorithm of Eckmann et al..
+	Estimates the Lyapunov exponents for the given data using the algorithm of Eckmann et al..
 
 	Recommendations for parameter settings by Eckmann et al.:
 		* long recording time improves accuracy, small tau does not
 		* use large values for emb_dim
-		* matrix_dim should be 'somewhat larger than the expected number of positive lyapunov exponents'
+		* matrix_dim should be 'somewhat larger than the expected number of positive Lyapunov exponents'
 		* min_nb = min(2 * matrix_dim, matrix_dim + 4)
+
+	Explanation of Lyapunov exponents:
+		The Lyapunov exponent describes the rate of separation of two infinitesimally close 
+		trajectories of a dynamical system in phase space. In a chaotic system, these trajectories
+		diverge exponentially following the equation:
+
+		|X(t, X_0) - X(t, X_0 + eps)| = e^(lambda * t) * |eps|
+
+		In this equation X(t, X_0) is the trajectory of the system X starting at the point X_0 in
+		phase space at time t. eps is the (infinitesimal) difference vector and lambda is called
+		the Lyapunov exponent. If the system has more than one free variable, the phase space is
+		multidimensional and each dimension has its own Lyapunov exponent. The existence of at 
+		least one positive Lyapunov exponent is generally seen as a strong indicator for chaos.
+
+	Explanation of the Algorithm:
+		To calculate the Lyapunov exponents analytically, the Jacobian of the system is required.
+		The algorithm of Eckmann et al. therefore tries to estimate this Jacobian by reconstructing
+		the dynamics of the system from which the time series was obtained. For this, several
+		steps are required:
+
+		* Embed the time series [x_1, x_2, ..., x_(N-1)] in an orbit of emb_dim dimensions 
+		  (map each point x_i of the time series to a vector [x_i, x_(i+1), x_(i+2), ... x_(i+emb_dim-1)]).
+		* For each vector X_i in this orbit find a radius r_i so that at least min_nb other vectors
+		  lie within (chebychev-)distance r_i around X_i. These vectors will be called 
+		  "neighbors" of X_i.
+		* Find the Matrix T_i that sends points from the neighborhood of X_i to the neighbor
+		  hood of X_(i+1). To avoid undetermined values in T_i, we construct T_i not with size
+		  (emb_dim x emb_dim) but with size (matrix_dim x matrix_dim), so that we have a larger
+		  "step size" m in the X_i, which are now defined as X'_i = [x_i, x_(i+m), x_(i+2m), 
+		  ... x_(i+(matrix_dim-1)*m)]. This means that emb_dim-1 must be divisible by matrix_dim-1.
+		  The T_i are then found by a linear least squares fit, assuring that 
+		  T_i (X_j - X_i) ~= X_(j+m) - X_(i+m) for any X_j in the neighborhood of X_i.
+		* Starting with i = 1 and Q_0 = identity successively decompose the matrix T_i * Q_(i-1) 
+		  into the matrices Q_i and R_i by a QR-decomposition.
+		* Calculate the Lyapunov exponents from the mean of the logarithm of the diagonal
+		  elements of the matrices R_i. To normalize the Lyapunov exponents, they have to be
+		  divided by m and by the step size tau of the original time series.
+
+	References:
+		[1] J. P. Eckmann, S. O. Kamphorst, D. Ruelle, and S. Ciliberto, 
+		    “Liapunov exponents from time series,” Physical Review A, 
+		    vol. 34, no. 6, pp. 4971–4979, 1986.
+
 
 	Args:
 		data (iterable): list/array of (scalar) data points
@@ -20,10 +62,10 @@ def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 		emb_dim (int): embedding dimension
 		matrix_dim (int): matrix dimension (emb_dim - 1 must be divisible by matrix_dim - 1)
 		min_nb (int): minimal number of neighbors (default: min(2 * matrix_dim, matrix_dim + 4))
-		tau (float): step size of the data in seconds
+		tau (float): step size of the data in seconds (normalization scaling factor for exponents)
 
 	Returns:
-		float array: array of matrix_dim lyapunov exponents
+		float array: array of matrix_dim Lyapunov exponents
 	"""
 	n = len(data)
 	if (emb_dim - 1) % (matrix_dim - 1) != 0:
@@ -48,6 +90,7 @@ def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 		# find neighbors for each vector in the orbit using the chebychev distance
 		diffs = np.max(np.abs(orbit - orbit[i]), axis=1)
 		diffs[i] = float('inf') # ensure that we do not count the difference of the vector to itself
+		# TODO also mask vectors that are too close in the original data?
 		indices = np.argsort(diffs)
 		idx = indices[min_nb-1] # index of the min_nb-nearest neighbor
 		r = diffs[idx] # corresponding distance
@@ -72,7 +115,7 @@ def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 
 		# perform linear least squares
 		a,_,_,_ = np.linalg.lstsq(mat_X, vec_beta)
-		# build matrix L
+		# build matrix T
 		# 0  1  0  ... 0
 		# 0  0  1  ... 0
 		# ...
@@ -96,7 +139,7 @@ def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 
 		old_Q = mat_Q
 
-		# successively build sum for lyapunov exponents
+		# successively build sum for Lyapunov exponents
 		lexp += np.log(np.diag(mat_R))
 	# normalize exponents over number of individual mat_Rs
 	lexp /= len(orbit)
