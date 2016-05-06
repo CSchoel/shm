@@ -69,7 +69,7 @@ def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 	"""
 	n = len(data)
 	if (emb_dim - 1) % (matrix_dim - 1) != 0:
-		raise "emb_dim - 1 must be divisible by matrix_dim - 1!"
+		raise ValueError("emb_dim - 1 must be divisible by matrix_dim - 1!")
 	m = (emb_dim - 1) / (matrix_dim - 1) 
 	if min_nb is None:
 		# minimal number of neighbors as suggested by Eckmann et al.
