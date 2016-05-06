@@ -314,12 +314,50 @@ def rs(data, n):
 
 def hurst_rs(data, nvals=None):
 	"""
-	Calculates the hurst exponent by a standard rescaled range (R/S) approach.
+	Calculates the Hurst exponent by a standard rescaled range (R/S) approach.
+
+	Explanation of Hurst exponent:
+		The Hurst exponent is a measure for the "long-term memory" of a time series, meaning
+		the long statistical dependencies in the data that do not originate from cycles.
+
+		It originates from H.E. Hursts observations of the problem of long-term storage in
+		water reservoirs. If x_i is the discharge of a river in year i and we observe this
+		discharge for N years, we can calculate the storage capacity that would be required
+		to keep the discharge steady at its mean value.
+
+		To do so, we first substract the mean over all x_i from the individual x_i to obtain
+		the departures x'_i from the mean for each year i. As the excess or deficit in 
+		discharge always carrys over from year i to year i+1, we need to examine the cumulative
+		sum of x'_i, denoted by y_i. This cumulative sum represents the filling of our
+		hypothetical storage. If the sum is above 0, we are storing excess discharge from 
+		the river, if it is below zero we have compensated a deficit in discharge by releasing
+		water from the storage. The range (maximum - minimum) R of y_i therefore represents 
+		the total capacity required for the storage.
+
+		Hurst showed that this value follows a steady trend for varying N if it is normalized
+		by the standard deviation sigma over the x_i. Namely he obtained the following formula:
+
+		R/sigma = (N/2)^K
+
+		In this equation, K is called the Hurst exponent. Its value is 0.5 for a purely brownian
+		motion, but becomes greater for time series that exhibit a bias in one direction.
+
+	Explanation of the algorithm:
+		The rescaled range (R/S) approach is directly derived from Hurst's definition. The time
+		series of length N is split into non-overlapping subseries of length n. Then, R and S
+		(S = sigma) are calculated for each subseries and the mean is taken over all subseries 
+		yielding (R/S)_n. This process is repeated for several lengths n. Finally, the exponent
+		K is obtained by fitting a straight line to the plot of log((R/S)_n) vs log(n).
+
+		There seems to be no consensus how to chose the subseries lenghts n. This function
+		therefore leaves the choice to the user. The module provides some utility functions
+		for "typical" values:
+			* binary_n: N/2, N/4, N/8, ...
 
 	Args:
 		data (array of float): time series
 	Kwargs:
-		nvals (iterable of int): sizes of subseries to use
+		nvals (iterable of int): sizes of subseries to use (default: binary_n(len(data), 50))
 
 	Returns:
 		float: estimated Hurst exponent using (R/S)
