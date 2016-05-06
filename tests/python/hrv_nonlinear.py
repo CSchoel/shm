@@ -271,8 +271,6 @@ def binary_n(total_N, min_n=50):
 
 	Non-integer results are rounded down.
 
-	Creates a list of values total_N/2^1, total_N/2^2, total_N/2^3, ... until total_N/2^i < min_n
-
 	Args:
 		total_N (int): total length
 	Kwargs:
