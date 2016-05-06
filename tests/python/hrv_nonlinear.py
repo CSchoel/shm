@@ -188,14 +188,36 @@ def sampen(data, emb_dim=2, tolerance=None, dist="chebychev"):
 	"""
 	Computes the sample entropy of the given data.
 
+	Explanation of the sample entropy:
+		The sample entropy of a time series is defined as the negative natural logarithm
+		of the conditional probability that two sequences similar for emb_dim points remain 
+		similar at the next point, excluding self-matches.
+
+		A lower value for the sample entropy therefore corresponds to a higher probability
+		indicating more self-similarity.
+
+	Explanation of the algorithm:
+		The algorithm constructs all subsequences of length emb_dim [s_1, s_2, s_3, ...] and 
+		then counts each pair (s_i, s_j) with i != j where dist(s_i, s_j) < tolerance. The same process
+		is repeated for all subsequences of length emb_dim + 1. The sum of similar sequence pairs 
+		with length emb_dim + 1 is divided by the sum of similar sequence pairs with length emb_dim.
+		The result of the algorithm is the negative logarithm of this ratio/probability.
+
+	References:
+		[1] J. S. Richman and J. R. Moorman, “Physiological time-series 
+		    analysis using approximate entropy and sample entropy,” 
+		    American Journal of Physiology-Heart and Circulatory Physiology, 
+		    vol. 278, no. 6, pp. H2039–H2049, 2000.
+
 	Args:
 		data (iterable): the list/array of data points
 
 	Kwargs:
 		emb_dim (int): the embedding dimension (length of vectors to compare)
-		tolerance (float): distance threshold for two template vectors to be considered equal (default: 0.2 * std(data))
-		dist (string): distance function used to calculate the distance between template vectors, can be 'euler' or 
-		               'chebychev'
+		tolerance (float): distance threshold for two template vectors to be considered 
+		                   equal (default: 0.2 * std(data))
+		dist (string): distance function used to calculate the distance between template vectors, 
+		               can be 'euler' or 'chebychev'
 
 	Returns: 
 		float: the sample entropy of the data (negative logarithm of ratio between similar template 
