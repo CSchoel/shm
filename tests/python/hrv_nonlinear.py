@@ -492,8 +492,7 @@ def dfa(data, nvals= None):
 		x = np.arange(n)
 		# calculate local trends as polynomes
 		poly = np.array([np.polyfit(x, walk[i], 1) for i in range(len(walk))])
-		print(walk.shape, poly.shape)
-		trend = poly[:,0] * np.repeat([x], len(walk),axis=0) + poly[:,1]
+		trend = np.array([poly[i,0] * x + poly[i,1] for i in range(len(walk))])
 		# calculate variance ("fluctuation") of original walk (walk) around trend
 		flucs = np.sqrt(np.sum((walk - trend) ** 2, axis=1) / n)
 		# calculate mean fluctuation over all subsequences
