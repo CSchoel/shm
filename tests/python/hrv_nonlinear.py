@@ -437,7 +437,7 @@ def corr_dim(data, emb_dim, rvals=None, dist=lambda x, y: np.max(np.abs(x - y), 
 	plt.show()
 	return poly[0]
 
-def dfa(data, nvals= None, overlap=True):
+def dfa(data, nvals= None, overlap=True, order=1):
 	"""
 	Performs a detrended fluctuation analysis on the given data
 
@@ -463,9 +463,9 @@ def dfa(data, nvals= None, overlap=True):
 			d = d.reshape((total_N//n, n))
 		# calculate local trends as polynomes
 		x = np.arange(n)
-		poly = np.array([np.polyfit(x, d[i], 1) for i in range(len(d))])
-		trend = np.array([poly[i,0] * x + poly[i,1] for i in range(len(d))])
-		# calculate variance ("fluctuation") of walks in d around trend
+		tpoly = np.array([np.polyfit(x, d[i], order) for i in range(len(d))])
+		trend = np.array([np.polyval(tpoly[i], x) for i in range(len(d))])
+		# calculate standard deviation ("fluctuation") of walks in d around trend
 		flucs = np.sqrt(np.sum((d - trend) ** 2, axis=1) / n)
 		# calculate mean fluctuation over all subsequences
 		f_n = np.sum(flucs) / len(flucs)
