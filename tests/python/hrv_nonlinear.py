@@ -71,7 +71,7 @@ def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 	n = len(data)
 	if (emb_dim - 1) % (matrix_dim - 1) != 0:
 		raise ValueError("emb_dim - 1 must be divisible by matrix_dim - 1!")
-	m = (emb_dim - 1) / (matrix_dim - 1) 
+	m = (emb_dim - 1) // (matrix_dim - 1) 
 	if min_nb is None:
 		# minimal number of neighbors as suggested by Eckmann et al.
 		min_nb = min(2 * matrix_dim, matrix_dim + 4)
@@ -288,11 +288,11 @@ def rs(data, n):
 	# cut values at the end of data to make the array divisible by n
 	data = data[:total_N - (total_N % n)]
 	# split remaining data into subsequences of length n
-	seqs = np.reshape(data, (total_N/n, n))
+	seqs = np.reshape(data, (total_N//n, n))
 	# calculate means of subsequences
 	means = np.mean(seqs,axis=1)
 	# normalize subsequences by substracting mean
-	y = seqs - means.reshape((total_N/n,1))
+	y = seqs - means.reshape((total_N//n,1))
 	# build cumulative sum of subsequences
 	y = np.cumsum(y, axis=1)
 	# find ranges
