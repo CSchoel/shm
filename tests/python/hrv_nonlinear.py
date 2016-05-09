@@ -483,8 +483,8 @@ def dfa(data, nvals= None):
 	fluctuations = []
 	for n in nvals:
 		# subdivide data into chunks of size n
-		d = data[:total_N % n]
-		d = data.reshape((total_N/n, n))
+		d = data[:total_N-(total_N % n)]
+		d = d.reshape((total_N/n, n))
 		# calculate a "walk" from the data by taking the cumulative sum of subsequences
 		# TODO do we get the same result with less computations when we take the cumulative 
 		# sum only once at the beginning for the whole sequence?
