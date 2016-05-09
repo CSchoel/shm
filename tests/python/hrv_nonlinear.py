@@ -406,7 +406,7 @@ def hurst_rs(data, nvals=None):
 	plt.show()
 	return poly[0]
 
-def corr_dim(data, emb_dim, rvals=None):
+def corr_dim(data, emb_dim, rvals=None, dist=lambda x, y: np.max(np.abs(x - y), axis=1)):
 	"""
 	Calculates the correlation dimension with the Grassberger-Procaccia algorithm
 
@@ -454,7 +454,6 @@ def corr_dim(data, emb_dim, rvals=None):
 	# TODO do this for multiple values of emb_dim?
 	if rvals is None:
 		rvals = np.arange(0.1,0.5,0.01) * np.std(data)
-	dist = lambda x, y: np.max(np.abs(x - y), axis=1)
 	n = len(data)
 	orbit = np.array([data[i:i+emb_dim] for i in range(n - emb_dim + 1)])
 	dists = np.array([dist(orbit, orbit[i]) for i in range(len(orbit))])
