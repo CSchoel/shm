@@ -407,18 +407,48 @@ def hurst_rs(data, nvals=None):
 	return poly[0]
 
 def corr_dim(data, emb_dim, rvals=None):
-	# TODO more verbose description of correlation dimension
 	"""
-	Calculates the correlation dimension with tge Grassberger-Procaccia algorithm
+	Calculates the correlation dimension with the Grassberger-Procaccia algorithm
+
+	Explanation of correlation dimension:
+		The correlation dimension is a characteristic measure that can be used
+		to describe the geometry of chaotic attractors. It is defined using the
+		correlation sum C(r) which is the fraction of pairs of points X_i in the
+		phase space whose distance is smaller than r.
+
+		If the relation between C(r) and r can be described by the power law
+
+		C(r) ~ r^D
+
+		then D is called the correlation dimension of the system.
+
+	Explanation of the algorithm:
+		The Grassberger-Procaccia algorithm calculates C(r) for a range of different
+		r and then fits a straight line into the plot of log(C(r)) versus log(r).
+
+		This version of the algorithm is created for one-dimensional (scalar) time
+		series. Therefore, before calculating C(r), a delay embedding of the time
+		series is performed to yield emb_dim dimensional vectors
+		Y_i = [X_i, X_(i+1), X_(i+2), ... X_(i+embd_dim-1)]. Choosing a higher value
+		for emb_dim allows to reconstruct higher dimensional dynamics and avoids
+		"systematic errors due to corrections to scaling".
+
+	References:
+		[1] P. Grassberger and I. Procaccia, “Characterization of strange attractors,” 
+		    Physical review letters, vol. 50, no. 5, p. 346, 1983.
+		[2] P. Grassberger and I. Procaccia, “Measuring the strangeness of strange 
+		    attractors,” Physica D: Nonlinear Phenomena, vol. 9, no. 1, pp. 189–208, 1983.
+		[3] http://www.scholarpedia.org/article/Grassberger-Procaccia_algorithm
 
 	Args:
 		data (array of float): time series of data points
 		emb_dim (int): embedding dimension
 	Kwargs:
-		rvals (iterable of float): list of values to use for calculating individual C(r) values
+		rvals (iterable of float): list of values for to use for r
+		dist (function (2d-array, 1d-array) -> 1d-array): row-wise difference function
 
 	Returns:
-		slope of the line fittet to log(r) vs log(C(r)) as estimate of correlation dimension
+		correlation dimension as slope of the line fittet to log(r) vs log(C(r))
 	"""
 	# TODO what are good values for r?
 	# TODO do this for multiple values of emb_dim?
