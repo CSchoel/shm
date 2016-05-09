@@ -280,6 +280,9 @@ def rs(data, n):
 	Args:	
 		data (array of float): time series
 		n (float): size of the subseries in which data should be split
+
+	Returns: 
+		float: (R/S)_n
 	"""
 	total_N = len(data)
 	# cut values at the end of data to make the array divisible by n
