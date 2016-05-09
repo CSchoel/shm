@@ -439,12 +439,69 @@ def corr_dim(data, emb_dim, rvals=None, dist=lambda x, y: np.max(np.abs(x - y), 
 
 def dfa(data, nvals= None, overlap=True, order=1):
 	"""
-	Performs a detrended fluctuation analysis on the given data
+	Performs a detrended fluctuation analysis (DFA) on the given data
+
+	Explanation of DFA:
+		Detrended fluctuation analysis, much like the Hurst exponent, is used to find
+		long-term statistical dependencies in time series.
+
+		The idea behind DFA originates from the definition of self-affine processes.
+		A process X is said to be self-affine if the standard deviation of the values
+		within a window of length n changes with the window length factor L in a power
+		law:
+
+		std(X,L * n) = L^H * std(X, n)
+
+		where std(X, k) is the standard deviation of the process X calculated over
+		windows of size k. In this equation, H is called the Hurst parameter, which
+		behaves indeed very similar to the Hurst exponent.
+
+		Like the Hurst exponent, H can be obtained by calculating the standard
+		deviations over all windows of size n with varying n and fitting a straight
+		line to the plot of log(std(X,n)) versus log(n).
+
+		The above equation, however assumes that the process is non-stationary (i.e.
+		that the standard deviation changes over time) and it is highly influenced by
+		local and global trends of the time series.
+
+		To overcome these problems, an estimate alpha of H is calculated by using a 
+		"detrended walk" or "signal profile" instead of the raw time series. This
+		walk is obtained by substracting the mean and then taking the cumulative
+		sum of the time series. The local trends are removed by fitting a polynomial
+		to the values in each window at each size n and substracting the values of
+		this polynomial from the data.
+
+		We then calculate the standard deviation over each "detrended" window and
+		average them over each window, so that we obtain one estimate of the
+		"fluctuation" for each time scale n and can then proceed to obtain the
+		exponent alpha as normal.
+
+		For alpha < 1 the underlying process is stationary and can be modelled as
+		fractional Gaussian noise with H = alpha. This means for alpha = 0.5 we have
+		no correlation or "memory", for 0.5 < alpha < 1 we have a memory with positive
+		correlation and for alpha < 0.5 the correlation is negative.
+
+		For alpha > 1 the underlying process is non-stationary and can be modeled
+		as fractional Brownian motion with H = alpha - 1.
+
+	References:
+		[1] C.-K. Peng, S. V. Buldyrev, S. Havlin, M. Simons, H. E. Stanley, and 
+		    A. L. Goldberger, “Mosaic organization of DNA nucleotides,” Physical 
+		    Review E, vol. 49, no. 2, 1994.
+		[2] R. Hardstone, S.-S. Poil, G. Schiavone, R. Jansen, V. V. Nikulin, 
+		    H. D. Mansvelder, and K. Linkenkaer-Hansen, “Detrended fluctuation 
+		    analysis: A scale-free view on neuronal oscillations,” Frontiers in 
+		    Physiology, vol. 30, 2012.
 
 	Args:
 		data (array of float): time series
 	Kwargs:
 		nvals (iterable of int): subseries sizes at which to calculate fluctuation
+		overlap (boolean): if True, the sequence will be split in windows with 50% 
+		                   overlap, otherwise non-overlapping windows will be used
+		order (int): (polynomial) order of trend to remove
+	Returns:
+		float: the estimate alpha for the Hurst parameter
 	"""
 	total_N = len(data)
 	if nvals is None:
