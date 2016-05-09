@@ -417,7 +417,7 @@ def corr_dim(data, emb_dim, rvals=None, dist=lambda x, y: np.max(np.abs(x - y), 
 		dist (function (2d-array, 1d-array) -> 1d-array): row-wise difference function
 
 	Returns:
-		correlation dimension as slope of the line fittet to log(r) vs log(C(r))
+		correlation dimension as slope of the line fitted to log(r) vs log(C(r))
 	"""
 	# TODO what are good values for r?
 	# TODO do this for multiple values of emb_dim?
