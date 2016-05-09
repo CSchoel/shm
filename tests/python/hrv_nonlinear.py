@@ -376,6 +376,15 @@ def hurst_rs(data, nvals=None):
 		for "typical" values:
 			* binary_n: N/2, N/4, N/8, ...
 
+	References:
+		[1] H. E. Hurst, “The problem of long-term storage in reservoirs,” International 
+		    Association of Scientific Hydrology. Bulletin, vol. 1, no. 3, pp. 13–27, 1956.
+		[2] H. E. Hurst, “A suggested statistical model of some time series which occur in 
+		    nature,” Nature, vol. 180, p. 494, 1957.
+		[3] R. Weron, “Estimating long-range dependence: finite sample properties and confidence 
+		    intervals,” Physica A: Statistical Mechanics and its Applications, vol. 312, no. 1, 
+		    pp. 285–299, 2002.
+
 	Args:
 		data (array of float): time series
 	Kwargs:
