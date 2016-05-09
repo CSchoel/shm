@@ -207,7 +207,6 @@ def test_lyap():
 	plt.show()
 
 def sampen(data, emb_dim=2, tolerance=None, dist="chebychev"):
-	# TODO more verbose description of sample entropy
 	"""
 	Computes the sample entropy of the given data.
 
