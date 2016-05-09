@@ -499,7 +499,7 @@ def dfa(data, nvals= None):
 		f_n = np.sum(flucs) / len(flucs)
 		fluctuations.append(f_n)
 	fluctuations = np.array(fluctuations)
-	poly = np.polyfit(np.log(nvals), np.log(fluctuations))
+	poly = np.polyfit(np.log(nvals), np.log(fluctuations), 1)
 	return poly[0]
 
 def test_lyap2():
