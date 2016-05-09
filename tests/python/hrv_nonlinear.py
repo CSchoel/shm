@@ -437,7 +437,7 @@ def corr_dim(data, emb_dim, rvals=None, dist=lambda x, y: np.max(np.abs(x - y), 
 	plt.show()
 	return poly[0]
 
-def dfa(data, nvals= None):
+def dfa(data, nvals= None, overlap=True):
 	"""
 	Performs a detrended fluctuation analysis on the given data
 
@@ -449,21 +449,24 @@ def dfa(data, nvals= None):
 	total_N = len(data)
 	if nvals is None:
 		nvals = binary_n(total_N, 50)
+	# create the signal profile (cumulative sum of deviations from the mean => "walk")
+	walk = np.cumsum(data - np.mean(data))
 	fluctuations = []
 	for n in nvals:
 		# subdivide data into chunks of size n
-		d = data[:total_N-(total_N % n)]
-		d = d.reshape((total_N/n, n))
-		# calculate a "walk" from the data by taking the cumulative sum of subsequences
-		# TODO do we get the same result with less computations when we take the cumulative 
-		# sum only once at the beginning for the whole sequence?
-		walk = np.cumsum(d, axis=1)
-		x = np.arange(n)
+		if overlap:
+			# step size n/2 instead of n
+			d = np.array([walk[i:i+n] for i in range(0,len(walk)-n,n//2)])
+		else:
+			# non-overlapping windows => we can simply do a reshape
+			d = walk[:total_N-(total_N % n)]
+			d = d.reshape((total_N//n, n))
 		# calculate local trends as polynomes
-		poly = np.array([np.polyfit(x, walk[i], 1) for i in range(len(walk))])
-		trend = np.array([poly[i,0] * x + poly[i,1] for i in range(len(walk))])
-		# calculate variance ("fluctuation") of original walk (walk) around trend
-		flucs = np.sqrt(np.sum((walk - trend) ** 2, axis=1) / n)
+		x = np.arange(n)
+		poly = np.array([np.polyfit(x, d[i], 1) for i in range(len(d))])
+		trend = np.array([poly[i,0] * x + poly[i,1] for i in range(len(d))])
+		# calculate variance ("fluctuation") of walks in d around trend
+		flucs = np.sqrt(np.sum((d - trend) ** 2, axis=1) / n)
 		# calculate mean fluctuation over all subsequences
 		f_n = np.sum(flucs) / len(flucs)
 		fluctuations.append(f_n)
