@@ -437,7 +437,12 @@ def corr_dim(data, emb_dim, rvals=None, dist=lambda x, y: np.max(np.abs(x - y), 
 	plt.show()
 	return poly[0]
 
+# TODO new nvals/rvals generator
+
+# TODO more description for outputs
+
 def dfa(data, nvals= None, overlap=True, order=1):
+	# TODO rewrite with more formulas
 	"""
 	Performs a detrended fluctuation analysis (DFA) on the given data
 
