@@ -99,6 +99,28 @@ def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 		# => update index accordingly
 		indices = np.where(diffs <= r)[0]
 		
+		# find the matrix T_i that satisifies
+		# T_i (orbit'[j] - orbit'[i]) = (orbit'[j+m] - orbit'[i+m])
+		# for all neighbors j where orbit'[i] = [x[i], x[i+m], ... x[i + (matrix_dim-1)*m]]
+
+		# note that T_i has the following form:
+		# 0  1  0  ... 0
+		# 0  0  1  ... 0
+		# ...
+		# a0 a1 a2 ... a(matrix_dim-1)
+
+		# This is because for all rows except the last one the aforementioned equation has
+		# a clear solution since
+		# orbit'[j+m] - orbit'[i+m] = [x[j+m]-x[i+m], x[j+2*m]-x[i+2*m], ... x[j+d_M*m]-x[i+d_M*m]]
+		# and
+		# orbit'[j] - orbit'[i] = [x[j]-x[i], x[j+m]-x[i+m], ... x[j+(d_M-1)*m]-x[i+(d_M-1)*m]]
+		# therefore x[j+k*m] - x[i+k*m] is already contained in orbit'[j] - orbit'[x]
+		# for all k from 1 to matrix_dim-1. Only for k = matrix_dim there is an actual
+		# problem to solve.
+
+		# We can therefore find a = [a0, a1, a2, ... a(matrix_dim-1)] by formulating a
+		# linear least squares problem (mat_X * a = vec_beta) as follows.
+
 		# build matrix X for linear least squares (d_M = matrix_dim)
 		# x_j1 - x_i   x_j1+m - x_i+m   ...   x_j1+(d_M-1)m - x_i+(d_M-1)m
 		# x_j2 - x_i   x_j2+m - x_i+m   ...   x_j2+(d_M-1)m - x_i+(d_M-1)m
