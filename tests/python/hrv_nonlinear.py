@@ -445,6 +445,16 @@ def dfa(data, nvals= None, overlap=True, order=1):
 	"""
 	Performs a detrended fluctuation analysis (DFA) on the given data
 
+	Recommendations for parameter settings by Hardstone et al.:
+		* nvals should be equally spaced on a logarithmic scale so that each window
+		  scale hase the same weight
+		* min(nvals) < 4 does not make much sense as fitting a polynomial (even if it
+		  is only of order 1) to 3 or less data points is very prone.
+		* max(nvals) > len(data) / 10 does not make much sense as we will then have
+		  less than 10 windows to calculate the average fluctuation 
+		* use overlap=True to obtain more windows and therefore better statistics
+		  (at an increased computational cost)
+
 	Explanation of DFA:
 		Detrended fluctuation analysis, much like the Hurst exponent, is used to find
 		long-term statistical dependencies in time series.
