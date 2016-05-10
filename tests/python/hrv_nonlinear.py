@@ -2,8 +2,75 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+def delay_embedding(data, emb_dim, lag=1):
+	"""
+	Perform a time-delay embedding of a time series
 
-def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
+	Args:
+		emb_dim (int): the embedding dimension
+	Kwargs:
+		lag (int): the lag between elements in the embedded vectors
+
+	Returns:
+		emb_dim x m array: matrix of embedded vectors of the form 
+		                   [data[i], data[i+lag], data[i+2*lag], ... data[i+(emb_dim-1)*lag]]
+		                   for i in 0 to m-1 (m = len(data)-(emb_dim-1)*lag)
+	"""
+	m = len(data) - (emb_dim-1)*lag
+	indices = np.repeat([np.arange(emb_dim)*lag], m, axis=0)
+	indices += np.arange(m).reshape((m,1))
+	return data[indices]
+
+def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1):
+	"""
+	Estimates the largest lyapunov exponent using the algorithm of Rosenstein et al.
+
+	Args:
+		data (iterable of float): (one-dimensional) time series
+	Kwargs:
+		emb_dim (int): embedding dimension for delay embedding
+		lag (float): lag for delay embedding
+		min_tsep (float): minimal temporal separation between two "neighbors"
+		tau (float): step size between data points in the time series in seconds
+	Returns:
+		float: an estimate of the largest lyapunov exponent (a positive exponent is
+		       a strong indicator for chaos)
+	"""
+	n = len(data)
+	if lag is None or min_tsep is None:
+		# calculate the mean period for min_tsep
+		f = np.fft.rfft(data, n*2-1)
+		mf = np.fft.rfftfreq(n*2-1) * np.abs(f)
+		mf = np.mean(mf[1:]) / np.sum(np.abs(f[1:]))
+		min_tsep = int(np.ceil(1.0/mf))
+		# calculate the autocorrelation for lag
+		# note: the Wiener–Khinchin theorem states that the spectral decomposition of the
+		# autocorrelation function of a process is the power spectrum of that process
+		# => we can use fft to calculate the autocorrelation
+		acorr = np.fft.irfft(f * np.conj(f))
+		acorr = np.roll(acorr, n-1)
+		eps = acorr[n-1] * (1 - 1.0 / np.e)
+		min_tsep = 1
+		for i in range(len(n))
+			if acorr[n-1+i] < eps or acorr[n-1-i] < eps:
+				min_tsep = i
+				break
+	def mask(i):
+		msk = np.ones(n)
+		msk[max(0,i-min_tsep):i+min_tsep] = float("inf")
+		# also mask last positions, since we cannot measure the divergence there
+		msk[-5:] = float("inf")
+	orbit = delay_embedding(data, emb_dim, lag)
+	nb_idx = [np.argmin(rowwise_euler(orbit,orbit[i]) * mask(i)) for i in range(n)]
+	def divergence_exp(i, j):
+		k = min(n-i, n-j)
+		x = np.arange(k)
+		y = rowwise_euler(orbit[i:i+k],orbit[j:j+k])
+		p = np.polyfit(np.log(x), np.log(y), 1)
+		return p[0]
+	return np.mean([divergence_exp(i,nb_idx[i]) for i in range(len(orbit))])
+
+def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 	"""
 	Estimates the Lyapunov exponents for the given data using the algorithm of Eckmann et al..
 
@@ -54,7 +121,6 @@ def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 		[1] J. P. Eckmann, S. O. Kamphorst, D. Ruelle, and S. Ciliberto, 
 		    “Liapunov exponents from time series,” Physical Review A, 
 		    vol. 34, no. 6, pp. 4971–4979, 1986.
-
 
 	Args:
 		data (iterable): list/array of (scalar) data points
@@ -657,7 +723,7 @@ def test_lyap():
 			x = logistic(x)
 			maps.append(x)
 			full_data.append(x)
-		le = lyap(np.array(full_data), emb_dim=6, matrix_dim=2)
+		le = lyap_e(np.array(full_data), emb_dim=6, matrix_dim=2)
 		#print(full_data)
 		#print(le)
 		lambdas_est.append(np.max(le))
@@ -676,7 +742,7 @@ def test_lyap2():
 	data = np.random.random((100,)) * 10
 	data = np.concatenate([np.arange(100)] * 3)
 	# TODO random numbers should give positive exponents, what is happening here?
-	l = lyap(np.array(data), emb_dim=7, matrix_dim=3)
+	l = lyap_e(np.array(data), emb_dim=7, matrix_dim=3)
 	print(l)
 
 def test_hurst():
@@ -709,6 +775,10 @@ def test_logarithmic_n():
 	x = np.log(list(x))
 	plt.plot(x,np.arange(len(x)))
 	plt.show()
+
+def test_delay_embed():
+	data = np.arange(57)
+	print(delay_embedding(data,4,lag=2))
 
 if __name__ == "__main__":
 	test_dfa()
