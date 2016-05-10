@@ -423,7 +423,10 @@ def hurst_rs(data, nvals=None):
 	plt.show()
 	return poly[0]
 
-def corr_dim(data, emb_dim, rvals=None, dist=lambda x, y: np.max(np.abs(x - y), axis=1)):
+rowwise_chebychev = lambda x, y: np.max(np.abs(x - y), axis=1)
+rowwise_euler = lambda x, y: np.sqrt(np.sum((x - y)**2, axis=1))
+
+def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler):
 	"""
 	Calculates the correlation dimension with the Grassberger-Procaccia algorithm
 
