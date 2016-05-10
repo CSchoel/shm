@@ -442,7 +442,6 @@ def corr_dim(data, emb_dim, rvals=None, dist=lambda x, y: np.max(np.abs(x - y), 
 # TODO more description for outputs
 
 def dfa(data, nvals= None, overlap=True, order=1):
-	# TODO rewrite with more formulas
 	"""
 	Performs a detrended fluctuation analysis (DFA) on the given data
 
@@ -461,25 +460,33 @@ def dfa(data, nvals= None, overlap=True, order=1):
 		windows of size k. In this equation, H is called the Hurst parameter, which
 		behaves indeed very similar to the Hurst exponent.
 
-		Like the Hurst exponent, H can be obtained by calculating the standard
-		deviations over all windows of size n with varying n and fitting a straight
-		line to the plot of log(std(X,n)) versus log(n).
+		Like the Hurst exponent, H can be obtained from a time series by calculating
+		std(X,n) for different n and fitting a straight line to the plot of log(std(X,n)) 
+		versus log(n).
 
-		The above equation, however assumes that the process is non-stationary (i.e.
-		that the standard deviation changes over time) and it is highly influenced by
-		local and global trends of the time series.
+		To calculate a single std(X,n), the time series is split into windows of
+		equal length n, so that the ith window of this size has the form
+
+		W_(n,i) = [x_i, x_(i+1), x_(i+2), ... x_(i+n-1)]
+
+		The value std(X,n) is then obtained by calculating std(W_(n,i)) for each i
+		and averaging the obtained values over i.
+
+		The aforementioned definition of self-affinity, however, assumes that the 
+		process is  non-stationary (i.e. that the standard deviation changes over 
+		time) and it is highly influenced by local and global trends of the time 
+		series.
 
 		To overcome these problems, an estimate alpha of H is calculated by using a 
-		"detrended walk" or "signal profile" instead of the raw time series. This
-		walk is obtained by substracting the mean and then taking the cumulative
-		sum of the time series. The local trends are removed by fitting a polynomial
-		to the values in each window at each size n and substracting the values of
-		this polynomial from the data.
+		"walk" or "signal profile" instead of the raw time series. This walk is 
+		obtained by substracting the mean and then taking the cumulative sum of the 
+		original time series. The local trends are removed for each window separately 
+		by fitting a polynomial p_(n,i) to the window W_(n,i) and then calculating 
+		W'_(n,i) = W_(n,i) - p_(n,i) (element-wise substraction).
 
-		We then calculate the standard deviation over each "detrended" window and
-		average them over each window, so that we obtain one estimate of the
-		"fluctuation" for each time scale n and can then proceed to obtain the
-		exponent alpha as normal.
+		We then calculate std(X,n) as before only using the "detrended" window 
+		W'_(n,i) instead of W_(n,i). Instead of H we obtain the parameter alpha
+		from the line fitting.
 
 		For alpha < 1 the underlying process is stationary and can be modelled as
 		fractional Gaussian noise with H = alpha. This means for alpha = 0.5 we have
