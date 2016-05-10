@@ -271,6 +271,53 @@ def binary_n(total_N, min_n=50):
 	max_exp = int(np.floor(max_exp))
 	return [int(np.floor(1.0*total_N/(2**i))) for i in range(1, max_exp+1)]
 
+def logarithmic_n(min_n, max_n, factor):
+	"""
+	Creates a list of values by successively multiplying a minimum value min_n by
+	a factor > 1 until a maximum value max_n is reached.
+
+	Non-integer results are rounded down.
+
+	Args:
+		min_n (float): minimum value (must be < max_n)
+		max_n (float): maximum value (must be > min_n)
+		factor (float): factor used to increase min_n (must be > 1)
+
+	Returns:
+		list of integers: min_n, min_n * factor, min_n * factor^2, ... min_n * factor^i < max_n
+		                  without duplicates
+	"""
+	assert max_n > min_n
+	assert factor > 1
+	# stop condition: min * f^x = max
+	# => f^x = max/min
+	# => x = log(max/min) / log(f)
+	max_i = int(np.floor(np.log(1.0 * max_n / min_n) / np.log(factor)))
+	ns = [min_n]
+	for i in range(max_i+1):
+		n = int(np.floor(min_n * (factor ** i)))
+		if n > ns[-1]:
+			ns.append(n)
+	return ns
+
+def logarithmic_r(min_n, max_n, factor):
+	"""
+	Creates a list of values by successively multiplying a minimum value min_n by
+	a factor > 1 until a maximum value max_n is reached.
+
+	Args:
+		min_n (float): minimum value (must be < max_n)
+		max_n (float): maximum value (must be > min_n)
+		factor (float): factor used to increase min_n (must be > 1)
+
+	Returns:
+		list of floats: min_n, min_n * factor, min_n * factor^2, ... min_n * factor^i < max_n
+	"""
+	assert max_n > min_n
+	assert factor > 1
+	max_i = int(np.floor(np.log(1.0 * max_n / min_n) / np.log(factor)))
+	return (int(np.floor(min_n * (factor ** i))) for i in range(max_i+1))
+
 def rs(data, n):
 	"""
 	Calculates an individual R/S value in the rescaled range approach for a given n.
@@ -344,6 +391,7 @@ def hurst_rs(data, nvals=None):
 		therefore leaves the choice to the user. The module provides some utility functions
 		for "typical" values:
 			* binary_n: N/2, N/4, N/8, ...
+			* logarithmic_n: min_n, min_n * f, min_n * f^2, ...
 
 	References:
 		[1] H. E. Hurst, “The problem of long-term storage in reservoirs,” International 
@@ -357,14 +405,14 @@ def hurst_rs(data, nvals=None):
 	Args:
 		data (array of float): time series
 	Kwargs:
-		nvals (iterable of int): sizes of subseries to use (default: binary_n(len(data), 50))
+		nvals (iterable of int): sizes of subseries to use (default: logarithmic_n(4, 0.1*len(data), 1.2))
 
 	Returns:
 		float: estimated Hurst exponent using (R/S)
 	"""
 	total_N = len(data)
 	if nvals is None:
-		nvals = binary_n(total_N, 50)
+		nvals = logarithmic_n(4, 0.1*total_N, 1.2)
 	# get individual values for (R/S)_n
 	rsvals = [rs(data, n) for n in nvals]
 	# fit a line to the logarithm of the obtained (R/S)_n
@@ -413,7 +461,8 @@ def corr_dim(data, emb_dim, rvals=None, dist=lambda x, y: np.max(np.abs(x - y), 
 		data (array of float): time series of data points
 		emb_dim (int): embedding dimension
 	Kwargs:
-		rvals (iterable of float): list of values for to use for r
+		rvals (iterable of float): list of values for to use for r 
+		                           (default: logarithmic_r(0.1 * std, 0.5 * std, 1.03))
 		dist (function (2d-array, 1d-array) -> 1d-array): row-wise difference function
 
 	Returns:
@@ -422,7 +471,8 @@ def corr_dim(data, emb_dim, rvals=None, dist=lambda x, y: np.max(np.abs(x - y), 
 	# TODO what are good values for r?
 	# TODO do this for multiple values of emb_dim?
 	if rvals is None:
-		rvals = np.arange(0.1,0.5,0.01) * np.std(data)
+		sd = np.std(data)
+		rvals = logarithmic_r(0.1 * std, 0.5 * std, 1.03)
 	n = len(data)
 	orbit = np.array([data[i:i+emb_dim] for i in range(n - emb_dim + 1)])
 	dists = np.array([dist(orbit, orbit[i]) for i in range(len(orbit))])
@@ -436,8 +486,6 @@ def corr_dim(data, emb_dim, rvals=None, dist=lambda x, y: np.max(np.abs(x - y), 
 	plt.plot(np.log(rvals), np.log(csums))
 	plt.show()
 	return poly[0]
-
-# TODO new nvals/rvals generator
 
 # TODO more description for outputs
 
@@ -519,6 +567,7 @@ def dfa(data, nvals= None, overlap=True, order=1):
 		data (array of float): time series
 	Kwargs:
 		nvals (iterable of int): subseries sizes at which to calculate fluctuation
+		                         (default: logarithmic_n(4, 0.1*len(data), 1.2))
 		overlap (boolean): if True, the windows W_(n,i) will have a 50% overlap, 
 		                   otherwise non-overlapping windows will be used
 		order (int): (polynomial) order of trend to remove
@@ -527,7 +576,7 @@ def dfa(data, nvals= None, overlap=True, order=1):
 	"""
 	total_N = len(data)
 	if nvals is None:
-		nvals = binary_n(total_N, 50)
+		nvals = logarithmic_n(4, 0.1*total_N, 1.2)
 	# create the signal profile (cumulative sum of deviations from the mean => "walk")
 	walk = np.cumsum(data - np.mean(data))
 	fluctuations = []
@@ -613,6 +662,14 @@ def test_dfa():
 	n = 1000
 	data = np.arange(n)
 	print(dfa(data))
+
+def test_logarithmic_n():
+	print(binary_n(1000))
+	print(logarithmic_n(4,100,1.1))
+	x = logarithmic_n(4,100,1.1)
+	x = np.log(list(x))
+	plt.plot(x,np.arange(len(x)))
+	plt.show()
 
 if __name__ == "__main__":
 	test_dfa()
