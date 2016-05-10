@@ -662,8 +662,12 @@ def test_corr():
 	print(corr_dim(data, 4))
 
 def test_dfa():
-	n = 1000
+	n = 10000
 	data = np.arange(n)
+	data = np.random.randn(n)
+	data = np.cumsum(data)
+	plt.plot(data)
+	plt.show()
 	print(dfa(data))
 
 def test_logarithmic_n():
