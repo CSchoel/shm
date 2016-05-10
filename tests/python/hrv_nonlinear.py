@@ -349,8 +349,31 @@ def rs(data, n):
 	# return mean of r/s along subsequence index
 	return np.mean(r/s)
 
+def plot_reg(xvals, yvals, poly, x_label="x", y_label="y", data_label="data", reg_label="regression line"):
+	"""
+	Helper function to plot trend lines for line-fitting approaches. This function will
+	show a plot through plt.show() and close it after the window has been closed by the user.
 
-def hurst_rs(data, nvals=None):
+	Args:
+		xvals (list/array of float): list of x-values
+		yvals (list/array of float): list of y-values
+		poly (list/array of float): polynomial parameters as accepted by np.polyval
+	Kwargs:
+		x_label (str): label of the x-axis
+		y_label (str): label of the y-axis 
+		data_label (str): label of the data
+		reg_label(str): label of the regression line
+	"""
+	plt.plot(xvals, yvals, "bo", label=data_label)
+	if not (poly is None):
+		plt.plot(xvals, np.polyval(poly, xvals), "r-", label=reg_label)
+	plt.xlabel(x_label)
+	plt.ylabel(y_label)
+	plt.legend(loc="best")
+	plt.show()
+	plt.close()
+
+def hurst_rs(data, nvals=None, debug_plot=False):
 	"""
 	Calculates the Hurst exponent by a standard rescaled range (R/S) approach.
 
@@ -406,6 +429,7 @@ def hurst_rs(data, nvals=None):
 		data (array of float): time series
 	Kwargs:
 		nvals (iterable of int): sizes of subseries to use (default: logarithmic_n(4, 0.1*len(data), 1.2))
+		debug_plot (boolean): if True, a simple plot of the final line-fitting step will be shown
 
 	Returns:
 		float: estimated Hurst exponent using (R/S)
@@ -417,16 +441,15 @@ def hurst_rs(data, nvals=None):
 	rsvals = [rs(data, n) for n in nvals]
 	# fit a line to the logarithm of the obtained (R/S)_n
 	poly = np.polyfit(np.log(nvals), np.log(rsvals), 1)
+	if debug_plot:
+		plot_reg(np.log(nvals), np.log(rsvals), poly, "log(n)", "log((R/S)_n)")
 	# return line slope
-	# TODO remove
-	plt.plot(np.log(nvals), np.log(rsvals))
-	plt.show()
 	return poly[0]
 
 rowwise_chebychev = lambda x, y: np.max(np.abs(x - y), axis=1)
 rowwise_euler = lambda x, y: np.sqrt(np.sum((x - y)**2, axis=1))
 
-def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler):
+def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler, debug_plot=False):
 	"""
 	Calculates the correlation dimension with the Grassberger-Procaccia algorithm
 
@@ -467,6 +490,8 @@ def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler):
 		rvals (iterable of float): list of values for to use for r 
 		                           (default: logarithmic_r(0.1 * std, 0.5 * std, 1.03))
 		dist (function (2d-array, 1d-array) -> 1d-array): row-wise difference function
+		debug_plot (boolean): if True, a simple plot of the final line-fitting step will
+		                      be shown
 
 	Returns:
 		correlation dimension as slope of the line fitted to log(r) vs log(C(r))
@@ -485,14 +510,13 @@ def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler):
 		csums.append(s)
 	csums = np.array(csums)
 	poly = np.polyfit(np.log(rvals), np.log(csums), 1)
-	# TODO remove
-	plt.plot(np.log(rvals), np.log(csums))
-	plt.show()
+	if debug_plot:
+		plot_reg(np.log(rvals), np.log(csums), poly, "log(r)", "log(C(r))")
 	return poly[0]
 
 # TODO more description for outputs
 
-def dfa(data, nvals= None, overlap=True, order=1):
+def dfa(data, nvals= None, overlap=True, order=1, debug_plot=True):
 	"""
 	Performs a detrended fluctuation analysis (DFA) on the given data
 
@@ -574,6 +598,8 @@ def dfa(data, nvals= None, overlap=True, order=1):
 		overlap (boolean): if True, the windows W_(n,i) will have a 50% overlap, 
 		                   otherwise non-overlapping windows will be used
 		order (int): (polynomial) order of trend to remove
+		debug_plot (boolean): if True, a simple plot of the final line-fitting step will
+		                      be shown
 	Returns:
 		float: the estimate alpha for the Hurst parameter
 	"""
@@ -603,6 +629,8 @@ def dfa(data, nvals= None, overlap=True, order=1):
 		fluctuations.append(f_n)
 	fluctuations = np.array(fluctuations)
 	poly = np.polyfit(np.log(nvals), np.log(fluctuations), 1)
+	if debug_plot:
+		plot_reg(np.log(nvals), np.log(fluctuations), poly, "log(n)", "std(X,n)")
 	return poly[0]
 
 def test_lyap():
@@ -654,7 +682,7 @@ def test_hurst():
 	#data = np.cumsum(np.random.randn(n)) # brownian motion, should give result 0.5
 	#data = np.random.randn(n) # should give result 0
 	data = np.sin(np.arange(n,dtype=float) / (n-1) * np.pi * 100)
-	print(hurst_rs(data, nvals = binary_n(len(data), 50)))
+	print(hurst_rs(data, debug_plot=True))
 
 def test_corr():
 	n = 1000
