@@ -509,8 +509,8 @@ def dfa(data, nvals= None, overlap=True, order=1):
 		data (array of float): time series
 	Kwargs:
 		nvals (iterable of int): subseries sizes at which to calculate fluctuation
-		overlap (boolean): if True, the sequence will be split in windows with 50% 
-		                   overlap, otherwise non-overlapping windows will be used
+		overlap (boolean): if True, the windows W_(n,i) will have a 50% overlap, 
+		                   otherwise non-overlapping windows will be used
 		order (int): (polynomial) order of trend to remove
 	Returns:
 		float: the estimate alpha for the Hurst parameter
