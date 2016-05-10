@@ -66,7 +66,8 @@ def lyap(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 		tau (float): step size of the data in seconds (normalization scaling factor for exponents)
 
 	Returns:
-		float array: array of matrix_dim Lyapunov exponents
+		float array: array of matrix_dim Lyapunov exponents (positive exponents are indicators
+		             for chaos)
 	"""
 	n = len(data)
 	if (emb_dim - 1) % (matrix_dim - 1) != 0:
@@ -432,7 +433,9 @@ def hurst_rs(data, nvals=None, debug_plot=False):
 		debug_plot (boolean): if True, a simple plot of the final line-fitting step will be shown
 
 	Returns:
-		float: estimated Hurst exponent using (R/S)
+		float: estimated Hurst exponent K using a rescaled range approach (if K = 0.5 there are
+		       no long-range correlations in the data, if K < 0.5 there are negative long-range
+		       correlations, if K > 0.5 there are positive long-range correlations)
 	"""
 	total_N = len(data)
 	if nvals is None:
@@ -513,8 +516,6 @@ def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler, debug_plot=False):
 	if debug_plot:
 		plot_reg(np.log(rvals), np.log(csums), poly, "log(r)", "log(C(r))")
 	return poly[0]
-
-# TODO more description for outputs
 
 def dfa(data, nvals= None, overlap=True, order=1, debug_plot=True):
 	"""
@@ -601,7 +602,10 @@ def dfa(data, nvals= None, overlap=True, order=1, debug_plot=True):
 		debug_plot (boolean): if True, a simple plot of the final line-fitting step will
 		                      be shown
 	Returns:
-		float: the estimate alpha for the Hurst parameter
+		float: the estimate alpha for the Hurst parameter (alpha < 1: stationary
+		       process similar to fractional Gaussian noise with H = alpha, 
+		       alpha > 1: non-stationary process similar to fractional brownian
+		       motion with H = alpha - 1)
 	"""
 	total_N = len(data)
 	if nvals is None:
