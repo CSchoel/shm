@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import matplotlib.pyplot as plt
+import warnings
 
 def delay_embedding(data, emb_dim, lag=1):
 	"""
@@ -21,9 +22,12 @@ def delay_embedding(data, emb_dim, lag=1):
 	indices += np.arange(m).reshape((m,1))
 	return data[indices]
 
-def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1):
+def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, min_trajectory_len=10):
 	"""
 	Estimates the largest lyapunov exponent using the algorithm of Rosenstein et al.
+
+	Explanation of Lyapunov exponents:
+		See lyap_e.
 
 	Args:
 		data (iterable of float): (one-dimensional) time series
@@ -32,6 +36,10 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1):
 		lag (float): lag for delay embedding
 		min_tsep (float): minimal temporal separation between two "neighbors"
 		tau (float): step size between data points in the time series in seconds
+		min_vectors (int): if lag=None, the search for a suitable lag will be stopped
+		                   when the number of resulting vectors drops below min_vectors
+		min_trajectory_len (int): do not consider points as neighbors that can only be
+		                          followed for less than min_trajectory_len steps
 	Returns:
 		float: an estimate of the largest lyapunov exponent (a positive exponent is
 		       a strong indicator for chaos)
@@ -50,22 +58,27 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1):
 		acorr = np.fft.irfft(f * np.conj(f))
 		acorr = np.roll(acorr, n-1)
 		eps = acorr[n-1] * (1 - 1.0 / np.e)
-		min_tsep = 1
-		for i in range(len(n))
-			if acorr[n-1+i] < eps or acorr[n-1-i] < eps:
-				min_tsep = i
+		lag = 1
+		for i in range(n):
+			if acorr[n-1+i] < eps or acorr[n-1-i] < eps or 1.0 * n / emb_dim * i < min_vectors:
+				lag = i
 				break
+		if 1.0 * n / emb_dim * lag < min_vectors:
+			warnings.warn("autocorrelation declined too slowly to find suitable lag")
 	def mask(i):
 		msk = np.ones(n)
 		msk[max(0,i-min_tsep):i+min_tsep] = float("inf")
 		# also mask last positions, since we cannot measure the divergence there
-		msk[-5:] = float("inf")
+		msk[-min_trajectory_len:] = float("inf")
+		return msk
 	orbit = delay_embedding(data, emb_dim, lag)
 	nb_idx = [np.argmin(rowwise_euler(orbit,orbit[i]) * mask(i)) for i in range(n)]
 	def divergence_exp(i, j):
 		k = min(n-i, n-j)
 		x = np.arange(k)
 		y = rowwise_euler(orbit[i:i+k],orbit[j:j+k])
+		if np.any(y == 0):
+			return -float("inf")
 		p = np.polyfit(np.log(x), np.log(y), 1)
 		return p[0]
 	return np.mean([divergence_exp(i,nb_idx[i]) for i in range(len(orbit))])
