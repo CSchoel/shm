@@ -720,6 +720,7 @@ def test_lyap():
 	rvalues = np.arange(2, 4, 0.01)
 	lambdas = []
 	lambdas_est = []
+	lambdas_est2 = []
 	maps = []
 	logistic = lambda x : r * x * (1 - x)
 	for r in rvalues:
@@ -740,9 +741,12 @@ def test_lyap():
 		#print(full_data)
 		#print(le)
 		lambdas_est.append(np.max(le))
+		lambdas_est2.append(lyap_r(np.array(full_data), emb_dim=6))
 	#print(lambdas_est)
+	print(lambdas_est2)
 	plt.plot(rvalues, lambdas, "b-")
 	plt.plot(rvalues, lambdas_est, color="#00AAAA")
+	plt.plot(rvalues, lambdas_est2, color="#AA00AA")
 	plt.plot(rvalues, np.zeros(len(rvalues)), "g--")
 	xvals = np.repeat(rvalues, 20)
 	plt.plot(xvals, maps, "ro", alpha=0.1)
