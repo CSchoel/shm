@@ -81,8 +81,11 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		indices = (range(i,i+trajectory_len), range(j,j+trajectory_len))
 		div_traj += dists[indices]
 	div_traj /= ntraj
-	poly = np.polyfit(np.log(np.arange(len(div_traj))), np.log(div_traj), 1)
-	return poly[0]
+	if np.any(div_traj == 0):
+		return -np.inf
+	else:
+		poly = np.polyfit(np.log(np.arange(trajectory_len)+1), np.log(div_traj), 1)
+		return poly[0]
 
 def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 	"""
