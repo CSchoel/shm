@@ -80,9 +80,6 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 	for i,j in zip(range(ntraj), nb_idx):
 		indices = (range(i,i+trajectory_len), range(j,j+trajectory_len))
 		div_traj += dists[indices]
-		if np.any(dists[indices] == float("inf")):
-			print(dists[indices])
-			print(i,j)
 	div_traj /= ntraj
 	poly = np.polyfit(np.log(np.arange(len(div_traj))), np.log(div_traj), 1)
 	return poly[0]
