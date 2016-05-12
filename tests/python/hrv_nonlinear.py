@@ -22,7 +22,7 @@ def delay_embedding(data, emb_dim, lag=1):
 	indices += np.arange(m).reshape((m,1))
 	return data[indices]
 
-def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, min_trajectory_len=10):
+def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, trajectory_len=20):
 	"""
 	Estimates the largest lyapunov exponent using the algorithm of Rosenstein et al.
 
@@ -69,23 +69,23 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, min
 				break
 		if 1.0 * n / emb_dim * lag < min_vectors:
 			warnings.warn("autocorrelation declined too slowly to find suitable lag")
-	def mask(i):
-		msk = np.ones(n)
-		msk[max(0,i-min_tsep):i+min_tsep] = float("inf")
-		# also mask last positions, since we cannot measure the divergence there
-		msk[-min_trajectory_len:] = float("inf")
-		return msk
 	orbit = delay_embedding(data, emb_dim, lag)
-	nb_idx = [np.argmin(rowwise_euler(orbit,orbit[i]) * mask(i)) for i in range(n)]
-	def divergence_exp(i, j):
-		k = min(n-i, n-j)
-		x = np.arange(k)
-		y = rowwise_euler(orbit[i:i+k],orbit[j:j+k])
-		if np.any(y == 0):
-			return -float("inf")
-		p = np.polyfit(np.log(x), np.log(y), 1)
-		return p[0]
-	return np.mean([divergence_exp(i,nb_idx[i]) for i in range(len(orbit))])
+	dists = np.array([rowwise_euler(orbit, orbit[i]) for i in range(n)])
+	for i in range(n):
+		dists[i,max(0,i-min_tsep):i+min_tsep] = float("inf")
+	dists[:,-trajectory_len:] = float("inf")
+	nb_idx = np.argmin(dists, axis=1)
+	ntraj = n-trajectory_len
+	div_traj = np.zeros(trajectory_len, dtype=float)
+	for i,j in zip(range(ntraj), nb_idx):
+		indices = (range(i,i+trajectory_len), range(j,j+trajectory_len))
+		div_traj += dists[indices]
+		if np.any(dists[indices] == float("inf")):
+			print(dists[indices])
+			print(i,j)
+	div_traj /= ntraj
+	poly = np.polyfit(np.log(np.arange(len(div_traj))), np.log(div_traj), 1)
+	return poly[0]
 
 def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 	"""
