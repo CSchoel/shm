@@ -54,7 +54,7 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		# TODO magic number
 		if min_tsep > 0.25 * n:
 			warnings.warn("signal has very low mean frequency, setting min_tsep = 0.25 * len(data)")
-			min_tsep = 0.25 * n
+			min_tsep = int(0.25 * n)
 		# calculate the autocorrelation for lag
 		# note: the Wiener–Khinchin theorem states that the spectral decomposition of the
 		# autocorrelation function of a process is the power spectrum of that process
