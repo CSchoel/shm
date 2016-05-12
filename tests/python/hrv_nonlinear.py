@@ -70,12 +70,12 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		if 1.0 * n / emb_dim * lag < min_vectors:
 			warnings.warn("autocorrelation declined too slowly to find suitable lag")
 	orbit = delay_embedding(data, emb_dim, lag)
-	dists = np.array([rowwise_euler(orbit, orbit[i]) for i in range(n)])
-	for i in range(n):
-		dists[i,max(0,i-min_tsep):i+min_tsep] = float("inf")
-	dists[:,-trajectory_len:] = float("inf")
-	nb_idx = np.argmin(dists, axis=1)
-	ntraj = n-trajectory_len
+	m = len(orbit)
+	dists = np.array([rowwise_euler(orbit, orbit[i]) for i in range(m)])
+	for i in range(m):
+		dists[i,max(0,i-min_tsep):i+min_tsep+1] = float("inf")
+	nb_idx = np.argmin(dists[:,:-trajectory_len+1], axis=1)
+	ntraj = m-trajectory_len
 	div_traj = np.zeros(trajectory_len, dtype=float)
 	for i,j in zip(range(ntraj), nb_idx):
 		indices = (range(i,i+trajectory_len), range(j,j+trajectory_len))
