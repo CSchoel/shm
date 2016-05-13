@@ -98,6 +98,11 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		below 1 - 1/e times its original (maximal) value. This procedure is used by default
 		if the user sets lag = None.
 
+	References:
+		[1] M. T. Rosenstein, J. J. Collins, and C. J. De Luca, “A practical method for 
+		    calculating largest Lyapunov exponents from small data sets,” Physica D: Nonlinear 
+		    Phenomena, vol. 65, no. 1, pp. 117–134, 1993.
+
 	Args:
 		data (iterable of float): (one-dimensional) time series
 	Kwargs:
