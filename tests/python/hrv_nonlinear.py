@@ -22,7 +22,7 @@ def delay_embedding(data, emb_dim, lag=1):
 	indices += np.arange(m).reshape((m,1))
 	return data[indices]
 
-def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, trajectory_len=20):
+def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, trajectory_len=20, debug_plot=False):
 	"""
 	Estimates the largest lyapunov exponent using the algorithm of Rosenstein et al.
 
@@ -55,7 +55,6 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		if min_tsep > max_tsep_factor * n:
 			min_tsep = int(max_tsep_factor * n)
 			warnings.warn("signal has very low mean frequency, setting min_tsep = %d" % min_tsep)
-			
 		# calculate the autocorrelation for lag
 		# note: the Wiener–Khinchin theorem states that the spectral decomposition of the
 		# autocorrelation function of a process is the power spectrum of that process
@@ -83,10 +82,12 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		div_traj += dists[indices]
 	div_traj /= ntraj
 	if np.any(div_traj == 0):
-		return -np.inf
+		poly = [np.inf, 0]
 	else:
 		poly = np.polyfit(np.log(np.arange(trajectory_len)+1), np.log(div_traj), 1)
-		return poly[0]
+	if debug_plot:
+		plot_reg(np.log(np.arange(trajectory_len)+1), np.log(div_traj), poly, "log(i)", "log(d(i))")
+	return poly[0]
 
 def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 	"""
