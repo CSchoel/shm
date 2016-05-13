@@ -54,7 +54,7 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		min_tsep = int(np.ceil(1.0/mf))
 		if min_tsep > max_tsep_factor * n:
 			min_tsep = int(max_tsep_factor * n)
-			warnings.warn("signal has very low mean frequency, setting min_tsep = %d" % min_tsep)
+			warnings.warn("signal has very low mean frequency, setting min_tsep = %d" % min_tsep, RuntimeWarning)
 		# calculate the lag as point where the autocorrelation drops to (1 - 1/e) times its
 		# maximum value
 		# note: the Wiener–Khinchin theorem states that the spectral decomposition of the
@@ -69,7 +69,7 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 				lag = i
 				break
 		if 1.0 * n / emb_dim * lag < min_vectors:
-			warnings.warn("autocorrelation declined too slowly to find suitable lag")
+			warnings.warn("autocorrelation declined too slowly to find suitable lag", RuntimeWarning)
 	# delay embedding
 	orbit = delay_embedding(data, emb_dim, lag)
 	m = len(orbit)
