@@ -45,16 +45,17 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		       a strong indicator for chaos)
 	"""
 	n = len(data)
+	max_tsep_factor = 0.25
 	if lag is None or min_tsep is None:
 		# calculate the mean period for min_tsep
 		f = np.fft.rfft(data, n*2-1)
 		mf = np.fft.rfftfreq(n*2-1) * np.abs(f)
 		mf = np.mean(mf[1:]) / np.sum(np.abs(f[1:]))
 		min_tsep = int(np.ceil(1.0/mf))
-		# TODO magic number
-		if min_tsep > 0.25 * n:
-			warnings.warn("signal has very low mean frequency, setting min_tsep = 0.25 * len(data)")
-			min_tsep = int(0.25 * n)
+		if min_tsep > max_tsep_factor * n:
+			min_tsep = int(max_tsep_factor * n)
+			warnings.warn("signal has very low mean frequency, setting min_tsep = %d" % min_tsep)
+			
 		# calculate the autocorrelation for lag
 		# note: the Wiener–Khinchin theorem states that the spectral decomposition of the
 		# autocorrelation function of a process is the power spectrum of that process
