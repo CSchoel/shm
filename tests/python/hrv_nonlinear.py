@@ -29,17 +29,58 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 	Explanation of Lyapunov exponents:
 		See lyap_e.
 
+	Explanation of the algorithm:
+		The algorithm of Rosenstein et al. is only able to recover the largest lyapunov
+		exponent, but behaves rather robust to parameter choices.
+
+		The idea for the algorithm relates closely to the definition of lyapunov exponents.
+		First, the dynamics of the data are reconstructed using a delay embedding method
+		with a lag, such that each value x_i of the data is mapped to the vector
+
+		X_i = [x_i, x_(i+lag), x_(i+2*lag), ..., x_(i+(emb_dim-1) * lag)]
+
+		For each such vector X_i, we find the closest neighbor X_j using the euclidean
+		distance. We know that as we follow the trajectories from X_i and X_j in time in a
+		chaotic system the distances betwen X_(i+k) and X_(j+k) denoted as d_i(k) will 
+		increase according to a power law d_i(k) = c * k^lambda where lambda is a good
+		approximation of the highest lyapunov exponent, because the exponential expansion
+		along the axis associated with this exponent will quickly dominate the expansion or
+		contraction along other axes.
+
+		To calculate lambda, we extract the mean trajectory d'(k) by taking the mean of 
+		d_i(k) over all orbit vectors X_i. We then fit a straight line to the plot of 
+		log(d'(k)) versus log(k). The slope of the line gives the desired parameter lambda.
+	
+	Method for choosing min_tsep:
+		Usually we want to find neighbors between points that are close in phase space but
+		not too close in time, because we want to avoid spurious correlations between
+		the obtained trajectories that originate from temporal dependencies rather than
+		the dynamic properties of the system. Therefore it is critical to find a good
+		value for min_tsep. One rather plausible estimate for this value is to set min_tsep
+		to the mean period of the signal, which can be obtained by calculating the mean
+		frequency using the fast fourier transform. This procedure is used by default if 
+		the user sets min_tsep = None.
+
+	Method for choosing lag:
+		Another parameter that can be hard to choose by instinct alone is the lag between
+		individual values in a vector of the embedded orbit. Here, Rosenstein et al.
+		suggest to set the lag to the distance where the autocorrelation function drops
+		below 1 - 1/e times its original (maximal) value. This procedure is used by default
+		if the user sets lag = None.
+
 	Args:
 		data (iterable of float): (one-dimensional) time series
 	Kwargs:
 		emb_dim (int): embedding dimension for delay embedding
 		lag (float): lag for delay embedding
-		min_tsep (float): minimal temporal separation between two "neighbors"
-		tau (float): step size between data points in the time series in seconds
+		min_tsep (float): minimal temporal separation between two "neighbors" (default: 
+		                  find a suitable value by calculating the mean period of the data)
+		tau (float): step size between data points in the time series in seconds (default:
+		             find a suitable value using the autocorrelation function)
 		min_vectors (int): if lag=None, the search for a suitable lag will be stopped
 		                   when the number of resulting vectors drops below min_vectors
-		min_trajectory_len (int): do not consider points as neighbors that can only be
-		                          followed for less than min_trajectory_len steps
+		trajectory_len (int): the time (in number of data points) to follow the distance
+		                      trajectories between two neighboring points
 	Returns:
 		float: an estimate of the largest lyapunov exponent (a positive exponent is
 		       a strong indicator for chaos)
