@@ -858,6 +858,10 @@ def test_delay_embed():
 	print(delay_embedding(data,4,lag=2))
 
 if __name__ == "__main__":
-	test_dfa()
+	#test_hurst()
+	test_lyap()
+	#test_corr()
+	#test_dfa()
+	#test_delay_embed()
 
 	
