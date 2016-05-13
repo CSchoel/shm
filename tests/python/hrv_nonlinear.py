@@ -3,6 +3,36 @@ import numpy as np
 import matplotlib.pyplot as plt
 import warnings
 
+
+# TODO more detailed description of fbm
+def fbm(n, H=0.75):
+	"""
+	Generates fractional brownian motions of desired length.
+
+	Author: Christian Thomae
+
+	References:
+		[1] https://en.wikipedia.org/wiki/Fractional_Brownian_motion
+
+	Args:
+		n (int): length of sequence to generate
+	Kwargs:
+		H (float): hurst parameter
+	"""
+	assert H > 0 and H < 1
+	def R(t, s):
+		twoH = 2*H
+		return 0.5 * (s**twoH + t**twoH - np.abs(t-s)**twoH)
+	# form the matrix tau
+	gamma = R(*np.mgrid[0:n,0:n]) # apply R to every element in matrix
+	w, P = np.linalg.eigh(gamma)
+	L = np.diag(w)
+	sigma = np.dot(np.dot(P, np.sqrt(L)), np.linalg.inv(P))
+	v = np.random.randn(n)
+	return np.dot(sigma,v)
+
+# TODO maybe we can use this function also in other algorithms than lyap_r?
+
 def delay_embedding(data, emb_dim, lag=1):
 	"""
 	Perform a time-delay embedding of a time series
