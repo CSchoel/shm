@@ -760,7 +760,7 @@ def test_lyap():
 		#print(full_data)
 		#print(le)
 		lambdas_est.append(np.max(le))
-		lambdas_est2.append(lyap_r(np.array(full_data), emb_dim=6))
+		lambdas_est2.append(lyap_r(np.array(full_data), emb_dim=6, lag=2, min_tsep=10, trajectory_len=20))
 	#print(lambdas_est)
 	print(lambdas_est2)
 	plt.plot(rvalues, lambdas, "b-")
