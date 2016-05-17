@@ -1,6 +1,8 @@
 import OMPython
 import DyMat # https://bitbucket.org/jraedler/dymat
 
+def enquote(s):
+	return "\"%s\"" % s
 
 class MyFancyOMCSession(OMPython.OMCSession):
 	def __init__(self):

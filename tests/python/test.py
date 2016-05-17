@@ -15,8 +15,6 @@ import matplotlib.pyplot as plt
 import scipy.interpolate as it
 import re
 
-def enquote(s):
-	return "\"%s\"" % s
 
 def rmse(x,y):
 	return np.sqrt(((x-y)**2).mean())
