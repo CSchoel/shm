@@ -4,8 +4,8 @@
 from __future__ import print_function # use python3-style printing
 from builtins import range            # use python3 implementation of range
 
-import hrv_nonlinear
-import ompython_helper
+import hrv_nonlinear as hnl
+import ompython_helper as omh
 
 import unittest
 import os
@@ -35,7 +35,7 @@ class TestSHMModel(unittest.TestCase):
 
 	@classmethod
 	def setUpClass(cls):
-		cls.session = MyFancyOMCSession()
+		cls.session = omh.MyFancyOMCSession()
 		cls.session.appendToMoPath("../..")
 		cls.session.loadModel("Modelica")
 		cls.loaded = cls.session.loadModel("SHM")
@@ -193,7 +193,7 @@ class TestSHMModel(unittest.TestCase):
 
 		# sample entropy (SampEn)
 		# - -log(p(sim_next|sim_last_m))  (sim_nex = next point is similar, sim_last_m = last m points are similar)
-		saen = sampen(hr[:,1])
+		saen = hnl.sampen(hr[:,1])
 
 		self.printt("sample entropy", "%.3f", saen, 0)
 
