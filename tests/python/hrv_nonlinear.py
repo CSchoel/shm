@@ -692,7 +692,7 @@ def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler, debug_plot=False):
 		plot_reg(np.log(rvals), np.log(csums), poly, "log(r)", "log(C(r))")
 	return poly[0]
 
-def dfa(data, nvals= None, overlap=True, order=1, debug_plot=True):
+def dfa(data, nvals= None, overlap=True, order=1, debug_plot=False):
 	"""
 	Performs a detrended fluctuation analysis (DFA) on the given data
 
