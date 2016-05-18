@@ -677,7 +677,7 @@ def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler, debug_plot=False):
 	# TODO do this for multiple values of emb_dim?
 	if rvals is None:
 		sd = np.std(data)
-		rvals = logarithmic_r(0.1 * std, 0.5 * std, 1.03)
+		rvals = logarithmic_r(0.1 * sd, 0.5 * sd, 1.03)
 	n = len(data)
 	orbit = np.array([data[i:i+emb_dim] for i in range(n - emb_dim + 1)])
 	dists = np.array([dist(orbit, orbit[i]) for i in range(len(orbit))])
