@@ -491,7 +491,7 @@ def logarithmic_r(min_n, max_n, factor):
 	assert max_n > min_n
 	assert factor > 1
 	max_i = int(np.floor(np.log(1.0 * max_n / min_n) / np.log(factor)))
-	return (int(np.floor(min_n * (factor ** i))) for i in range(max_i+1))
+	return [min_n * (factor ** i) for i in range(max_i+1)]
 
 def rs(data, n):
 	"""
