@@ -198,12 +198,20 @@ class TestSHMModel(unittest.TestCase):
 		self.printt("sample entropy", "%.3f", saen, 0)
 
 		# Lyapunov Exponent
+		lexp = hnl.lyap_e(hr[:,1], emb_dim=10, matrix_dim=4)
+		self.printt("lyapunov exponent", "%.3f", np.max(lexp), 0)
 
 		# Hurst Exponent
+		hexp = hnl.hurst_rs(hr[:,1])
+		self.printt("hurst exponent", "%.3f", hexp, 0)
 
 		# Correlation Dimension
+		cdim = hnl.corr_dim(hr[:,1], 4)
+		self.printt("correlation dimension", "%.3f", cdim, 0)
 
 		# Detrended Fluctuation Analysis
+		hdfa = hnl.dfa(hr[:,1])
+		self.printt("hurst parameter (DFA)", "%.3f", hdfa, 0)
 
 		# TODO calculate values for human sample data?
 
