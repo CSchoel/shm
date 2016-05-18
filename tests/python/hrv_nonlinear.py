@@ -686,6 +686,7 @@ def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler, debug_plot=False):
 		s = 1.0 / (n * (n-1)) * np.sum(dists < r)
 		csums.append(s)
 	csums = np.array(csums)
+	# TODO check if value in csums is zero
 	poly = np.polyfit(np.log(rvals), np.log(csums), 1)
 	if debug_plot:
 		plot_reg(np.log(rvals), np.log(csums), poly, "log(r)", "log(C(r))")
