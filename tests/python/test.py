@@ -192,24 +192,32 @@ class TestSHMModel(unittest.TestCase):
 		#tinn = 0
 
 		# sample entropy (SampEn)
-		# - -log(p(sim_next|sim_last_m))  (sim_nex = next point is similar, sim_last_m = last m points are similar)
+		# - -log(p(sim_next|sim_last_m))  (sim_next = next point is similar, sim_last_m = last m points are similar)
+		# - lower values (closer to zero) => more self-similarity
 		saen = hnl.sampen(hr[:,1])
 
 		self.printt("sample entropy", "%.3f", saen, 0)
 
 		# Lyapunov Exponent
-		lexp = hnl.lyap_e(hr[:,1], emb_dim=10, matrix_dim=4)
-		self.printt("lyapunov exponent", "%.3f", np.max(lexp), 0)
+		# - A positive lyapunov exponent is an indicator of chaos
+		lexp = np.max(hnl.lyap_e(hr[:,1], emb_dim=10, matrix_dim=4))
+		self.printt("lyapunov exponent", "%.3f", lexp, 0)
 
 		# Hurst Exponent
+		# - < 0.5 : negative long-term correlations ("mean-reverting" system)
+		# - = 0.5 : no long-term correlations (random walk)
+		# - > 0.5 : positive long-term correlations ("long-term memory")
 		hexp = hnl.hurst_rs(hr[:,1])
 		self.printt("hurst exponent", "%.3f", hexp, 0)
 
 		# Correlation Dimension
+		# - between 0 and 1, should be < 1 for 1D-system with strange attractor
 		cdim = hnl.corr_dim(hr[:,1], 4)
 		self.printt("correlation dimension", "%.3f", cdim, 0)
 
 		# Detrended Fluctuation Analysis
+		# - < 1 : stationary process with Hurst exponent H = hdfa
+		# - > 1 : non-stationary process with Hurst exponent H = hdfa - 1
 		hdfa = hnl.dfa(hr[:,1])
 		self.printt("hurst parameter (DFA)", "%.3f", hdfa, 0)
 
