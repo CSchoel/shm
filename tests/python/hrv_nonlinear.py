@@ -642,6 +642,13 @@ def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler, debug_plot=False):
 
 		then D is called the correlation dimension of the system.
 
+		In a d-dimensional system, the maximum value for D is d. This value is obtained
+		for systems that expand uniformly in each dimension with time. The lowest 
+		possible value is 0 for a system with constant C(r) (i.e. a system that visits 
+		just one point in the phase space). Generally if D is lower than d and the
+		system has an attractor, this attractor is called "strange" and D is a measure
+		of this "strangeness".
+
 	Explanation of the algorithm:
 		The Grassberger-Procaccia algorithm calculates C(r) for a range of different
 		r and then fits a straight line into the plot of log(C(r)) versus log(r).
