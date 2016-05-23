@@ -15,7 +15,6 @@ import matplotlib.pyplot as plt
 import scipy.interpolate as it
 import re
 
-
 def rmse(x,y):
 	return np.sqrt(((x-y)**2).mean())
 
@@ -176,14 +175,21 @@ class TestSHMModel(unittest.TestCase):
 		self.assertBetween(bpm, 60, 100)
 
 		# standard deviation of nn-inverval (sdnn)
-		sdnn = rr_std
+		# normal values (Task Force paper): 141 +- 39 ms
+		sdnn = rr_std * 1000
+		# TODO increase lower bound to 102 when model is fixed (only possible with noise?)
+		self.assertBetween(sdnn, 30, 180)
+
 		# standard deviation of average (over 5 minutes) NN interval (sdann)
 		# - estimate for changes in heart rate due to cycles longer than 5 min
 		# - cannot be used here, because we only simulate 100 seconds
-		#sdann = 0     
+		#sdann = 0
 
 		# root mean squared successive differences (rmssd)
-		rmssd = rmse(hr[1:,1],hr[:-1,1])
+		# normal values (Task Force paper): 27+-12 ms
+		rmssd = rmse(hr[1:,1],hr[:-1,1]) * 1000
+		self.printt("rmssd", "%.3f", rmssd, 0) # TODO base value
+		self.assertBetween(rmssd, 15, 39)
 
 		# proportion of number of successive interval differences greater than 50 ms (pnn50)
 		# - not recommended by task force of ESC and NASPE => not implemented
@@ -191,13 +197,12 @@ class TestSHMModel(unittest.TestCase):
 
 		# triangular interpolation of NN interval histogram (TINN)
 		# - not recommended by task force of ESC and NASPE => not implemented
-		#tinn = 0
+		# tinn = 0
 
 		# sample entropy (SampEn)
 		# - -log(p(sim_next|sim_last_m))  (sim_next = next point is similar, sim_last_m = last m points are similar)
 		# - lower values (closer to zero) => more self-similarity
 		saen = hnl.sampen(hr[:,1])
-
 		self.printt("sample entropy", "%.3f", saen, 0)
 
 		# Lyapunov Exponent
