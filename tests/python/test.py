@@ -52,6 +52,9 @@ class TestSHMModel(unittest.TestCase):
 	def tearDownClass(cls):
 		# close session
 		del cls.session
+	def assertBetween(v, vmin, vmax):
+		self.assertGreater(v, vmin)
+		self.assertLess(v, vmax)
 	def printt(self, name, fmt, value, base):
 		match = re.match(r"%(\d*)(.*)", fmt)
 		if match :
@@ -78,20 +81,16 @@ class TestSHMModel(unittest.TestCase):
 		
 		# normal MAP: 70 - 105 mmHg
 		# is already elevated in the model => shift upper range to 110
-		self.assertGreater(bp_mean, 70)
-		self.assertLess(bp_mean, 110) # TODO reduce to 105 when model is fixed
+		self.assertBetween(bp_mean, 70, 110) # TODO reduce to 105 when model is fixed
 		
 		# normal diastolic pressure: 60 - 90 mmHg
-		self.assertGreater(bp_min, 60)
-		self.assertLess(bp_min, 90)
+		self.assertBetween(bp_min, 60, 90)
 
 		# normal systolic pressure: 100 - 140 mmHg
-		self.assertGreater(bp_max, 100)
-		self.assertLess(bp_max, 150) # TODO reduce to 140 when model is fixed
+		self.assertBetween(bp_max, 100, 150) # TODO reduce to 140 when model is fixed
 
 		# normal standard deviation: 14 - 24 mmHg (taken from model run in base state)
-		self.assertGreater(bp_std, 14)
-		self.assertLess(bp_std, 24)
+		self.assertBetween(bp_std, 14, 24)
 	def plot_hist(self, bins, vals, outfile, val, unit, expected=None):
 		f = plt.figure(figsize=(10,5))
 		ax = f.add_subplot(111)
@@ -171,7 +170,10 @@ class TestSHMModel(unittest.TestCase):
 		self.printt("heart rate", "%.3f", bpm, 61.333)
 		self.printt("min RR", "%.3f", rr_min, 0.930)
 		self.printt("max RR", "%.3f", rr_max, 1.029)
-		self.printt("std RR", "%.3f", rr_std, 0.034)
+		self.printt("std RR (sdnn)", "%.3f", rr_std, 0.034)
+
+		# normal resting heart rate: 60 - 100 bpm
+		self.assertBetween(bpm, 60, 100)
 
 		# standard deviation of nn-inverval (sdnn)
 		sdnn = rr_std
@@ -222,11 +224,6 @@ class TestSHMModel(unittest.TestCase):
 		self.printt("hurst parameter (DFA)", "%.3f", hdfa, 0)
 
 		# TODO calculate values for human sample data?
-
-		# normal resting heart rate: 60 - 100 bpm
-		self.assertGreater(bpm, 60)
-		self.assertLess(bpm, 100)
-		# TODO more actual tests!
 		
 	def test_rr_hist(self):
 		vals,bins = np.histogram(self.data_hrv[:,1],np.arange(0.5,2.0,0.1))
