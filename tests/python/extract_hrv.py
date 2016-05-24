@@ -34,8 +34,9 @@ def parse_time(s):
 
 
 def load_fantasia(dname):
-	young = [ra(x) for x in glob.glob(os.path.join(dname, "*y*_ann.txt"))]
-	old = [ra(x) for x in glob.glob(os.path.join(dname, "*o*_ann.txt"))]
+	name = lambda x : "ft_"+os.path.basename(x)[:-8]
+	young = [(name(x),ra(x)) for x in glob.glob(os.path.join(dname, "*y*_ann.txt"))]
+	old = [(name(x),ra(x)) for x in glob.glob(os.path.join(dname, "*o*_ann.txt"))]
 	return {"healthy_young": young, "healthy_old": old }
 
 
