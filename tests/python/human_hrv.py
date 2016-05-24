@@ -46,7 +46,12 @@ def make_plots(db, dname):
 		if not os.path.exists(kdir):
 			os.mkdir(kdir)
 		for n,ar in db[k].items():
-			plot_poincare(os.path.join(kdir,n), ar)
+			#print(n.encode("utf-8"))
+			print("plotting %s" % os.path.join(kdir,n))
+			if(len(ar) < 2):
+				print("ERROR: too few datapoints!")
+			else:
+				plot_poincare(os.path.join(kdir,n), ar)
 
 if __name__ == "__main__":
 	dbdir = "D:/Daten/hrvdb"
