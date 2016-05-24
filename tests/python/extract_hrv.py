@@ -7,14 +7,16 @@ import matplotlib.pyplot as plt
 beat_chars = set(['N','L','R','B','A','a','J','S','V','r','F','e','j','n','E','/','f','Q','?'])
 
 def ra(fname):
-	data = np.loadtxt(fname, dtype=str, usecols=(0,2))
-	types = data[:,1]
-	times = data[:,0]
-	other = set(types) - beat_chars
+	#data = np.loadtxt(fname, dtype=bytes, usecols=(0,2))
+	line_re = r"\[?([\d:\.]+(?: \d)?)\]?\s+\d+\s+(.)\s+.+"
+	data = np.fromregex(fname, line_re, [('time', 'S14'), ('type', 'S1')])
+	types = np.char.decode(data['type'], "utf-8")
+	times = np.char.decode(data['time'], "utf-8")
+	other = set([str(x) for x in set(types)]) - beat_chars
 	if len(other) > 0:
 		print("ignored the following annotation types in %s: %s" % (fname, other))
 	data = [times[i] for i in range(len(times)) if types[i] in beat_chars]
-	data = [parse_time(x) for x in data]
+	data = np.array([parse_time(x) for x in data])
 	return data
 
 time_re = re.compile(r"(?:(\d+):)?(\d+):(\d+).(\d+)")
