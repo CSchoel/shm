@@ -70,10 +70,43 @@ def load_prcp(dname):
 	data = [(name(x), ra(x)) for x in glob.glob(os.path.join(dname, "*_ann_wqrs.txt"))]
 	return {"healthy_moving" : data}	
 
-if __name__ == '__main__':
-	fantasia = "D:/Daten/physionet/fantasia" 
+def update_lst(dct, dct2):
+	all_keys = set(list(dct.keys()) + list(dct2.keys()))
+	ndict = dict([(k, dct.get(k, []) + dct2.get(k, [])) for k in all_keys])
+	return ndict
+
+def load_all():
+	fantasia = "D:/Daten/physionet/fantasia"
+	ptb = "D:/Daten/physionet/ptbdb"
+	nsr = "D:/Daten/physionet/nsrdb"
+	nsr2 = "D:/Daten/physionet/nsr2db"
+	prcp = "D:/Daten/physionet/prcp"
+
 	val = load_fantasia(fantasia)
-	ds = val["healthy_young"][0]
-	plt.plot(np.array(ds[1:])-np.array(ds[:-1]))
-	plt.show()
-	#print(val)
+	val = update_lst(val, load_ptbdb(ptb))
+	val = update_lst(val, load_nsr(nsr))
+	val = update_lst(val, load_nsr(nsr2, "nsr2"))
+	val = update_lst(val, load_prcp(prcp))
+	return val
+
+def make_safe(s):
+	return s.replace("/","-")
+
+def create_db(dstdir):
+	if not os.path.exists(dstdir):
+		os.mkdir(dstdir)
+	data = load_all()
+	for k in data:
+		kf = os.path.join(dstdir,make_safe(k)+".npz")
+		dct = dict(data[k])
+		print("creating %s with %d records..." % (kf,len(data[k])))
+		np.savez(kf, **dct)
+
+
+def inspect(db):
+	for k in val:
+		print("%s: %d" % (k, len(val[k])))
+		print([x[0] for x in val[k]])
+
+if __name__ == '__main__':
+	create_db("D:/Daten/hrvdb")
