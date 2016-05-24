@@ -29,9 +29,12 @@ def poincare(rr):
 def plot_poincare(fname, data):
 	rr = to_rr(data)
 	pc = poincare(rr)
+	lim = (0, 2000)
 	fig = plt.figure(figsize=(8,8))
 	ax = fig.add_subplot(111)
-	ax.plot(pc[:,0], pc[:,1], "ro")
+	ax.plot(pc[:,0], pc[:,1], "ro", alpha=0.1)
+	ax.set_xlim(lim)
+	ax.set_ylim(lim)
 	fig.savefig(fname+".png")
 	plt.close(fig)
 
