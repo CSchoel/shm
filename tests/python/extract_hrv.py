@@ -22,7 +22,10 @@ def ra(fname):
 time_re = re.compile(r"\[?(?:(\d+):)?(\d+):(\d+).(\d+)\]?")
 
 def parse_time(s):
-	h,m,s,ms = time_re.match(s).groups()
+	mtch = time_re.match(s)
+	if mtch is None:
+		print("malformatted time: %s" % s)
+	h,m,s,ms = mtch.groups()
 	h = 0 if h is None else int(h)
 	t = h * 60 + int(m)    # t[min]
 	t = t * 60 + int(s)    # t[s]
