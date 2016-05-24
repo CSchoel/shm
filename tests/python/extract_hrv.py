@@ -19,15 +19,17 @@ def ra(fname):
 	data = np.array([parse_time(x) for x in data])
 	return data
 
-time_re = re.compile(r"\[?(?:(\d+):)?(\d+):(\d+).(\d+)\]?")
+time_re = re.compile(r"\[?(?:(\d+):)?(\d+):(\d+).(\d+)( \d)?\]?")
 
 def parse_time(s):
 	mtch = time_re.match(s)
 	if mtch is None:
 		print("malformatted time: %s" % s)
-	h,m,s,ms = mtch.groups()
+	h,m,s,ms,d = mtch.groups()
 	h = 0 if h is None else int(h)
-	t = h * 60 + int(m)    # t[min]
+	d = 0 if d is None else int(d)
+	t = d * 24 + h         # t[h]
+	t = t * 60 + int(m)    # t[min]
 	t = t * 60 + int(s)    # t[s]
 	t = t * 1000 + int(ms) # t[ms]
 	return t
