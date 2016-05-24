@@ -19,7 +19,7 @@ def ra(fname):
 	data = np.array([parse_time(x) for x in data])
 	return data
 
-time_re = re.compile(r"(?:(\d+):)?(\d+):(\d+).(\d+)")
+time_re = re.compile(r"\[?(?:(\d+):)?(\d+):(\d+).(\d+)\]?")
 
 def parse_time(s):
 	h,m,s,ms = time_re.match(s).groups()
