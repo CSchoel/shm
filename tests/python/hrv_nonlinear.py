@@ -12,7 +12,7 @@ def fbm(n, H=0.75):
 	Author: Christian Thomae
 
 	References:
-		[1] https://en.wikipedia.org/wiki/Fractional_Brownian_motion
+		[1] https://en.wikipedia.org/wiki/Fractional_Brownian_motion#Method_1_of_simulation
 
 	Args:
 		n (int): length of sequence to generate
@@ -102,6 +102,12 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		[1] M. T. Rosenstein, J. J. Collins, and C. J. De Luca, “A practical method for 
 		    calculating largest Lyapunov exponents from small data sets,” Physica D: Nonlinear 
 		    Phenomena, vol. 65, no. 1, pp. 117–134, 1993.
+
+	Reference Code:
+		[a] mirwais, "Largest Lyapunov Exponent with Rosenstein's Algorithm",
+		    url: http://www.mathworks.com/matlabcentral/fileexchange/38424-largest-lyapunov-exponent-with-rosenstein-s-algorithm
+		[b] Shapour Mohammadi, "LYAPROSEN: MATLAB function to calculate Lyapunov exponent",
+		    url: https://ideas.repec.org/c/boc/bocode/t741502.html
 
 	Args:
 		data (iterable of float): (one-dimensional) time series
@@ -229,6 +235,13 @@ def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 		[1] J. P. Eckmann, S. O. Kamphorst, D. Ruelle, and S. Ciliberto, 
 		    “Liapunov exponents from time series,” Physical Review A, 
 		    vol. 34, no. 6, pp. 4971–4979, 1986.
+
+	Reference code:
+		[a] Manfred Füllsack, "Lyapunov exponent",
+		    url: http://systems-sciences.uni-graz.at/etextbook/sw2/lyapunov.html
+		[b] Steve SIU, Lyapunov Exponents Toolbox (LET),
+		    url: http://www.mathworks.com/matlabcentral/fileexchange/233-let/content/LET/findlyap.m
+		[c] TODO: TISEAN?
 
 	Args:
 		data (iterable): list/array of (scalar) data points
@@ -371,6 +384,10 @@ def sampen(data, emb_dim=2, tolerance=None, dist="chebychev"):
 		    analysis using approximate entropy and sample entropy,” 
 		    American Journal of Physiology-Heart and Circulatory Physiology, 
 		    vol. 278, no. 6, pp. H2039–H2049, 2000.
+
+	Reference code:
+		[a] "sample_entropy" function in R-package "pracma",
+		    url: https://cran.r-project.org/web/packages/pracma/pracma.pdf
 
 	Args:
 		data (iterable): the list/array of data points
@@ -600,6 +617,16 @@ def hurst_rs(data, nvals=None, debug_plot=False):
 		    intervals,” Physica A: Statistical Mechanics and its Applications, vol. 312, no. 1, 
 		    pp. 285–299, 2002.
 
+	Reference Code:
+		[a] "hurst" function in R-package "pracma",
+		    url: https://cran.r-project.org/web/packages/pracma/pracma.pdf
+		[b] Rafael Weron, "HURST: MATLAB function to compute the Hurst exponent using R/S 
+		    Analysis", url: https://ideas.repec.org/c/wuu/hscode/m11003.html
+		[c] Bill Davidson, "Hurst exponent",
+		    url: http://www.mathworks.com/matlabcentral/fileexchange/9842-hurst-exponent
+		[d] Tomaso Aste, "Generalized Hurst exponent",
+		    url: http://de.mathworks.com/matlabcentral/fileexchange/30076-generalized-hurst-exponent
+
 	Args:
 		data (array of float): time series
 	Kwargs:
@@ -666,6 +693,12 @@ def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler, debug_plot=False):
 		[2] P. Grassberger and I. Procaccia, “Measuring the strangeness of strange 
 		    attractors,” Physica D: Nonlinear Phenomena, vol. 9, no. 1, pp. 189–208, 1983.
 		[3] http://www.scholarpedia.org/article/Grassberger-Procaccia_algorithm
+
+	Reference Code:
+		[a] "corrDim" function in R package "fractal",
+		    url: https://cran.r-project.org/web/packages/fractal/fractal.pdf
+		[b] Peng Yuehua, "Correlation dimension",
+		    url: http://de.mathworks.com/matlabcentral/fileexchange/24089-correlation-dimension
 
 	Args:
 		data (array of float): time series of data points
@@ -772,6 +805,13 @@ def dfa(data, nvals= None, overlap=True, order=1, debug_plot=False):
 		    H. D. Mansvelder, and K. Linkenkaer-Hansen, “Detrended fluctuation 
 		    analysis: A scale-free view on neuronal oscillations,” Frontiers in 
 		    Physiology, vol. 30, 2012.
+
+	Reference code:
+		[a] Peter Jurica, "Introduction to MDFA in Python",
+	      url: http://bsp.brain.riken.jp/~juricap/mdfa/mdfaintro.html
+	  [b] JE Mietus, "dfa",
+	      url: https://www.physionet.org/physiotools/dfa/dfa-1.htm
+	  [c] "DFA" function in R package "fractal"
 
 	Args:
 		data (array of float): time series
