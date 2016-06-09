@@ -5,6 +5,7 @@ import itertools as it
 import glob
 from scipy.stats import norm
 from scipy.stats.mstats import mquantiles
+import scipy.signal as sig
 
 def load_db(dbdir, names=None, combine=False):
 	data = {}
@@ -62,7 +63,27 @@ def plot_qq(fname, data):
 	ax.set_ylim(lim)
 	fig.savefig(fname+"_qq.png")
 	plt.close(fig)
-	
+
+def plot_cdf(fname, data):
+	rr = to_rr(data)
+	pc = poincare(rr)
+	# project onto sd1 diagonal
+	ax1 = np.array([-1,1])
+	sd1 = np.dot(pc,ax1) / np.linalg.norm(ax1)
+	sd1 = (sd1 - np.mean(sd1)) / np.std(sd1)
+	lim = (-4,4)
+	nbins = 50
+	h,bins = np.histogram(sd1, nbins, lim)
+	xvals = bins[1:]
+	cdf_data = np.cumsum(h) / np.sum(h)
+	cdf_gauss = norm.cdf(xvals)
+	fig = plt.figure(figsize=(8,8))
+	ax = fig.add_subplot(111)
+	ax.plot(xvals,cdf_data,"b-")
+	ax.plot(xvals,cdf_gauss,"r-")
+	ax.set_xlim(lim)
+	fig.savefig(fname+"_cdf.png")
+	plt.close(fig)		
 
 def plot_hist(fname, data):
 	rr = to_rr(data)
@@ -83,7 +104,34 @@ def plot_hist(fname, data):
 	ax.bar(xvals, h, bin_width, label="actual")
 	fig.savefig(fname+"_hist.png")
 	plt.close(fig)
+
+def plot_hist_smooth(fname, data):
+	rr = to_rr(data)
+	pc = poincare(rr)
+	# project onto sd1 diagonal
+	ax1 = np.array([-1,1])
+	sd1 = np.dot(pc,ax1) / np.linalg.norm(ax1)
+	lim = (-1000, 1000)
+	nbins = 50
+	h,bins = np.histogram(sd1, nbins, lim)
+	xvals = bins[:-1] 
+	bin_width = bins[1]-bins[0]
+	g0 = np.where(h > 0)
+	h = h.astype("float32")
+	h[g0] = np.log(h[g0])
+	h /= np.sum(h)
+	gauss = sig.gaussian(20,1)
+	gauss /= np.sum(gauss)
+	hsmooth = np.convolve(h, gauss)
+	
+
+	fig = plt.figure(figsize=(8,8))
+	ax = fig.add_subplot(111)
+	ax.bar(xvals, h, bin_width, label="actual")
+	ax.plot(xvals,hsmooth[len(gauss)//2:], "r-")
 	fig.savefig(fname+"_hist.png")
+	plt.show()
+	exit()
 	plt.close(fig)
 
 def is_flat(data):
@@ -102,9 +150,11 @@ def make_plots(db, dname):
 			if(len(ar) < 2):
 				print("ERROR: too few datapoints!")
 			else:
-				plot_poincare(os.path.join(kdir,n), ar)
-				plot_hist(os.path.join(kdir,n), ar)
-				plot_qq(os.path.join(kdir,n), ar)
+				name = os.path.join(kdir,n)
+				plot_poincare(name, ar)
+				plot_hist_smooth(name, ar)
+				plot_qq(name, ar)
+				plot_cdf(name, ar)
 
 if __name__ == "__main__":
 	dbdir = "D:/Daten/hrvdb"
