@@ -159,6 +159,6 @@ def make_plots(db, dname):
 if __name__ == "__main__":
 	dbdir = "D:/Daten/hrvdb"
 	db = load_db(dbdir, names=None, combine=False)
-	make_plots(db, dbdir)
+	make_plots(db, os.path.join(dbdir,"plots"))
 	print(db.keys())
 	print(is_flat(db))
