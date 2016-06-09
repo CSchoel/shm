@@ -71,12 +71,18 @@ def plot_hist(fname, data):
 	ax1 = np.array([-1,1])
 	sd1 = np.dot(pc,ax1) / np.linalg.norm(ax1)
 	lim = (-1000, 1000)
-	h,bins = np.histogram(sd1, 30, lim)
+	h,bins = np.histogram(sd1, 50, lim)
 	fig = plt.figure(figsize=(8,8))
 	ax = fig.add_subplot(111)
 	xvals = bins[:-1] 
 	bin_width = bins[1]-bins[0]
-	ax.bar(xvals, np.log(h), bin_width, label="actual")
+	g0 = np.where(h > 0)
+	h = h.astype("float32")
+	h[g0] = np.log(h[g0])
+	h /= np.sum(h)
+	ax.bar(xvals, h, bin_width, label="actual")
+	fig.savefig(fname+"_hist.png")
+	plt.close(fig)
 	fig.savefig(fname+"_hist.png")
 	plt.close(fig)
 
