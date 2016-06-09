@@ -120,7 +120,7 @@ def plot_hist_smooth(fname, data):
 	h = h.astype("float32")
 	h[g0] = np.log(h[g0])
 	h /= np.sum(h)
-	gauss = sig.gaussian(20,1)
+	gauss = sig.gaussian(23,0.8)
 	gauss /= np.sum(gauss)
 	hsmooth = np.convolve(h, gauss)
 	
@@ -128,10 +128,15 @@ def plot_hist_smooth(fname, data):
 	fig = plt.figure(figsize=(8,8))
 	ax = fig.add_subplot(111)
 	ax.bar(xvals, h, bin_width, label="actual")
-	ax.plot(xvals,hsmooth[len(gauss)//2:], "r-")
+	off_s = np.floor(len(gauss)/2.0) - 1
+	off_e = len(gauss) - off_s - 1
+	left = (hsmooth[1:-1] - hsmooth[2:]) > 0
+	right = (hsmooth[1:-1] - hsmooth[:-2]) > 0
+	extrema = np.where(np.logical_and(left,right))[0]
+	for e in extrema:
+		ax.axvline(xvals[np.clip(e + 1 - off_s,0,len(xvals)-1)], color="#00FFFF")
+	ax.plot(xvals,hsmooth[off_s:-off_e], "r-")
 	fig.savefig(fname+"_hist.png")
-	plt.show()
-	exit()
 	plt.close(fig)
 
 def is_flat(data):
