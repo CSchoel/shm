@@ -52,7 +52,57 @@ def poincare_d(pc, binsize=5, max_rr=2000):
 	density = np.zeros((nbins, nbins))
 	density[(nbins - points[:,1], points[:,0])] = counts
 	return density
+
+def keep(data):
+	min_ex_height = 0.01
+	sd1_cutoff = 70 # mean 42 +- 7 (Guzik2007)
+	rr = to_rr(data)
+	pc = poincare(rr)
+	ppc = np.dot(pc,[-1,1])/np.sqrt(2) # projected poincare to axis (-1,1)
+	sd1 = np.std(ppc)
+	_,hs,_,extrema = extreme_hist(data)
+	# only keep extrema that are higher than min_ex_height
+	ex = [x for x in np.clip(extrema,0,len(hs)-1) if hs[x] > min_ex_height]
+	return len(ex) == 1 and sd1 < sd1_cutoff
+
+def extreme_hist(data):
+	lim = (-1000, 1000)
+	nbins = 50
 	
+	rr = to_rr(data)
+	pc = poincare(rr)
+	# project onto sd1 diagonal
+	ax1 = np.array([-1,1])
+	ppc = np.dot(pc,ax1) / np.linalg.norm(ax1) # projected poincare
+	# calculate historgram
+	h,bins = np.histogram(ppc, nbins, lim)
+	xvals = bins[:-1] 
+	bin_width = bins[1]-bins[0]
+	# take log where h > 0
+	g0 = np.where(h > 0)
+	h = h.astype("float32")
+	h[g0] = np.log(h[g0])
+	s = np.sum(h)
+	if s > 0:
+		h /= s
+	# smoothe histogram with gaussian
+	gauss = sig.gaussian(23,0.8)
+	gauss /= np.sum(gauss)
+	hsmooth = np.convolve(h, gauss)
+	
+	# finnd extrema
+	left = (hsmooth[1:-1] - hsmooth[2:]) > 0
+	right = (hsmooth[1:-1] - hsmooth[:-2]) > 0
+	extrema = np.where(np.logical_and(left,right))[0]
+
+	# return only relevant part of histogram
+	off_s = np.floor(len(gauss)/2.0) - 1
+	off_e = len(gauss) - off_s - 1
+
+	hsmooth = hsmooth[off_s:-off_e]
+	extrema += 1 - off_s
+	
+	return h, hsmooth,bins[:-1],extrema
 
 def plot_poincare(fname, data):
 	rr = to_rr(data)
@@ -152,36 +202,16 @@ def plot_hist(fname, data):
 	plt.close(fig)
 
 def plot_hist_smooth(fname, data):
-	rr = to_rr(data)
-	pc = poincare(rr)
-	# project onto sd1 diagonal
-	ax1 = np.array([-1,1])
-	sd1 = np.dot(pc,ax1) / np.linalg.norm(ax1)
-	lim = (-1000, 1000)
-	nbins = 50
-	h,bins = np.histogram(sd1, nbins, lim)
-	xvals = bins[:-1] 
-	bin_width = bins[1]-bins[0]
-	g0 = np.where(h > 0)
-	h = h.astype("float32")
-	h[g0] = np.log(h[g0])
-	h /= np.sum(h)
-	gauss = sig.gaussian(23,0.8)
-	gauss /= np.sum(gauss)
-	hsmooth = np.convolve(h, gauss)
-	
+	h, hsmooth, xvals, extrema = extreme_hist(data)
+	bin_width = xvals[1] - xvals[0]
 
 	fig = plt.figure(figsize=(8,8))
 	ax = fig.add_subplot(111)
 	ax.bar(xvals, h, bin_width, label="actual")
-	off_s = np.floor(len(gauss)/2.0) - 1
-	off_e = len(gauss) - off_s - 1
-	left = (hsmooth[1:-1] - hsmooth[2:]) > 0
-	right = (hsmooth[1:-1] - hsmooth[:-2]) > 0
-	extrema = np.where(np.logical_and(left,right))[0]
 	for e in extrema:
-		ax.axvline(xvals[np.clip(e + 1 - off_s,0,len(xvals)-1)], color="#00FFFF")
-	ax.plot(xvals,hsmooth[off_s:-off_e], "r-")
+		ax.axvline(xvals[np.clip(e,0,len(xvals)-1)], color="#00FFFF")
+	ax.plot(xvals,hsmooth, "r-")
+	ax.set_ylim(0,0.5)
 	fig.savefig(fname+"_hist.png")
 	plt.close(fig)
 
@@ -208,9 +238,46 @@ def make_plots(db, dname):
 				plot_qq(name, ar)
 				plot_cdf(name, ar)
 
+def filter_db(db, dname, outname):
+	if not os.path.exists(dname):
+		os.mkdir(dname)
+	if is_flat(db):
+		db = {'' : db}
+	seldir = os.path.join(dname,"selected")
+	exdir = os.path.join(dname,"excluded")
+	if not os.path.exists(seldir):
+		os.mkdir(seldir)
+	if not os.path.exists(exdir):
+		os.mkdir(exdir)
+	selected = []
+	excluded = []
+	for k in db:
+		for n,ar in db[k].items():
+			if keep(ar):
+				selected.append((n,ar))
+			else:
+				excluded.append((n,ar))
+	np.savez(os.path.join(dname,outname+"_selected.npz"),**dict(selected))
+	np.savez(os.path.join(dname,outname+"_excluded.npz"),**dict(excluded))
+	with open(os.path.join(dname,"selected.txt"),"w",encoding="utf-8") as f:
+		f.write("\n".join([x[0] for x in selected]))
+	with open(os.path.join(dname,"excluded.txt"),"w",encoding="utf-8") as f:
+		f.write("\n".join([x[0] for x in excluded]))
+	print("excluded: %d/%d samples" % (len(excluded),len(selected)+len(excluded)))
+	print([x[0] for x in excluded])
+	for data,outdir in [[selected, seldir], [excluded, exdir]]:
+		for n,ar in data:
+			name = os.path.join(outdir,n)
+			print("plotting %s..." % name)
+			plot_poincare(name, ar)
+			plot_poincare_d(name, ar)
+			plot_hist_smooth(name, ar)
+			plot_qq(name, ar)
+			plot_cdf(name, ar)
+
 if __name__ == "__main__":
 	dbdir = "D:/Daten/hrvdb"
 	db = load_db(dbdir, names=None, combine=False)
 	make_plots(db, os.path.join(dbdir,"plots"))
-	print(db.keys())
-	print(is_flat(db))
+	#db = load_db(dbdir, names=["healthy", "healthy_moving", "healthy_young", "healthy_old"], combine=True)
+	#filter_db(db, os.path.join(dbdir, "filter"), "filtered")
