@@ -29,6 +29,31 @@ def poincare(rr):
 	pc[:,1] = rr[1:]
 	return pc
 
+def poincare_d(pc, binsize=5, max_rr=2000):
+	nbins = int(np.ceil(max_rr / binsize))
+	# capping rr values at max_rr
+	pc = np.minimum(pc, max_rr-1)
+	# transform from rr to bin coordinates
+	pc = np.floor(pc / binsize).astype("int32")
+	# sort poincare points as tuples
+	pc = pc[np.argsort(pc[:,0] * max_rr*2 + pc[:,1])]
+	# calculate absolute difference between neighboring points in sorted array
+	diff = np.sum(np.abs(np.diff(pc,n=1,axis=0)),axis=1)
+	# add a difference of 1 for the first element
+	diff = np.concatenate(([1], diff))
+	# find indices where difference is not zero
+	idx = np.where(diff > 0)[0]
+	# add artificial index len(pc) so that last element is not lost
+	idx = np.concatenate((idx, [len(pc)]))
+	# calculate how often the points pc[idx] occurred (difference of indices)
+	counts = np.diff(idx)
+	points = pc[idx[:-1]]
+	# transform point coordintates and counts to density plot
+	density = np.zeros((nbins, nbins))
+	density[(nbins - points[:,1], points[:,0])] = counts
+	return density
+	
+
 def plot_poincare(fname, data):
 	rr = to_rr(data)
 	pc = poincare(rr)
@@ -39,6 +64,27 @@ def plot_poincare(fname, data):
 	ax.set_xlim(lim)
 	ax.set_ylim(lim)
 	fig.savefig(fname+".png")
+	plt.close(fig)
+
+def plot_poincare_d(fname, data):
+	rr = to_rr(data)
+	pc = poincare(rr)
+	binsize = 50
+	max_rr = 2000
+	density = poincare_d(pc, binsize=binsize, max_rr=max_rr)
+	d2 = density.copy()
+	d2[d2 > 0] = np.log(d2[d2 > 0])
+	
+	fig = plt.figure(figsize=(8,8))
+	ax = fig.add_subplot(111)
+	ax.imshow(d2)
+	labels = np.array(range(0,max_rr,500))
+	ticks = labels / binsize
+	ax.set_xticks(ticks)
+	ax.set_xticklabels(labels)
+	ax.set_yticks(ticks)
+	ax.set_yticklabels(max_rr - labels)
+	fig.savefig(fname+"_0d.png")
 	plt.close(fig)
 
 def plot_qq(fname, data):
@@ -157,6 +203,7 @@ def make_plots(db, dname):
 			else:
 				name = os.path.join(kdir,n)
 				plot_poincare(name, ar)
+				plot_poincare_d(name, ar)
 				plot_hist_smooth(name, ar)
 				plot_qq(name, ar)
 				plot_cdf(name, ar)
