@@ -7,6 +7,8 @@ from scipy.stats import norm
 from scipy.stats.mstats import mquantiles
 import scipy.signal as sig
 
+import hrv_nonlinear as hnl
+
 def load_db(dbdir, names=None, combine=False):
 	data = {}
 	for f in glob.glob(os.path.join(dbdir,"*.npz")):
@@ -275,9 +277,40 @@ def filter_db(db, dname, outname):
 			plot_qq(name, ar)
 			plot_cdf(name, ar)
 
+def compare_measures(dbs, names, outdir=None):
+	nparams = 1
+	template = "{:s};" + "{:.3f};" * nparams + "\n"
+	res = {}
+	for dbn, db in zip(names, dbs):
+		sample_names = sorted(db.keys())
+		log_data = []
+		for i in range(len(sample_names)):
+			n = sample_names[i]
+			rr = to_rr(db[n])
+			print("processing sample {:d}/{:d}...".format(i+1, len(sample_names)))
+			print("name: {:s}, length: {:d}".format(n,len(rr)))
+			# FIXME: do we want to use only the first x heartbeats?
+			lambda_e = hnl.lyap_e(rr[:200], emb_dim=10, matrix_dim=4)
+			log_data.append([np.max(lambda_e)])
+		log_data = np.array(log_data, dtype="float32")
+		res[dbn] = dict(zip(sample_names, log_data))
+		if not (outdir is None):
+			with open(os.path.join(outdir,dbn + "_nonlinear.txt"), "w", encoding="utf-8") as f:
+				f.writelines([template.format(*([n]+list(x))) for n, x in zip(sample_names, log_data)])
+				f.write(template.format(*(["mean"]+list(np.mean(log_data, axis=0)))))
+				f.write("\n")
+	return res
+
 if __name__ == "__main__":
 	dbdir = "D:/Daten/hrvdb"
-	db = load_db(dbdir, names=None, combine=False)
-	make_plots(db, os.path.join(dbdir,"plots"))
+	#db = load_db(dbdir, names=None, combine=False)
+	#make_plots(db, os.path.join(dbdir,"plots"))
+	
 	#db = load_db(dbdir, names=["healthy", "healthy_moving", "healthy_young", "healthy_old"], combine=True)
 	#filter_db(db, os.path.join(dbdir, "filter"), "filtered")
+
+	db_s = load_db(os.path.join(dbdir,"filter"), names=["filtered_selected"], combine=True)
+	db_e = load_db(os.path.join(dbdir,"filter"), names=["filtered_excluded"], combine=True)
+	#db_s = dict(list(db_s.items())[:2])
+	#db_e = dict(list(db_e.items())[:2])
+	compare_measures([db_s, db_e], ["selected", "excluded"], outdir=os.path.join(dbdir, "filter"))
