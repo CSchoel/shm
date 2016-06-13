@@ -278,7 +278,7 @@ def filter_db(db, dname, outname):
 			plot_cdf(name, ar)
 
 def compare_measures(dbs, names, outdir=None):
-	nparams = 1
+	nparams = 6
 	template = "{:s};" + "{:.3f};" * nparams + "\n"
 	res = {}
 	for dbn, db in zip(names, dbs):
@@ -289,9 +289,15 @@ def compare_measures(dbs, names, outdir=None):
 			rr = to_rr(db[n])
 			print("processing sample {:d}/{:d}...".format(i+1, len(sample_names)))
 			print("name: {:s}, length: {:d}".format(n,len(rr)))
-			# FIXME: do we want to use only the first x heartbeats?
-			lambda_e = hnl.lyap_e(rr[:200], emb_dim=10, matrix_dim=4)
-			log_data.append([np.max(lambda_e)])
+			# FIXME: do we really want to use only the first x heartbeats?
+			rr = rr[:200]
+			lambda_e = np.max(hnl.lyap_e(rr, emb_dim=10, matrix_dim=4))
+			lambda_r = hnl.lyap_r(rr)
+			sen = hnl.sampen(rr)
+			h = hnl.hurst_rs(rr)
+			cd = hnl.corr_dim(rr, 2)
+			dfa = hnl.dfa(rr)
+			log_data.append([lambda_e, lambda_r, sen, h, cd, dfa])
 		log_data = np.array(log_data, dtype="float32")
 		res[dbn] = dict(zip(sample_names, log_data))
 		if not (outdir is None):
