@@ -128,6 +128,8 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		float: an estimate of the largest lyapunov exponent (a positive exponent is
 		       a strong indicator for chaos)
 	"""
+	# convert data to float to avoid overflow errors in rowwise_euler
+	data = data.astype("float32")
 	n = len(data)
 	max_tsep_factor = 0.25
 	if lag is None or min_tsep is None:
