@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import warnings
 
+# TODO: use RANSAC instead of simple polyfit?
 
 # TODO more detailed description of fbm
 def fbm(n, H=0.75):
@@ -168,6 +169,7 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 	ntraj = m-trajectory_len
 	# build divergence trajectory by averaging distances along the trajectory over all neighbor
 	# pairs
+	# TODO maybe we can just ignore elements with -infinity?
 	div_traj = np.zeros(trajectory_len, dtype=float)
 	for i,j in zip(range(ntraj), nb_idx):
 		indices = (range(i,i+trajectory_len), range(j,j+trajectory_len))
@@ -275,6 +277,8 @@ def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 	orbit = np.array([data[i:i+emb_dim] for i in range(n - emb_dim + 1 - m)], dtype=float)
 	old_Q = np.identity(matrix_dim)
 	lexp = np.zeros(matrix_dim)
+	# TODO reduce number of points to visit?
+	# TODO performance test!
 	for i in range(len(orbit)):
 		# find neighbors for each vector in the orbit using the chebychev distance
 		diffs = np.max(np.abs(orbit - orbit[i]), axis=1)
