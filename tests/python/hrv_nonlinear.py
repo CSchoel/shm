@@ -53,7 +53,8 @@ def delay_embedding(data, emb_dim, lag=1):
 	indices += np.arange(m).reshape((m,1))
 	return data[indices]
 
-def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, trajectory_len=20, debug_plot=False):
+# TODO comment debug_plot and plot_file
+def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, trajectory_len=20, debug_plot=False, plot_file=None):
 	"""
 	Estimates the largest lyapunov exponent using the algorithm of Rosenstein et al.
 
@@ -183,7 +184,7 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		# normal line fitting
 		poly = np.polyfit(np.arange(trajectory_len), np.log(div_traj), 1)
 	if debug_plot:
-		plot_reg(np.arange(trajectory_len), np.log(div_traj), poly, "log(i)", "log(d(i))")
+		plot_reg(np.arange(trajectory_len), np.log(div_traj), poly, "log(i)", "log(d(i))", fname=plot_file)
 	return poly[0]/tau
 
 def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
@@ -545,7 +546,7 @@ def rs(data, n):
 	# return mean of r/s along subsequence index
 	return np.mean(r/s)
 
-def plot_reg(xvals, yvals, poly, x_label="x", y_label="y", data_label="data", reg_label="regression line"):
+def plot_reg(xvals, yvals, poly, x_label="x", y_label="y", data_label="data", reg_label="regression line", fname=None):
 	"""
 	Helper function to plot trend lines for line-fitting approaches. This function will
 	show a plot through plt.show() and close it after the window has been closed by the user.
@@ -559,6 +560,8 @@ def plot_reg(xvals, yvals, poly, x_label="x", y_label="y", data_label="data", re
 		y_label (str): label of the y-axis 
 		data_label (str): label of the data
 		reg_label(str): label of the regression line
+		fname (str): file name (if not None, the plot will be saved to disc instead of
+		             showing it though plt.show())
 	"""
 	plt.plot(xvals, yvals, "bo", label=data_label)
 	if not (poly is None):
@@ -566,7 +569,10 @@ def plot_reg(xvals, yvals, poly, x_label="x", y_label="y", data_label="data", re
 	plt.xlabel(x_label)
 	plt.ylabel(y_label)
 	plt.legend(loc="best")
-	plt.show()
+	if fname is None:
+		plt.show()
+	else:
+		plt.savefig(fname)
 	plt.close()
 
 def hurst_rs(data, nvals=None, debug_plot=False):
