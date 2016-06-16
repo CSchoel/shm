@@ -291,8 +291,14 @@ def compare_measures(dbs, names, outdir=None):
 			print("name: {:s}, length: {:d}".format(n,len(rr)))
 			# FIXME: do we really want to use only the first x heartbeats?
 			rr = rr[:200]
+			if not (outdir is None):
+				os.makedirs(os.path.join(outdir,"plots"),exist_ok=True)
+				fname = os.path.join(outdir,"plots/{}".format(n))
+				fname_lr = fname + "_lyap_r.png"
+			else:
+				fname_lr = None
 			lambda_e = np.max(hnl.lyap_e(rr, emb_dim=10, matrix_dim=4))
-			lambda_r = hnl.lyap_r(rr)
+			lambda_r = hnl.lyap_r(rr, debug_plot=True, plot_file=fname_lr)
 			sen = hnl.sampen(rr)
 			h = hnl.hurst_rs(rr)
 			cd = hnl.corr_dim(rr, 2)
