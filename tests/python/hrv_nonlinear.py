@@ -80,7 +80,7 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 
 		To calculate lambda, we extract the mean trajectory d'(k) by taking the mean of 
 		d_i(k) over all orbit vectors X_i. We then fit a straight line to the plot of 
-		log(d'(k)) versus log(k). The slope of the line gives the desired parameter lambda.
+		log(d'(k)) versus k. The slope of the line gives the desired parameter lambda.
 	
 	Method for choosing min_tsep:
 		Usually we want to find neighbors between points that are close in phase space but
@@ -181,9 +181,9 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		poly = [np.inf, 0]
 	else:
 		# normal line fitting
-		poly = np.polyfit(np.log(np.arange(trajectory_len)+1), np.log(div_traj), 1)
+		poly = np.polyfit(np.arange(trajectory_len), np.log(div_traj), 1)
 	if debug_plot:
-		plot_reg(np.log(np.arange(trajectory_len)+1), np.log(div_traj), poly, "log(i)", "log(d(i))")
+		plot_reg(np.arange(trajectory_len), np.log(div_traj), poly, "log(i)", "log(d(i))")
 	return poly[0]/tau
 
 def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
