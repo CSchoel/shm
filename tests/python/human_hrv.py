@@ -279,7 +279,7 @@ def filter_db(db, dname, outname):
 
 def compare_measures(dbs, names, outdir=None):
 	nparams = 6
-	template = "{:s};" + "{:.3f};" * nparams + "\n"
+	template = "{:s};" + ";".join(["{:.3f}"] * nparams) + "\n"
 	res = {}
 	for dbn, db in zip(names, dbs):
 		sample_names = sorted(db.keys())
