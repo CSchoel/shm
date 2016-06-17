@@ -282,6 +282,9 @@ def compare_measures(dbs, names, outdir=None):
 	template = "{:s};" + ";".join(["{:.3f}"] * nparams) + "\n"
 	res = {}
 	for dbn, db in zip(names, dbs):
+		measurefile = os.path.join(outdir,dbn + "_nonlinear.txt")
+		with open(measurefile, "w", encoding="utf-8") as f:
+			f.write("name;lyap_e;lyap_r;sampen;hurst;corr_dim;dfa\n")
 		sample_names = sorted(db.keys())
 		log_data = []
 		for i in range(len(sample_names)):
@@ -307,7 +310,7 @@ def compare_measures(dbs, names, outdir=None):
 		log_data = np.array(log_data, dtype="float32")
 		res[dbn] = dict(zip(sample_names, log_data))
 		if not (outdir is None):
-			with open(os.path.join(outdir,dbn + "_nonlinear.txt"), "w", encoding="utf-8") as f:
+			with open(measurefile, "a", encoding="utf-8") as f:
 				f.writelines([template.format(*([n]+list(x))) for n, x in zip(sample_names, log_data)])
 				f.write(template.format(*(["mean"]+list(np.mean(log_data, axis=0)))))
 				f.write("\n")
