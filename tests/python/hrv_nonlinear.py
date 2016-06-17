@@ -546,7 +546,7 @@ def rs(data, n):
 	# find standard deviation
 	s = np.std(seqs,axis=1)
 	# some ranges may be zero and have to be excluded from the analysis
-	idx = np.where(r == 0)
+	idx = np.where(r != 0)
 	r = r[idx]
 	s = s[idx]
 	# it may happen that all ranges are zero (if all values in data are equal)
