@@ -545,8 +545,16 @@ def rs(data, n):
 	r = np.max(y,axis=1) - np.min(y, axis=1)
 	# find standard deviation
 	s = np.std(seqs,axis=1)
-	# return mean of r/s along subsequence index
-	return np.mean(r/s)
+	# some ranges may be zero and have to be excluded from the analysis
+	idx = np.where(r == 0)
+	r = r[idx]
+	s = s[idx]
+	# it may happen that all ranges are zero (if all values in data are equal)
+	if len(r) == 0:
+		return np.nan
+	else:
+		# return mean of r/s along subsequence index
+		return np.mean(r/s)
 
 def plot_reg(xvals, yvals, poly, x_label="x", y_label="y", data_label="data", reg_label="regression line", fname=None):
 	"""
@@ -654,9 +662,15 @@ def hurst_rs(data, nvals=None, debug_plot=False):
 	if nvals is None:
 		nvals = logarithmic_n(4, 0.1*total_N, 1.2)
 	# get individual values for (R/S)_n
-	rsvals = [rs(data, n) for n in nvals]
-	# fit a line to the logarithm of the obtained (R/S)_n
-	poly = np.polyfit(np.log(nvals), np.log(rsvals), 1)
+	rsvals = np.array([rs(data, n) for n in nvals])
+	# filter NaNs (zeros should not be possible, because if R is 0 then S is also zero)
+	rsvals = rsvals[np.logical_not(np.isnan(rsvals))]
+	# it may happen that no rsvals are left (if all values of data are the same)
+	if len(rsvals) == 0:
+		poly = [np.nan, np.nan]
+	else :
+		# fit a line to the logarithm of the obtained (R/S)_n
+		poly = np.polyfit(np.log(nvals), np.log(rsvals), 1)
 	if debug_plot:
 		plot_reg(np.log(nvals), np.log(rsvals), poly, "log(n)", "log((R/S)_n)")
 	# return line slope
