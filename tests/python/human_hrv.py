@@ -294,17 +294,20 @@ def compare_measures(dbs, names, outdir=None):
 			print("name: {:s}, length: {:d}".format(n,len(rr)))
 			# FIXME: do we really want to use only the first x heartbeats?
 			rr = rr[:200]
+			alnames = ["lyap_r", "hurst"]
 			if not (outdir is None):
-				os.makedirs(os.path.join(outdir,"plots"),exist_ok=True)
-				fname = os.path.join(outdir,"plots/{}".format(n))
-				fname_lr = fname + "_lyap_r.png"
-				fname_h = fname + "_hurst.png"
+				plotdir = os.path.join(outdir,"plots")
+				fnames = {}
+				for algo in alnames:
+					algodir = os.path.join(plotdir, algo)
+					os.makedirs(algodir,exist_ok=True)
+					fnames[algo] = os.path.join(algodir,"{}_{}.png".format(n, algo))
 			else:
-				fname_lr = fname_h = None
+				fnames = {a : None for a in alnames}
 			lambda_e = np.max(hnl.lyap_e(rr, emb_dim=10, matrix_dim=4))
-			lambda_r = hnl.lyap_r(rr, debug_plot=True, plot_file=fname_lr)
+			lambda_r = hnl.lyap_r(rr, debug_plot=True, plot_file=fnames["lyap_r"])
 			sen = hnl.sampen(rr)
-			h = hnl.hurst_rs(rr, debug_plot=True, plot_file=fname_h)
+			h = hnl.hurst_rs(rr, debug_plot=True, plot_file=fnames["hurst"])
 			cd = hnl.corr_dim(rr, 2)
 			dfa = hnl.dfa(rr)
 			log_data.append([lambda_e, lambda_r, sen, h, cd, dfa])
