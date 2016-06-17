@@ -585,7 +585,7 @@ def plot_reg(xvals, yvals, poly, x_label="x", y_label="y", data_label="data", re
 		plt.savefig(fname)
 	plt.close()
 
-def hurst_rs(data, nvals=None, debug_plot=False):
+def hurst_rs(data, nvals=None, debug_plot=False, plot_file=None):
 	"""
 	Calculates the Hurst exponent by a standard rescaled range (R/S) approach.
 
@@ -672,7 +672,7 @@ def hurst_rs(data, nvals=None, debug_plot=False):
 		# fit a line to the logarithm of the obtained (R/S)_n
 		poly = np.polyfit(np.log(nvals), np.log(rsvals), 1)
 	if debug_plot:
-		plot_reg(np.log(nvals), np.log(rsvals), poly, "log(n)", "log((R/S)_n)")
+		plot_reg(np.log(nvals), np.log(rsvals), poly, "log(n)", "log((R/S)_n)", fname=plot_file)
 	# return line slope
 	return poly[0]
 

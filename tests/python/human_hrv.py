@@ -298,12 +298,13 @@ def compare_measures(dbs, names, outdir=None):
 				os.makedirs(os.path.join(outdir,"plots"),exist_ok=True)
 				fname = os.path.join(outdir,"plots/{}".format(n))
 				fname_lr = fname + "_lyap_r.png"
+				fname_h = fname + "_hurst.png"
 			else:
-				fname_lr = None
+				fname_lr = fname_h = None
 			lambda_e = np.max(hnl.lyap_e(rr, emb_dim=10, matrix_dim=4))
 			lambda_r = hnl.lyap_r(rr, debug_plot=True, plot_file=fname_lr)
 			sen = hnl.sampen(rr)
-			h = hnl.hurst_rs(rr)
+			h = hnl.hurst_rs(rr, debug_plot=True, plot_file=fname_h)
 			cd = hnl.corr_dim(rr, 2)
 			dfa = hnl.dfa(rr)
 			log_data.append([lambda_e, lambda_r, sen, h, cd, dfa])
