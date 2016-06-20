@@ -74,14 +74,17 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		For each such vector X_i, we find the closest neighbor X_j using the euclidean
 		distance. We know that as we follow the trajectories from X_i and X_j in time in a
 		chaotic system the distances betwen X_(i+k) and X_(j+k) denoted as d_i(k) will 
-		increase according to a power law d_i(k) = c * k^lambda where lambda is a good
+		increase according to a power law d_i(k) = c * e^(lambda * k) where lambda is a good
 		approximation of the highest lyapunov exponent, because the exponential expansion
 		along the axis associated with this exponent will quickly dominate the expansion or
 		contraction along other axes.
 
-		To calculate lambda, we extract the mean trajectory d'(k) by taking the mean of 
-		d_i(k) over all orbit vectors X_i. We then fit a straight line to the plot of 
-		log(d'(k)) versus k. The slope of the line gives the desired parameter lambda.
+		To calculate lambda, we look at the logarithm of the distance trajectory, because
+		log(d_i(k)) = log(c) + lambda * k. This gives a set of lines (one for each index i)
+		whose slope is an approximation of lambda. We therefore extract the mean log
+		trajectory d'(k) by taking the mean of log(d_i(k)) over all orbit vectors X_i. 
+		We then fit a straight line to the plot of d'(k) versus k. The slope of the line 
+		gives the desired parameter lambda.
 	
 	Method for choosing min_tsep:
 		Usually we want to find neighbors between points that are close in phase space but
@@ -183,7 +186,7 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 			# if all entries where zero, we have to use -inf
 			div_traj[k] = -np.inf
 		else:
-			div_traj[k] = np.log(np.mean(div_traj_k[nonzero]))
+			div_traj[k] = np.mean(np.log(div_traj_k[nonzero]))
 	#filter -inf entries from mean trajectory
 	ks = np.arange(trajectory_len)
 	finite = np.where(np.isfinite(div_traj))
