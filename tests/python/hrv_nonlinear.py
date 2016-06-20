@@ -168,25 +168,36 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		dists[i,max(0,i-min_tsep):i+min_tsep+1] = float("inf")
 	# find nearest neighbors (exclude last columns, because these vectors cannot be followed
 	# in time for trajectory_len steps)
-	nb_idx = np.argmin(dists[:,:-trajectory_len+1], axis=1)
-	ntraj = m-trajectory_len
+	ntraj = m-trajectory_len+1
+	nb_idx = np.argmin(dists[:ntraj,:ntraj], axis=1)
 	# build divergence trajectory by averaging distances along the trajectory over all neighbor
 	# pairs
-	# TODO maybe we can just ignore elements with -infinity?
 	div_traj = np.zeros(trajectory_len, dtype=float)
-	for i,j in zip(range(ntraj), nb_idx):
-		indices = (range(i,i+trajectory_len), range(j,j+trajectory_len))
-		div_traj += dists[indices]
-	div_traj /= ntraj
-	if np.any(div_traj == 0):
-		# if we have zeros in the divergence trajectory, we get -inf in the log plot and therefore
-		# cannot correctly fit a line
-		poly = [np.inf, 0]
+	for k in range(trajectory_len):
+		# calculate mean trajectory distance at step k
+		indices = (np.arange(ntraj) + k, nb_idx + k)
+		div_traj_k = dists[indices]
+		# filter entries where distance is zero (would lead to -inf after log)
+		nonzero = np.where(div_traj_k != 0)
+		if len(nonzero[0]) == 0:
+			# if all entries where zero, we have to use -inf
+			div_traj[k] = -np.inf
+		else:
+			div_traj[k] = np.log(np.mean(div_traj_k[nonzero]))
+	#filter -inf entries from mean trajectory
+	ks = np.arange(trajectory_len)
+	finite = np.where(np.isfinite(div_traj))
+	ks = ks[finite]
+	div_traj = div_traj[finite]
+	if len(ks) < 1:
+		# if all points or all but one point in the trajectory is -inf, we cannot
+		# fit a line through the remaining points => return -inf as estimate for exponent
+		poly = [-np.inf, 0]
 	else:
 		# normal line fitting
-		poly = np.polyfit(np.arange(trajectory_len), np.log(div_traj), 1)
+		poly = np.polyfit(ks, div_traj, 1)
 	if debug_plot:
-		plot_reg(np.arange(trajectory_len), np.log(div_traj), poly, "log(i)", "log(d(i))", fname=plot_file)
+		plot_reg(ks, div_traj, poly, "log(i)", "log(d(i))", fname=plot_file)
 	return poly[0]/tau
 
 def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
