@@ -277,10 +277,30 @@ def filter_db(db, dname, outname):
 			plot_qq(name, ar)
 			plot_cdf(name, ar)
 
+def plot_measure_hists(data, dnames, alnames, plotdir):
+	nbins = 50
+	nsigma = 3
+	ymax = 50
+	n = len(alnames)
+	total_data = np.concatenate(data)
+	total_std = np.std(total_data, axis=0)
+	total_mean = np.mean(total_data, axis=0)
+	for i in range(n):
+		rng = (total_mean[i] - nsigma * total_std[i], total_mean[i] + nsigma * total_std[i])
+		for j in range(len(data)):
+			fname = os.path.join(plotdir,"{0:s}/{0:s}_hist_{1:s}.png".format(alnames[i], dnames[j]))
+			plt.hist(data[j][:,i], nbins, rng)
+			plt.vlines(np.mean(data[j][:,i]),0,ymax,"red")
+			plt.ylim(0, ymax)
+			plt.savefig(fname)
+			plt.close()
+
 def compare_measures(dbs, names, outdir=None):
 	nparams = 6
 	template = "{:s};" + ";".join(["{:.3f}"] * nparams) + "\n"
 	res = {}
+	all_data = []
+	alnames = ["lyap_e", "lyap_r", "sampEn", "hurst", "corrDim", "dfa"]
 	for dbn, db in zip(names, dbs):
 		measurefile = os.path.join(outdir,dbn + "_nonlinear.txt")
 		with open(measurefile, "w", encoding="utf-8") as f:
@@ -294,12 +314,11 @@ def compare_measures(dbs, names, outdir=None):
 			print("name: {:s}, length: {:d}".format(n,len(rr)))
 			# FIXME: do we really want to use only the first x heartbeats?
 			rr = rr[:200]
-			alnames = ["lyap_r", "hurst"]
 			if not (outdir is None):
 				plotdir = os.path.join(outdir,"plots")
 				fnames = {}
 				for algo in alnames:
-					algodir = os.path.join(plotdir, algo)
+					algodir = os.path.join(os.path.join(plotdir, algo),dbn)
 					os.makedirs(algodir,exist_ok=True)
 					fnames[algo] = os.path.join(algodir,"{}_{}.png".format(n, algo))
 			else:
@@ -312,12 +331,15 @@ def compare_measures(dbs, names, outdir=None):
 			dfa = hnl.dfa(rr)
 			log_data.append([lambda_e, lambda_r, sen, h, cd, dfa])
 		log_data = np.array(log_data, dtype="float32")
+		all_data.append(log_data)
 		res[dbn] = dict(zip(sample_names, log_data))
 		if not (outdir is None):
 			with open(measurefile, "a", encoding="utf-8") as f:
 				f.writelines([template.format(*([n]+list(x))) for n, x in zip(sample_names, log_data)])
 				f.write(template.format(*(["mean"]+list(np.mean(log_data, axis=0)))))
 				f.write("\n")
+	if not outdir is None:
+		plot_measure_hists(all_data, names, alnames, os.path.join(outdir, "plots"))
 	return res
 
 if __name__ == "__main__":
