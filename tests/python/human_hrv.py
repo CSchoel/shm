@@ -297,6 +297,7 @@ def plot_measure_hists(data, dnames, alnames, plotdir):
 
 def compare_measures(dbs, names, outdir=None):
 	nparams = 6
+	nbeats = 200
 	template = "{:s};" + ";".join(["{:.3f}"] * nparams) + "\n"
 	res = {}
 	all_data = []
@@ -307,35 +308,39 @@ def compare_measures(dbs, names, outdir=None):
 			f.write("name;lyap_e;lyap_r;sampen;hurst;corr_dim;dfa\n")
 		sample_names = sorted(db.keys())
 		log_data = []
+		log_names = []
 		for i in range(len(sample_names)):
 			n = sample_names[i]
 			rr = to_rr(db[n])
 			print("processing sample {:d}/{:d}...".format(i+1, len(sample_names)))
 			print("name: {:s}, length: {:d}".format(n,len(rr)))
 			# FIXME: do we really want to use only the first x heartbeats?
-			rr = rr[:200]
-			if not (outdir is None):
-				plotdir = os.path.join(outdir,"plots")
-				fnames = {}
-				for algo in alnames:
-					algodir = os.path.join(os.path.join(plotdir, algo),dbn)
-					os.makedirs(algodir,exist_ok=True)
-					fnames[algo] = os.path.join(algodir,"{}_{}.png".format(n, algo))
-			else:
-				fnames = {a : None for a in alnames}
-			lambda_e = np.max(hnl.lyap_e(rr, emb_dim=10, matrix_dim=4))
-			lambda_r = hnl.lyap_r(rr, debug_plot=True, plot_file=fnames["lyap_r"])
-			sen = hnl.sampen(rr)
-			h = hnl.hurst_rs(rr, debug_plot=True, plot_file=fnames["hurst"])
-			cd = hnl.corr_dim(rr, 2)
-			dfa = hnl.dfa(rr)
+			for s in range(len(rr) // nbeats):
+				rr_slice = rr[s*nbeats:(s+1)*nbeats]
+				if not (outdir is None):
+					plotdir = os.path.join(outdir,"plots")
+					fnames = {}
+					for algo in alnames:
+						algodir = os.path.join(os.path.join(plotdir, algo),dbn)
+						os.makedirs(algodir,exist_ok=True)
+						fn = "{}_{}_{}-{}.png".format(n, algo, s*nbeats, (s+1)*nbeats)
+						fnames[algo] = os.path.join(algodir,fn)
+				else:
+					fnames = {a : None for a in alnames}
+				lambda_e = np.max(hnl.lyap_e(rr_slice, emb_dim=10, matrix_dim=4))
+				lambda_r = hnl.lyap_r(rr_slice, debug_plot=True, plot_file=fnames["lyap_r"])
+				sen = hnl.sampen(rr_slice)
+				h = hnl.hurst_rs(rr_slice, debug_plot=True, plot_file=fnames["hurst"])
+				cd = hnl.corr_dim(rr_slice, 2)
+				dfa = hnl.dfa(rr_slice)
 			log_data.append([lambda_e, lambda_r, sen, h, cd, dfa])
+			log_names.append("{}_{}".format(n,s))
 		log_data = np.array(log_data, dtype="float32")
 		all_data.append(log_data)
 		res[dbn] = dict(zip(sample_names, log_data))
 		if not (outdir is None):
 			with open(measurefile, "a", encoding="utf-8") as f:
-				f.writelines([template.format(*([n]+list(x))) for n, x in zip(sample_names, log_data)])
+				f.writelines([template.format(*([n]+list(x))) for n, x in zip(log_names,log_data)])
 				f.write(template.format(*(["mean"]+list(np.mean(log_data, axis=0)))))
 				f.write("\n")
 	if not outdir is None:
