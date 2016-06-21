@@ -351,6 +351,14 @@ def compare_measures(dbs, names, outdir=None):
 		plot_measure_hists(all_data, names, alnames, os.path.join(outdir, "plots"))
 	return res
 
+def replot_compare_hists():
+	dn = "D:/Daten/hrvdb/filter"
+	cols = range(1,7)
+	names = ["selected_nonlinear.txt", "excluded_nonlinear.txt"]
+	data = [np.loadtxt(os.path.join(dn,fn), delimiter=";", skiprows=1, usecols=cols) for fn in names]
+	alnames = ["lyap_e", "lyap_r", "sampEn", "hurst", "corrDim", "dfa"]
+	plot_measure_hists(data, ["selected", "excluded"], alnames, os.path.join(dn, "plots"))
+
 if __name__ == "__main__":
 	dbdir = "D:/Daten/hrvdb"
 	#db = load_db(dbdir, names=None, combine=False)
@@ -359,8 +367,9 @@ if __name__ == "__main__":
 	#db = load_db(dbdir, names=["healthy", "healthy_moving", "healthy_young", "healthy_old"], combine=True)
 	#filter_db(db, os.path.join(dbdir, "filter"), "filtered")
 
-	db_s = load_db(os.path.join(dbdir,"filter"), names=["filtered_selected"], combine=True)
-	db_e = load_db(os.path.join(dbdir,"filter"), names=["filtered_excluded"], combine=True)
+	#db_s = load_db(os.path.join(dbdir,"filter"), names=["filtered_selected"], combine=True)
+	#db_e = load_db(os.path.join(dbdir,"filter"), names=["filtered_excluded"], combine=True)
 	#db_s = dict(list(db_s.items())[:2])
 	#db_e = dict(list(db_e.items())[:2])
-	compare_measures([db_s, db_e], ["selected", "excluded"], outdir=os.path.join(dbdir, "filter"))
+	#compare_measures([db_s, db_e], ["selected", "excluded"], outdir=os.path.join(dbdir, "filter"))
+	replot_compare_hists()
