@@ -280,7 +280,7 @@ def filter_db(db, dname, outname):
 def plot_measure_hists(data, dnames, alnames, plotdir):
 	nbins = 50
 	nsigma = 3
-	ymax = 50
+	ymax = 0.2
 	n = len(alnames)
 	total_data = np.concatenate(data)
 	total_std = np.std(total_data, axis=0)
@@ -289,9 +289,13 @@ def plot_measure_hists(data, dnames, alnames, plotdir):
 		rng = (total_mean[i] - nsigma * total_std[i], total_mean[i] + nsigma * total_std[i])
 		for j in range(len(data)):
 			fname = os.path.join(plotdir,"{0:s}/{0:s}_hist_{1:s}.png".format(alnames[i], dnames[j]))
-			plt.hist(data[j][:,i], nbins, rng)
+			h, bins = np.histogram(data[j][:,i], nbins, rng)
+			h = h.astype("float32") / np.sum(h)
+			bin_width = bins[1]-bins[0]
+			plt.bar(bins[:-1], h, bin_width)
 			plt.vlines(np.mean(data[j][:,i]),0,ymax,"red")
 			plt.ylim(0, ymax)
+			plt.xlim(bins[0],bins[-1]+bin_width)
 			plt.savefig(fname)
 			plt.close()
 
