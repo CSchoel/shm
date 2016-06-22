@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import os
 import itertools as it
 import glob
-from scipy.stats import norm
-from scipy.stats.mstats import mquantiles
+import scipy.stats as sst
+import scipy.stats.mstats as msst
 import scipy.signal as sig
 
 import hrv_nonlinear as hnl
@@ -149,8 +149,8 @@ def plot_qq(fname, data):
 	lim = (-4,4)
 	nbins = 50
 	xvals = np.arange(nbins,dtype="float32")/nbins
-	q_data = mquantiles(sd1, xvals)
-	q_gauss = [norm.ppf(x) for x in xvals]
+	q_data = sst.mquantiles(sd1, xvals)
+	q_gauss = [msst.norm.ppf(x) for x in xvals]
 	fig = plt.figure(figsize=(8,8))
 	ax = fig.add_subplot(111)
 	#xvals = bins[:-1] 
@@ -289,15 +289,29 @@ def plot_measure_hists(data, dnames, alnames, plotdir):
 		rng = (total_mean[i] - nsigma * total_std[i], total_mean[i] + nsigma * total_std[i])
 		for j in range(len(data)):
 			fname = os.path.join(plotdir,"{0:s}/{0:s}_hist_{1:s}.png".format(alnames[i], dnames[j]))
-			h, bins = np.histogram(data[j][:,i], nbins, rng)
-			h = h.astype("float32") / np.sum(h)
-			bin_width = bins[1]-bins[0]
-			plt.bar(bins[:-1], h, bin_width)
-			plt.vlines(np.mean(data[j][:,i]),0,ymax,"red")
-			plt.ylim(0, ymax)
-			plt.xlim(bins[0],bins[-1]+bin_width)
-			plt.savefig(fname)
-			plt.close()
+			d = data[j][:,i]
+			h, bins = np.histogram(d, nbins, rng)
+			normfac = np.sum(h)
+			h = h.astype("float32") / normfac
+			pdfs = []
+			pdfs.append(("norm", sst.norm.pdf(bins[:-1],*sst.norm.fit(d))))
+			pdfs.append(("gamma", sst.gamma.pdf(bins[:-1],*sst.gamma.fit(d))))
+			pdfs.append(("-gamma", sst.gamma.pdf(-bins[:-1],*sst.gamma.fit(-d))))
+			pdfs = [(n, d / np.sum(d)) for n,d in pdfs]
+			plot_hist_with_pdf(h, bins, ymax, fname, mean=np.mean(data[j][:,i]), pdfs=pdfs)
+
+def plot_hist_with_pdf(h, bins, ymax, fname, mean=None, pdfs=[]):
+	bin_width = bins[1]-bins[0]
+	plt.bar(bins[:-1], h, bin_width)
+	if not mean is None:
+		plt.vlines(mean,0,ymax,"red")
+	for name,pdf in pdfs:
+		plt.plot(bins[:-1], pdf,label=name)
+	plt.ylim(0, ymax)
+	plt.xlim(bins[0],bins[-1]+bin_width)
+	plt.legend(loc="best")
+	plt.savefig(fname)
+	plt.close()
 
 def compare_measures(dbs, names, outdir=None):
 	nparams = 6
@@ -358,6 +372,15 @@ def replot_compare_hists():
 	data = [np.loadtxt(os.path.join(dn,fn), delimiter=";", skiprows=1, usecols=cols) for fn in names]
 	alnames = ["lyap_e", "lyap_r", "sampEn", "hurst", "corrDim", "dfa"]
 	plot_measure_hists(data, ["selected", "excluded"], alnames, os.path.join(dn, "plots"))
+
+def plot_dist_hist(data):
+	nbins = 50
+	h, bins = np.histogram(data)
+	gparams = sst.gamma.fit(data)
+	pass
+
+def plot_compare_distributions():
+	pass
 
 if __name__ == "__main__":
 	dbdir = "D:/Daten/hrvdb"
