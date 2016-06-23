@@ -296,15 +296,22 @@ def plot_measure_hists(data, dnames, alnames, plotdir):
 			pdfs = []
 			pdfs.append(("norm", sst.norm.pdf(bins[:-1],*sst.norm.fit(d))))
 			pdfs.append(("gamma", sst.gamma.pdf(bins[:-1],*sst.gamma.fit(d))))
-			pdfs.append(("powernorm", sst.powernorm.pdf(bins[:-1],*sst.powernorm.fit(d))))
+			pdfs.append(("beta", sst.beta.pdf(bins[:-1],*sst.beta.fit(d))))
+			pdfs.append(("gen. logistic", sst.genlogistic.pdf(bins[:-1],*sst.genlogistic.fit(d))))
+			pdfs.append(("weibull_min", sst.weibull_min.pdf(bins[:-1],*sst.weibull_min.fit(d))))
+			pdfs.append(("weibull_max", sst.weibull_max.pdf(bins[:-1],*sst.weibull_max.fit(d))))
+			#powerfit = sst.powernorm.fit(d)
+			#pdfs.append(("powernorm (p={:.3f})".format(powerfit[0]), sst.powernorm.pdf(bins[:-1],*powerfit)))
 			pdfs = [(n, d / np.sum(d)) for n,d in pdfs]
-			plot_hist_with_pdf(h, bins, ymax, fname, mean=np.mean(data[j][:,i]), pdfs=pdfs)
+			plot_hist_with_pdf(h, bins, ymax, fname, mean=np.mean(d), median=np.median(d), pdfs=pdfs)
 
-def plot_hist_with_pdf(h, bins, ymax, fname, mean=None, pdfs=[]):
+def plot_hist_with_pdf(h, bins, ymax, fname, mean=None, median=None, pdfs=[]):
 	bin_width = bins[1]-bins[0]
 	plt.bar(bins[:-1], h, bin_width)
 	if not mean is None:
 		plt.vlines(mean,0,ymax,"red")
+	if not median is None:
+		plt.vlines(median,0,ymax,"black")
 	for name,pdf in pdfs:
 		plt.plot(bins[:-1], pdf,label=name)
 	plt.ylim(0, ymax)
