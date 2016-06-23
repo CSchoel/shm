@@ -296,7 +296,7 @@ def plot_measure_hists(data, dnames, alnames, plotdir):
 			pdfs = []
 			pdfs.append(("norm", sst.norm.pdf(bins[:-1],*sst.norm.fit(d))))
 			pdfs.append(("gamma", sst.gamma.pdf(bins[:-1],*sst.gamma.fit(d))))
-			pdfs.append(("-gamma", sst.gamma.pdf(-bins[:-1],*sst.gamma.fit(-d))))
+			pdfs.append(("powernorm", sst.powernorm.pdf(bins[:-1],*sst.powernorm.fit(d))))
 			pdfs = [(n, d / np.sum(d)) for n,d in pdfs]
 			plot_hist_with_pdf(h, bins, ymax, fname, mean=np.mean(data[j][:,i]), pdfs=pdfs)
 
