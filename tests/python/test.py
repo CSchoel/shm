@@ -52,9 +52,13 @@ class TestSHMModel(unittest.TestCase):
 	def tearDownClass(cls):
 		# close session
 		del cls.session
-	def assertBetween(self, v, vmin, vmax):
-		self.assertGreater(v, vmin)
-		self.assertLess(v, vmax)
+	def assertBetween(self, v, vmin, vmax, name=None):
+		msg_gt = msg_lt = None
+		if not name is None:
+			msg_gt = "{} not greater than {} for {:s}".format(v, vmin, name)
+			msg_lt = "{} not less than {} for {:s}".format(v, vmax, name)
+		self.assertGreater(v, vmin, msg=msg_gt)
+		self.assertLess(v, vmax, msg=msg_lt)
 	def printt(self, name, fmt, value, base):
 		match = re.match(r"%(\d*)(.*)", fmt)
 		if match :
