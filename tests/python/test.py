@@ -238,7 +238,7 @@ class TestSHMModel(unittest.TestCase):
 
 		# Correlation Dimension
 		# - between 0 and 1, should be < 1 for 1D-system with strange attractor
-		cdim = hnl.corr_dim(hr[:,1], 4)
+		cdim = hnl.corr_dim(hr[:,1], 2)
 		# TODO min, max, ref?
 		measures.append(("correlation dimension", cdim, 0, 1, 0))
 		
