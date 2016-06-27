@@ -174,20 +174,18 @@ class TestSHMModel(unittest.TestCase):
 		rr_max = np.max(hr[:,1])
 		rr_min = np.min(hr[:,1])
 		rr_std = np.std(hr[:,1])
+		sdnn = rr_std * 1000
 
-		self.printt("heart rate", "%.3f", bpm, 61.333)
-		self.printt("min RR", "%.3f", rr_min, 0.930)
-		self.printt("max RR", "%.3f", rr_max, 1.029)
-		self.printt("std RR (sdnn)", "%.3f", rr_std, 0.034)
-
+		# name, value, min, max, ref
+		measures = []
 		# normal resting heart rate: 60 - 100 bpm
-		self.assertBetween(bpm, 60, 100)
-
+		measures.append(("heart rate", bpm, 60, 100, 61.333))
+		measures.append(("min RR", rr_min, 0.5, 1.0, 0.930))
+		measures.append(("max RR", rr_max, 0.6, 1.2, 1.029))
 		# standard deviation of nn-inverval (sdnn)
 		# normal values (Task Force paper): 141 +- 39 ms
-		sdnn = rr_std * 1000
 		# TODO increase lower bound to 102 when model is fixed (only possible with noise?)
-		self.assertBetween(sdnn, 30, 180)
+		measures.append(("std RR (sdnn)", sdnn, 30, 180, 34))
 
 		# standard deviation of average (over 5 minutes) NN interval (sdann)
 		# - estimate for changes in heart rate due to cycles longer than 5 min
@@ -197,8 +195,7 @@ class TestSHMModel(unittest.TestCase):
 		# root mean squared successive differences (rmssd)
 		# normal values (Task Force paper): 27+-12 ms
 		rmssd = rmse(hr[1:,1],hr[:-1,1]) * 1000
-		self.printt("rmssd", "%.3f", rmssd, 0) # TODO base value
-		self.assertBetween(rmssd, 15, 39)
+		measures.append(("rmssd", rmssd, 15, 39, 0)) # TODO reference value
 
 		# proportion of number of successive interval differences greater than 50 ms (pnn50)
 		# - not recommended by task force of ESC and NASPE => not implemented
@@ -212,32 +209,44 @@ class TestSHMModel(unittest.TestCase):
 		# - -log(p(sim_next|sim_last_m))  (sim_next = next point is similar, sim_last_m = last m points are similar)
 		# - lower values (closer to zero) => more self-similarity
 		saen = hnl.sampen(hr[:,1])
-		self.printt("sample entropy", "%.3f", saen, 0)
-
+		measures.append(("sample entropy", saen, 0, 100, 0)) # TODO min, max, ref?
+		
 		# Lyapunov Exponent
 		# - A positive lyapunov exponent is an indicator of chaos
-		lexp = np.max(hnl.lyap_e(hr[:,1], emb_dim=10, matrix_dim=4))
-		self.printt("lyapunov exponent", "%.3f", lexp, 0)
+		fname_e = os.path.join(self.outdir,"lyap_e.png")
+		fname_r = os.path.join(self.outdir,"lyap_r.png")
+		lexp_e = np.max(hnl.lyap_e(hr[:,1], emb_dim=10, matrix_dim=4, debug_plot=True, plot_file=fname_e))
+		lexp_r = hnl.lyap_r(hr[:,1], debug_plot=True, plot_file=fname_r)
+		# TODO min, max, ref?
+		measures.append(("lyapunov exponent (Eckmann)", lexp_e, -100, 100, 0))
+		measures.append(("lyapunov exponent (Rosenstein)", lexp_r, -100, 100, 0))
 
 		# Hurst Exponent
 		# - < 0.5 : negative long-term correlations ("mean-reverting" system)
 		# - = 0.5 : no long-term correlations (random walk)
 		# - > 0.5 : positive long-term correlations ("long-term memory")
 		hexp = hnl.hurst_rs(hr[:,1])
-		self.printt("hurst exponent", "%.3f", hexp, 0)
+		# TODO min, max, ref?
+		measures.append(("hurst exponent", hexp, 0, 1, 0))
 
 		# Correlation Dimension
 		# - between 0 and 1, should be < 1 for 1D-system with strange attractor
 		cdim = hnl.corr_dim(hr[:,1], 4)
-		self.printt("correlation dimension", "%.3f", cdim, 0)
-
+		# TODO min, max, ref?
+		measures.append(("correlation dimension", cdim, 0, 1, 0))
+		
 		# Detrended Fluctuation Analysis
 		# - < 1 : stationary process with Hurst exponent H = hdfa
 		# - > 1 : non-stationary process with Hurst exponent H = hdfa - 1
 		hdfa = hnl.dfa(hr[:,1])
-		self.printt("hurst parameter (DFA)", "%.3f", hdfa, 0)
+		# TODO min, max, ref?
+		measures.append(("hurst parameter (DFA)", hdfa, 0, 2, 0))
 
 		# TODO calculate values for human sample data?
+		for name, val, v_min, v_max, v_ref in measures:
+			self.printt(name, "%.3f", val, v_ref)
+		for name, val, v_min, v_max, v_ref in measures:
+			self.assertBetween(val, v_min, v_max)
 		
 	def test_rr_hist(self):
 		vals,bins = np.histogram(self.data_hrv[:,1],np.arange(0.5,2.0,0.1))
@@ -252,12 +261,13 @@ class TestSHMModel(unittest.TestCase):
 		vals2, bins2 = np.histogram(self.data_hrv[:,1],np.arange(0.0,1.5,1.0/128))
 		ti = 1.0*len(self.data_hrv)/np.max(vals2)
 
+		self.printt("RMSE RR-interval histogram", "%.3f", error, 0.001)
+		self.printt("HRV triangular index","%.3f", ti, 0) # TODO set base value
+
 		# TODO set limits
 		self.assertGreater(ti, 4)
 		self.assertLess(ti,6)
 		
-		self.printt("RMSE RR-interval histogram", "%.3f", error, 0.001)
-		self.printt("HRV triangular index","%.3f", ti, 0) # TODO set base value
 		# TODO tolerance is chosen very low to not produce false positive test results
 		# TODO probably needs to be increased when this test fails repeatedly (look at the plot!)
 		self.assertLess(error, 0.005)
