@@ -393,7 +393,34 @@ def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1, debug_plot=False,
 	lexp /= m
 	return lexp
 
-def sampen(data, emb_dim=2, tolerance=None, dist="chebychev"):
+def plot_dists(dists, tolerance, m, title=None, fname=None):
+	nstd = 3
+	nbins = 50
+	dists_full = np.concatenate(dists)
+	ymax = len(dists_full) * 0.05
+	mean = np.mean(dists_full)
+	std = np.std(dists_full)
+	rng = (0, mean + std*nstd)
+	i = 0
+	colors = ["green", "blue"]
+	for h, bins in [np.histogram(dat, nbins, rng) for dat in dists]:
+		bw = bins[1]-bins[0]
+		plt.bar(bins[:-1], h, bw, label="m={:d}".format(m+i), color=colors[i], alpha=0.5)
+		i += 1
+	plt.axvline(tolerance,color="red")
+	plt.legend(loc="best")
+	plt.xlabel("distance")
+	plt.ylabel("count")
+	plt.ylim(0, ymax)
+	if not title is None:
+		plt.title(title)
+	if fname is None:
+		plt.show()
+	else:
+		plt.savefig(fname)
+	plt.close()
+
+def sampen(data, emb_dim=2, tolerance=None, dist="chebychev", debug_plot=True, plot_file=True):
 	"""
 	Computes the sample entropy of the given data.
 
@@ -431,6 +458,9 @@ def sampen(data, emb_dim=2, tolerance=None, dist="chebychev"):
 		                   equal (default: 0.2 * std(data))
 		dist (string): distance function used to calculate the distance between template vectors, 
 		               can be 'euler' or 'chebychev'
+		debug_plot (boolean): if True, a histogram of the individual distances for m and m+1
+		plot_file (str): if debug_plot is True and plot_file is not None, the plot will be saved
+		                 under the given file name instead of directly showing it through plt.show()
 
 	Returns: 
 		float: the sample entropy of the data (negative logarithm of ratio between similar template 
@@ -458,9 +488,11 @@ def sampen(data, emb_dim=2, tolerance=None, dist="chebychev"):
 	tVecs = np.zeros((n - emb_dim, emb_dim + 1))
 	for i in range(tVecs.shape[0]):
 		tVecs[i,:] = data[i:i+tVecs.shape[1]]
+	plot_data = []
 	counts = []
 	for m in [emb_dim, emb_dim+1]:
 		counts.append(0)
+		plot_data.append([])
 		# get the matrix that we need for the current m
 		tVecsM = tVecs[:n-m+1,:m]
 		# successively calculate distances between each pair of template vectors
@@ -472,9 +504,14 @@ def sampen(data, emb_dim=2, tolerance=None, dist="chebychev"):
 				dsts = np.norm(diff, axis=1)
 			else :
 				raise "unknown distance function: %s" % dist
+			if debug_plot:
+				plot_data[-1].extend(dsts)
 			# count how many distances are smaller than the tolerance
 			counts[-1] += np.sum(dsts < tolerance)
-	return -np.log(1.0*counts[1]/counts[0])
+	saen = -np.log(1.0*counts[1]/counts[0])
+	if debug_plot:
+		plot_dists(plot_data, tolerance, m, title="sampEn = {:.3f}".format(saen), fname=plot_file)
+	return saen
 
 
 def binary_n(total_N, min_n=50):
