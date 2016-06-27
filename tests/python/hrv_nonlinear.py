@@ -725,7 +725,7 @@ def hurst_rs(data, nvals=None, debug_plot=False, plot_file=None):
 rowwise_chebychev = lambda x, y: np.max(np.abs(x - y), axis=1)
 rowwise_euler = lambda x, y: np.sqrt(np.sum((x - y)**2, axis=1))
 
-def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler, debug_plot=False):
+def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler, debug_plot=False, plot_file=None):
 	"""
 	Calculates the correlation dimension with the Grassberger-Procaccia algorithm
 
@@ -781,6 +781,8 @@ def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler, debug_plot=False):
 		dist (function (2d-array, 1d-array) -> 1d-array): row-wise difference function
 		debug_plot (boolean): if True, a simple plot of the final line-fitting step will
 		                      be shown
+		plot_file (str): if debug_plot is True and plot_file is not None, the plot will be saved
+		                 under the given file name instead of directly showing it through plt.show() 
 
 	Returns:
 		correlation dimension as slope of the line fitted to log(r) vs log(C(r))
@@ -801,10 +803,10 @@ def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler, debug_plot=False):
 	# TODO check if value in csums is zero
 	poly = np.polyfit(np.log(rvals), np.log(csums), 1)
 	if debug_plot:
-		plot_reg(np.log(rvals), np.log(csums), poly, "log(r)", "log(C(r))")
+		plot_reg(np.log(rvals), np.log(csums), poly, "log(r)", "log(C(r))", fname=plot_file)
 	return poly[0]
 
-def dfa(data, nvals= None, overlap=True, order=1, debug_plot=False):
+def dfa(data, nvals= None, overlap=True, order=1, debug_plot=False, plot_file=None):
 	"""
 	Performs a detrended fluctuation analysis (DFA) on the given data
 
@@ -895,6 +897,8 @@ def dfa(data, nvals= None, overlap=True, order=1, debug_plot=False):
 		order (int): (polynomial) order of trend to remove
 		debug_plot (boolean): if True, a simple plot of the final line-fitting step will
 		                      be shown
+		plot_file (str): if debug_plot is True and plot_file is not None, the plot will be saved
+		                 under the given file name instead of directly showing it through plt.show() 
 	Returns:
 		float: the estimate alpha for the Hurst parameter (alpha < 1: stationary
 		       process similar to fractional Gaussian noise with H = alpha, 
@@ -928,7 +932,7 @@ def dfa(data, nvals= None, overlap=True, order=1, debug_plot=False):
 	fluctuations = np.array(fluctuations)
 	poly = np.polyfit(np.log(nvals), np.log(fluctuations), 1)
 	if debug_plot:
-		plot_reg(np.log(nvals), np.log(fluctuations), poly, "log(n)", "std(X,n)")
+		plot_reg(np.log(nvals), np.log(fluctuations), poly, "log(n)", "std(X,n)", fname=plot_file)
 	return poly[0]
 
 def test_lyap():
