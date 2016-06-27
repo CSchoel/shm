@@ -52,7 +52,7 @@ class TestSHMModel(unittest.TestCase):
 	def tearDownClass(cls):
 		# close session
 		del cls.session
-	def assertBetween(v, vmin, vmax):
+	def assertBetween(self, v, vmin, vmax):
 		self.assertGreater(v, vmin)
 		self.assertLess(v, vmax)
 	def printt(self, name, fmt, value, base):
