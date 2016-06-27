@@ -299,7 +299,8 @@ def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, min_tsep=0, tau=1, debug
 	#       => maximum start index is n - emb_dim - m
 	orbit = np.array([data[i:i+emb_dim] for i in range(n - emb_dim + 1 - m)], dtype=float)
 	old_Q = np.identity(matrix_dim)
-	lexp = np.zeros(matrix_dim)
+	lexp = np.zeros(matrix_dim, dtype="float32")
+	lexp_counts = np.zeros(lexp.shape)
 	debug_data = []
 	# TODO reduce number of points to visit?
 	# TODO performance test!
@@ -378,16 +379,25 @@ def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, min_tsep=0, tau=1, debug
 		# assert np.sum(np.abs(np.dot(mat_Q, mat_R) - np.dot(mat_T, old_Q))) < 1e-10
 
 		old_Q = mat_Q
-
 		# successively build sum for Lyapunov exponents
-		lexp_i = np.log(np.diag(mat_R))
+		diag_R = np.diag(mat_R)
+		# filter zeros in mat_R (would lead to -infs)
+		idx = np.where(diag_R > 0)
+		lexp_i = np.zeros(diag_R.shape, dtype="float32")
+		lexp_i[idx] = np.log(diag_R[idx])
+		lexp_i[np.where(diag_R == 0)] = np.inf
 		if debug_plot:
 			debug_data.append(lexp_i / tau / m)
-		lexp += lexp_i
+		lexp[idx] += lexp_i[idx]
+		lexp_counts[idx] += 1
+	# end of loop over orbit vectors
+	# it may happen that all R-matrices contained zeros => exponent really has to be -inf
 	if debug_plot:
 		plot_histogram_matrix(np.array(debug_data),"layp_e",fname=plot_file)
 	# normalize exponents over number of individual mat_Rs
-	lexp /= len(orbit)
+	idx = np.where(lexp_counts > 0)
+	lexp[idx] /= lexp_counts[idx]
+	lexp[np.where(lexp_counts == 0)] = np.inf
 	# normalize with respect to tau
 	lexp /= tau
 	# take m into account
