@@ -387,16 +387,38 @@ def compare_measures(dbs, names, outdir=None):
 		plot_measure_hists(all_data, names, alnames, os.path.join(outdir, "plots"))
 	return res
 
+test_names = {
+	"lyap_e" : "lyapunov exponent (Eckmann)",
+	"lyap_r" : "lyapunov exponent (Rosenstein)",
+	"corrDim" : "correlation dimension",
+	"hurst" : "hurst exponent",
+	"dfa" : "hurst parameter (DFA)",
+	"sampEn" : "sample entropy"
+}
+
+def load_test_data(fname):
+	with io.open(fname, "r", encoding="utf-8") as f:
+		data = [x.split(";") for x in f.readlines()]
+		data = [(x, float(y)) for x, y in data]
+	return dict(data)
+
+def test_extras(fname, alnames):
+	d = load_test_data(fname)
+	return ("SHM test", [d[test_names[an]] for an in alnames])
+
 def replot_compare_hists():
 	dn = "D:/Daten/hrvdb/filter"
+	test_file = "../../../test-output/measures.csv"
 	cols = range(1,7)
 	names = ["selected_nonlinear.txt", "excluded_nonlinear.txt"]
 	data = [np.loadtxt(os.path.join(dn,fn), delimiter=";", skiprows=1, usecols=cols) for fn in names]
 	alnames = ["lyap_e", "lyap_r", "sampEn", "hurst", "corrDim", "dfa"]
-	plot_measure_hists(data, ["selected", "excluded"], alnames, os.path.join(dn, "plots"))
+	ex = test_extras(test_file, alnames)
+	plot_measure_hists(data, ["selected", "excluded"], alnames, os.path.join(dn, "plots"), extra=ex)
 
 if __name__ == "__main__":
 	dbdir = "D:/Daten/hrvdb"
+	test_file = "../../../test-output/measures.csv"
 	#db = load_db(dbdir, names=None, combine=False)
 	#make_plots(db, os.path.join(dbdir,"plots"))
 	
