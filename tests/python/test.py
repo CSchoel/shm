@@ -250,7 +250,7 @@ class TestSHMModel(unittest.TestCase):
 		for name, val, v_min, v_max, v_ref in measures:
 			self.printt(name, "%.3f", val, v_ref)
 		for name, val, v_min, v_max, v_ref in measures:
-			self.assertBetween(val, v_min, v_max)
+			self.assertBetween(val, v_min, v_max, name=name)
 		
 	def test_rr_hist(self):
 		vals,bins = np.histogram(self.data_hrv[:,1],np.arange(0.5,2.0,0.1))
