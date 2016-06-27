@@ -283,6 +283,8 @@ def plot_measure_hists(data, dnames, alnames, plotdir, extra=None):
 	nsigma = 3
 	ymax = 0.2
 	usebest = None
+	#pdf_names = ["norm", "gamma", "beta", "genlogistic", "weibull_min", "weibull_max"]
+	pdf_names = ["norm", "gamma", "weibull_min"]
 	n = len(alnames)
 	total_data = np.concatenate(data)
 	total_std = np.std(total_data, axis=0)
@@ -307,7 +309,7 @@ def plot_measure_hists(data, dnames, alnames, plotdir, extra=None):
 			pdfs.append(("weibull_max", sst.weibull_max.pdf(bins[:-1],*sst.weibull_max.fit(d))))
 			#powerfit = sst.powernorm.fit(d)
 			#pdfs.append(("powernorm (p={:.3f})".format(powerfit[0]), sst.powernorm.pdf(bins[:-1],*powerfit)))
-			pdfs = [(nm, dat / np.sum(dat)) for nm,dat in pdfs]
+			pdfs = [(nm, dat / np.sum(dat)) for nm,dat in pdfs if nm in pdf_names]
 			if not usebest is None:
 				# compare pdfs to actual histogram and retain only normal and best n (for visibility)		
 				pdf_diffs = [np.sum((h - dat)**2) for _, dat in pdfs]
