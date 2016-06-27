@@ -77,7 +77,7 @@ class TestSHMModel(unittest.TestCase):
 		self.printt("MAP", "%.3f", bp_mean, 106.842)
 		self.printt("min pressure", "%.3f", bp_min, 74.979)
 		self.printt("max pressure", "%.3f", bp_max, 140.912)
-		self.printt("standard deviation", "%.3f", bp_std, 18.639)
+		self.printt("std pressure", "%.3f", bp_std, 18.639)
 		
 		# normal MAP: 70 - 105 mmHg
 		# is already elevated in the model => shift upper range to 110
