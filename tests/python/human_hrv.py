@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import io
 import itertools as it
 import glob
 import scipy.stats as sst
@@ -261,9 +262,9 @@ def filter_db(db, dname, outname):
 				excluded.append((n,ar))
 	np.savez(os.path.join(dname,outname+"_selected.npz"),**dict(selected))
 	np.savez(os.path.join(dname,outname+"_excluded.npz"),**dict(excluded))
-	with open(os.path.join(dname,"selected.txt"),"w",encoding="utf-8") as f:
+	with io.open(os.path.join(dname,"selected.txt"),"w",encoding="utf-8") as f:
 		f.write("\n".join([x[0] for x in selected]))
-	with open(os.path.join(dname,"excluded.txt"),"w",encoding="utf-8") as f:
+	with io.open(os.path.join(dname,"excluded.txt"),"w",encoding="utf-8") as f:
 		f.write("\n".join([x[0] for x in excluded]))
 	print("excluded: %d/%d samples" % (len(excluded),len(selected)+len(excluded)))
 	print([x[0] for x in excluded])
@@ -343,7 +344,7 @@ def compare_measures(dbs, names, outdir=None):
 	alnames = ["lyap_e", "lyap_r", "sampEn", "hurst", "corrDim", "dfa"]
 	for dbn, db in zip(names, dbs):
 		measurefile = os.path.join(outdir,dbn + "_nonlinear.txt")
-		with open(measurefile, "w", encoding="utf-8") as f:
+		with io.open(measurefile, "w", encoding="utf-8") as f:
 			f.write("name;lyap_e;lyap_r;sampen;hurst;corr_dim;dfa\n")
 		sample_names = sorted(db.keys())
 		log_data = []
@@ -378,7 +379,7 @@ def compare_measures(dbs, names, outdir=None):
 		all_data.append(log_data)
 		res[dbn] = dict(zip(sample_names, log_data))
 		if not (outdir is None):
-			with open(measurefile, "a", encoding="utf-8") as f:
+			with io.open(measurefile, "a", encoding="utf-8") as f:
 				f.writelines([template.format(*([n]+list(x))) for n, x in zip(log_names,log_data)])
 				f.write(template.format(*(["mean"]+list(np.mean(log_data, axis=0)))))
 				f.write("\n")
