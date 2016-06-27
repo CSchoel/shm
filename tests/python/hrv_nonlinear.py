@@ -53,7 +53,6 @@ def delay_embedding(data, emb_dim, lag=1):
 	indices += np.arange(m).reshape((m,1))
 	return data[indices]
 
-# TODO comment debug_plot and plot_file
 def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, trajectory_len=20, debug_plot=False, plot_file=None):
 	"""
 	Estimates the largest lyapunov exponent using the algorithm of Rosenstein et al.
@@ -127,6 +126,10 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		                   when the number of resulting vectors drops below min_vectors
 		trajectory_len (int): the time (in number of data points) to follow the distance
 		                      trajectories between two neighboring points
+		debug_plot (boolean): if True, a simple plot of the final line-fitting step will
+		                      be shown
+		plot_file (str): if debug_plot is True and plot_file is not None, the plot will be saved
+		                 under the given file name instead of directly showing it through plt.show()
 	Returns:
 		float: an estimate of the largest lyapunov exponent (a positive exponent is
 		       a strong indicator for chaos)
@@ -698,6 +701,8 @@ def hurst_rs(data, nvals=None, debug_plot=False, plot_file=None):
 	Kwargs:
 		nvals (iterable of int): sizes of subseries to use (default: logarithmic_n(4, 0.1*len(data), 1.2))
 		debug_plot (boolean): if True, a simple plot of the final line-fitting step will be shown
+		plot_file (str): if debug_plot is True and plot_file is not None, the plot will be saved
+		                 under the given file name instead of directly showing it through plt.show()
 
 	Returns:
 		float: estimated Hurst exponent K using a rescaled range approach (if K = 0.5 there are
