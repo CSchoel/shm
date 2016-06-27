@@ -302,7 +302,7 @@ def plot_measure_hists(data, dnames, alnames, plotdir, extra=None):
 			pdfs.append(("norm", sst.norm.pdf(bins[:-1],*sst.norm.fit(d))))
 			pdfs.append(("gamma", sst.gamma.pdf(bins[:-1],*sst.gamma.fit(d))))
 			pdfs.append(("beta", sst.beta.pdf(bins[:-1],*sst.beta.fit(d))))
-			pdfs.append(("gen. logistic", sst.genlogistic.pdf(bins[:-1],*sst.genlogistic.fit(d))))
+			pdfs.append(("genlogistic", sst.genlogistic.pdf(bins[:-1],*sst.genlogistic.fit(d))))
 			pdfs.append(("weibull_min", sst.weibull_min.pdf(bins[:-1],*sst.weibull_min.fit(d))))
 			pdfs.append(("weibull_max", sst.weibull_max.pdf(bins[:-1],*sst.weibull_max.fit(d))))
 			#powerfit = sst.powernorm.fit(d)
