@@ -856,7 +856,7 @@ def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler, debug_plot=False, pl
 	csums = np.array(csums)
 	# filter zeros from csums
 	nonzero = np.where(csums != 0)
-	rvals = rvals[nonzero]
+	rvals = np.array(rvals)[nonzero]
 	csums = csums[nonzero]
 	if len(csums) == 0:
 		# all sums are zero => we cannot fit a line
@@ -993,7 +993,7 @@ def dfa(data, nvals= None, overlap=True, order=1, debug_plot=False, plot_file=No
 	fluctuations = np.array(fluctuations)
 	# filter zeros from fluctuations
 	nonzero = np.where(fluctuations != 0)
-	nvals = nvals[nonzero]
+	nvals = np.array(nvals)[nonzero]
 	fluctuations = fluctuations[nonzero]
 	if len(fluctuations) == 0:
 		# all fluctuations are zero => we cannot fit a line
