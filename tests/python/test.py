@@ -27,6 +27,7 @@ class TestSHMModel(unittest.TestCase):
 	session = None
 	loaded = None
 	outdir = None
+	simtime = 200
 	simres = None
 	data_pressure = None
 	data_hrv = None
@@ -42,11 +43,11 @@ class TestSHMModel(unittest.TestCase):
 		if not os.path.exists(cls.outdir) :
 			os.makedirs(cls.outdir)
 		cls.session.cd(outdir)
-		cls.simres = cls.session.simulate("SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample", stopTime=100)
+		cls.simres = cls.session.simulate("SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample", stopTime=cls.simtime)
 		cls.data_pressure = cls.session.getResults("blood.vessel.pressure")
 		cls.data_hrv = np.loadtxt(os.path.join(outdir,"heartbeats.csv"),skiprows=1)
 		tmp_hrv = cls.session.getResults("heart.contraction.T")
-		cls.data_hrv_cont = resample_nearest(tmp_hrv[:,0], tmp_hrv[:,1], 100000) # 1000 datapoints per second
+		cls.data_hrv_cont = resample_nearest(tmp_hrv[:,0], tmp_hrv[:,1], cls.simtime*1000)
 	@classmethod
 	def tearDownClass(cls):
 		# close session
@@ -160,7 +161,7 @@ class TestSHMModel(unittest.TestCase):
 	def test_heart_rate(self):
 		# skip all heart beats that occured in the first 10 seconds
 		hr = self.data_hrv[np.where(self.data_hrv[:,0] > 10)]
-		dt = 90 # 90 seconds of data left
+		dt = self.simtime - 10 # seconds of data left
 		bpm = len(hr)*60.0/dt
 		rr_max = np.max(hr[:,1])
 		rr_min = np.min(hr[:,1])
