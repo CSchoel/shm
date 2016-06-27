@@ -302,8 +302,14 @@ def plot_measure_hists(data, dnames, alnames, plotdir):
 			pdfs.append(("weibull_max", sst.weibull_max.pdf(bins[:-1],*sst.weibull_max.fit(d))))
 			#powerfit = sst.powernorm.fit(d)
 			#pdfs.append(("powernorm (p={:.3f})".format(powerfit[0]), sst.powernorm.pdf(bins[:-1],*powerfit)))
-			pdfs = [(n, d / np.sum(d)) for n,d in pdfs]
-			plot_hist_with_pdf(h, bins, ymax, fname, mean=np.mean(d), median=np.median(d), pdfs=pdfs)
+			pdfs = [(nm, dat / np.sum(dat)) for nm,dat in pdfs]
+			# compare pdfs to actual histogram and retain only normal and best 2 (for visibility)
+			pdf_diffs = [np.sum((h - dat)**2) for _, dat in pdfs]
+			best_idx = np.argsort(pdf_diffs)[:2]
+			best = [pdfs[idx] for idx in best_idx]
+			if not 0 in best_idx:
+				best.insert(0, pdfs[0])
+			plot_hist_with_pdf(h, bins, ymax, fname, vlines=vlines, pdfs=best)
 
 def plot_hist_with_pdf(h, bins, ymax, fname, mean=None, median=None, pdfs=[]):
 	bin_width = bins[1]-bins[0]
