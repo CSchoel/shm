@@ -203,7 +203,7 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		# normal line fitting
 		poly = np.polyfit(ks, div_traj, 1)
 	if debug_plot:
-		plot_reg(ks, div_traj, poly, "log(i)", "log(d(i))", fname=plot_file)
+		plot_reg(ks, div_traj, poly, "k", "log(d(k))", fname=plot_file)
 	return poly[0]/tau
 
 def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1, debug_plot=False, plot_file=None):
