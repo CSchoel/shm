@@ -203,7 +203,7 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		plot_reg(ks, div_traj, poly, "log(i)", "log(d(i))", fname=plot_file)
 	return poly[0]/tau
 
-def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
+def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1, debug_plot=False, plot_file=None):
 	"""
 	Estimates the Lyapunov exponents for the given data using the algorithm of Eckmann et al..
 
@@ -270,6 +270,9 @@ def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 		matrix_dim (int): matrix dimension (emb_dim - 1 must be divisible by matrix_dim - 1)
 		min_nb (int): minimal number of neighbors (default: min(2 * matrix_dim, matrix_dim + 4))
 		tau (float): step size of the data in seconds (normalization scaling factor for exponents)
+		debug_plot (boolean): if True, a histogram matrix of the individual estimates will be shown
+		plot_file (str): if debug_plot is True and plot_file is not None, the plot will be saved
+		                 under the given file name instead of directly showing it through plt.show()
 
 	Returns:
 		float array: array of matrix_dim Lyapunov exponents (positive exponents are indicators
@@ -294,6 +297,7 @@ def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 	orbit = np.array([data[i:i+emb_dim] for i in range(n - emb_dim + 1 - m)], dtype=float)
 	old_Q = np.identity(matrix_dim)
 	lexp = np.zeros(matrix_dim)
+	debug_data = []
 	# TODO reduce number of points to visit?
 	# TODO performance test!
 	for i in range(len(orbit)):
@@ -372,7 +376,12 @@ def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1):
 		old_Q = mat_Q
 
 		# successively build sum for Lyapunov exponents
-		lexp += np.log(np.diag(mat_R))
+		lexp_i = np.log(np.diag(mat_R))
+		if debug_plot:
+			debug_data.append(lexp_i / tau / m)
+		lexp += lexp_i
+	if debug_plot:
+		plot_histogram_matrix(np.array(debug_data),"layp_e",fname=plot_file)
 	# normalize exponents over number of individual mat_Rs
 	lexp /= len(orbit)
 	# normalize with respect to tau
@@ -569,6 +578,29 @@ def rs(data, n):
 	else:
 		# return mean of r/s along subsequence index
 		return np.mean(r/s)
+
+def plot_histogram_matrix(data, name, fname=None):
+	nhists = len(data[0])
+	nbins = 25
+	ylim = (0, 0.5)
+	nrows = int(np.ceil(np.sqrt(nhists)))
+	plt.figure(figsize=(nrows*4, nrows*4))
+	for i in range(nhists):
+		plt.subplot(nrows, nrows, i+1)
+		absmax = max(abs(np.max(data[:,i])), abs(np.min(data[:,i])))
+		rng = (-absmax, absmax)
+		h, bins = np.histogram(data[:,i],nbins,rng)
+		bin_width = bins[1] - bins[0]
+		h = h.astype("float32") / np.sum(h)
+		plt.bar(bins[:-1], h, bin_width)
+		plt.axvline(np.mean(data[:,i]),color="red")
+		plt.ylim(ylim)
+		plt.title("{:s}[{:d}]".format(name, i))
+	if fname is None:
+		plt.show()
+	else:
+		plt.savefig(fname)
+	plt.close()
 
 def plot_reg(xvals, yvals, poly, x_label="x", y_label="y", data_label="data", reg_label="regression line", fname=None):
 	"""
