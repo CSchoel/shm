@@ -206,7 +206,7 @@ def lyap_r(data, emb_dim=10, lag=None, min_tsep=None, tau=1, min_vectors=20, tra
 		plot_reg(ks, div_traj, poly, "k", "log(d(k))", fname=plot_file)
 	return poly[0]/tau
 
-def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1, debug_plot=False, plot_file=None):
+def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, min_tsep=0, tau=1, debug_plot=False, plot_file=None):
 	"""
 	Estimates the Lyapunov exponents for the given data using the algorithm of Eckmann et al..
 
@@ -307,7 +307,8 @@ def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, tau=1, debug_plot=False,
 		# find neighbors for each vector in the orbit using the chebychev distance
 		diffs = np.max(np.abs(orbit - orbit[i]), axis=1)
 		diffs[i] = float('inf') # ensure that we do not count the difference of the vector to itself
-		# TODO also mask vectors that are too close in the original data?
+		# mask all neighbors that are too close in time to the vector itself
+		diffs[max(0,i-min_tsep):min(len(diffs),i+min_tsep+1)] = np.inf
 		indices = np.argsort(diffs)
 		idx = indices[min_nb-1] # index of the min_nb-nearest neighbor
 		r = diffs[idx] # corresponding distance
