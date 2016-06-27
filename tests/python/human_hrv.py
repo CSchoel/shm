@@ -277,10 +277,11 @@ def filter_db(db, dname, outname):
 			plot_qq(name, ar)
 			plot_cdf(name, ar)
 
-def plot_measure_hists(data, dnames, alnames, plotdir):
+def plot_measure_hists(data, dnames, alnames, plotdir, extra=None):
 	nbins = 50
 	nsigma = 3
 	ymax = 0.2
+	usebest = None
 	n = len(alnames)
 	total_data = np.concatenate(data)
 	total_std = np.std(total_data, axis=0)
@@ -306,13 +307,15 @@ def plot_measure_hists(data, dnames, alnames, plotdir):
 			#powerfit = sst.powernorm.fit(d)
 			#pdfs.append(("powernorm (p={:.3f})".format(powerfit[0]), sst.powernorm.pdf(bins[:-1],*powerfit)))
 			pdfs = [(nm, dat / np.sum(dat)) for nm,dat in pdfs]
-			# compare pdfs to actual histogram and retain only normal and best 2 (for visibility)
-			pdf_diffs = [np.sum((h - dat)**2) for _, dat in pdfs]
-			best_idx = np.argsort(pdf_diffs)[:2]
-			best = [pdfs[idx] for idx in best_idx]
-			if not 0 in best_idx:
-				best.insert(0, pdfs[0])
-			plot_hist_with_pdf(h, bins, ymax, fname, vlines=vlines, pdfs=best)
+			if not usebest is None:
+				# compare pdfs to actual histogram and retain only normal and best n (for visibility)		
+				pdf_diffs = [np.sum((h - dat)**2) for _, dat in pdfs]
+				best_idx = np.argsort(pdf_diffs)[:usebest]
+				best = [pdfs[idx] for idx in best_idx]
+				if not 0 in best_idx:
+					best.insert(0, pdfs[0])
+				pdfs = best
+			plot_hist_with_pdf(h, bins, ymax, fname, vlines=vlines, pdfs=pdfs)
 
 def plot_hist_with_pdf(h, bins, ymax, fname, vlines=[], pdfs=[]):
 	print(fname)
