@@ -395,15 +395,6 @@ def replot_compare_hists():
 	alnames = ["lyap_e", "lyap_r", "sampEn", "hurst", "corrDim", "dfa"]
 	plot_measure_hists(data, ["selected", "excluded"], alnames, os.path.join(dn, "plots"))
 
-def plot_dist_hist(data):
-	nbins = 50
-	h, bins = np.histogram(data)
-	gparams = sst.gamma.fit(data)
-	pass
-
-def plot_compare_distributions():
-	pass
-
 if __name__ == "__main__":
 	dbdir = "D:/Daten/hrvdb"
 	#db = load_db(dbdir, names=None, combine=False)
