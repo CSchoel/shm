@@ -375,9 +375,6 @@ def lyap_e(data, emb_dim=10, matrix_dim=4, min_nb=None, min_tsep=0, tau=1, debug
 		mat_Q = np.dot(mat_Q, sign_diag)
 		mat_R = np.dot(sign_diag, mat_R)
 		
-		# TODO tolerance value may not be applicable for matrices with very large values
-		# assert np.sum(np.abs(np.dot(mat_Q, mat_R) - np.dot(mat_T, old_Q))) < 1e-10
-
 		old_Q = mat_Q
 		# successively build sum for Lyapunov exponents
 		diag_R = np.diag(mat_R)
