@@ -240,7 +240,7 @@ class TestSHMModel(unittest.TestCase):
 		# - between 0 and 1, should be < 1 for 1D-system with strange attractor
 		cdim = hnl.corr_dim(hr[:,1], 2)
 		# TODO min, max, ref?
-		measures.append(("correlation dimension", cdim, 0, 1, 0))
+		measures.append(("correlation dimension", cdim, 0, 2, 0))
 		
 		# Detrended Fluctuation Analysis
 		# - < 1 : stationary process with Hurst exponent H = hdfa
