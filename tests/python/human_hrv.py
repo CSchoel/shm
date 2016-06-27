@@ -369,12 +369,12 @@ def compare_measures(dbs, names, outdir=None):
 						fnames[algo] = os.path.join(algodir,fn)
 				else:
 					fnames = {a : None for a in alnames}
-				lambda_e = np.max(hnl.lyap_e(rr_slice, emb_dim=10, matrix_dim=4))
+				lambda_e = np.max(hnl.lyap_e(rr_slice, emb_dim=10, matrix_dim=4, debug_plot=True, plot_file=fnames["lyap_e"]))
 				lambda_r = hnl.lyap_r(rr_slice, debug_plot=True, plot_file=fnames["lyap_r"])
-				sen = hnl.sampen(rr_slice)
+				sen = hnl.sampen(rr_slice, debug_plot=True, plot_file=fnames["sampEn"])
 				h = hnl.hurst_rs(rr_slice, debug_plot=True, plot_file=fnames["hurst"])
-				cd = hnl.corr_dim(rr_slice, 2)
-				dfa = hnl.dfa(rr_slice)
+				cd = hnl.corr_dim(rr_slice, 2, debug_plot=True, plot_file=fnames["corrDim"])
+				dfa = hnl.dfa(rr_slice, debug_plot=True, plot_file=fnames["dfa"])
 				log_data.append([lambda_e, lambda_r, sen, h, cd, dfa])
 				log_names.append("{}_{}".format(n,s))
 		log_data = np.array(log_data, dtype="float32")

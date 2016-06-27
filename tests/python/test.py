@@ -215,7 +215,7 @@ class TestSHMModel(unittest.TestCase):
 		# sample entropy (SampEn)
 		# - -log(p(sim_next|sim_last_m))  (sim_next = next point is similar, sim_last_m = last m points are similar)
 		# - lower values (closer to zero) => more self-similarity
-		saen = hnl.sampen(hr[:,1])
+		saen = hnl.sampen(hr[:,1], debug_plot=True, plot_file=os.path.join(self.outdir,"sampEn.png"))
 		measures.append(("sample entropy", saen, 0, 100, 0)) # TODO min, max, ref?
 		
 		# Lyapunov Exponent
@@ -232,20 +232,20 @@ class TestSHMModel(unittest.TestCase):
 		# - < 0.5 : negative long-term correlations ("mean-reverting" system)
 		# - = 0.5 : no long-term correlations (random walk)
 		# - > 0.5 : positive long-term correlations ("long-term memory")
-		hexp = hnl.hurst_rs(hr[:,1])
+		hexp = hnl.hurst_rs(hr[:,1], debug_plot=True, plot_file=os.path.join(self.outdir,"hurst.png"))
 		# TODO min, max, ref?
 		measures.append(("hurst exponent", hexp, 0, 1, 0))
 
 		# Correlation Dimension
 		# - between 0 and 1, should be < 1 for 1D-system with strange attractor
-		cdim = hnl.corr_dim(hr[:,1], 2)
+		cdim = hnl.corr_dim(hr[:,1], 2, debug_plot=True, plot_file=os.path.join(self.outdir,"corrDim.png"))
 		# TODO min, max, ref?
 		measures.append(("correlation dimension", cdim, 0, 2, 0))
 		
 		# Detrended Fluctuation Analysis
 		# - < 1 : stationary process with Hurst exponent H = hdfa
 		# - > 1 : non-stationary process with Hurst exponent H = hdfa - 1
-		hdfa = hnl.dfa(hr[:,1])
+		hdfa = hnl.dfa(hr[:,1], debug_plot=True, plot_file=os.path.join(self.outdir,"dfa.png"))
 		# TODO min, max, ref?
 		measures.append(("hurst parameter (DFA)", hdfa, 0, 2, 0))
 
