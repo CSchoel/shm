@@ -293,6 +293,9 @@ def plot_measure_hists(data, dnames, alnames, plotdir):
 			h, bins = np.histogram(d, nbins, rng)
 			normfac = np.sum(h)
 			h = h.astype("float32") / normfac
+			vlines = [("mean", np.mean(d)), ("median",np.median(d))]
+			if not extra is None:
+				vlines.append(extra[i])
 			pdfs = []
 			pdfs.append(("norm", sst.norm.pdf(bins[:-1],*sst.norm.fit(d))))
 			pdfs.append(("gamma", sst.gamma.pdf(bins[:-1],*sst.gamma.fit(d))))
@@ -311,13 +314,15 @@ def plot_measure_hists(data, dnames, alnames, plotdir):
 				best.insert(0, pdfs[0])
 			plot_hist_with_pdf(h, bins, ymax, fname, vlines=vlines, pdfs=best)
 
-def plot_hist_with_pdf(h, bins, ymax, fname, mean=None, median=None, pdfs=[]):
+def plot_hist_with_pdf(h, bins, ymax, fname, vlines=[], pdfs=[]):
+	print(fname)
 	bin_width = bins[1]-bins[0]
-	plt.bar(bins[:-1], h, bin_width)
-	if not mean is None:
-		plt.vlines(mean,0,ymax,"red")
-	if not median is None:
-		plt.vlines(median,0,ymax,"black")
+	plt.bar(bins[:-1], h, bin_width, color="0.8")
+	colors = ["red", "blue", "black", "#FF9900", "#0099FF"]
+	for vi in range(len(vlines)):
+		v_name, v_value = vlines[vi]
+		col = colors[vi % len(colors)]
+		plt.axvline(v_value,label=v_name, linestyle="--", color=col)
 	for name,pdf in pdfs:
 		plt.plot(bins[:-1], pdf,label=name)
 	plt.ylim(0, ymax)
