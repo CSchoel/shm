@@ -290,7 +290,7 @@ def plot_measure_hists(data, dnames, alnames, plotdir, extra=None):
 	for i in range(n):
 		rng = (total_mean[i] - nsigma * total_std[i], total_mean[i] + nsigma * total_std[i])
 		for j in range(len(data)):
-			fname = os.path.join(plotdir,"{0:s}/{0:s}_hist_{1:s}.png".format(alnames[i], dnames[j]))
+			fname = os.path.join(plotdir,"{0:s}_hist_{1:s}.png".format(alnames[i], dnames[j]))
 			d = data[j][:,i]
 			h, bins = np.histogram(d, nbins, rng)
 			normfac = np.sum(h)
