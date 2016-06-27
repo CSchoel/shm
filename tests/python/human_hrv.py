@@ -297,7 +297,7 @@ def plot_measure_hists(data, dnames, alnames, plotdir, extra=None):
 			h = h.astype("float32") / normfac
 			vlines = [("mean", np.mean(d)), ("median",np.median(d))]
 			if not extra is None:
-				vlines.append(extra[i])
+				vlines.append((extra[0], extra[1][i]))
 			pdfs = []
 			pdfs.append(("norm", sst.norm.pdf(bins[:-1],*sst.norm.fit(d))))
 			pdfs.append(("gamma", sst.gamma.pdf(bins[:-1],*sst.gamma.fit(d))))
