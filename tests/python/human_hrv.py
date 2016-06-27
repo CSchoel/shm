@@ -323,7 +323,7 @@ def plot_measure_hists(data, dnames, alnames, plotdir, extra=None):
 			plot_hist_with_pdf(h, bins, ymax, fname, vlines=vlines, pdfs=pdfs)
 
 def plot_hist_with_pdf(h, bins, ymax, fname, vlines=[], pdfs=[]):
-	print(fname)
+	print("plotting {}...".format(fname))
 	bin_width = bins[1]-bins[0]
 	plt.bar(bins[:-1], h, bin_width, color="0.8")
 	colors = ["red", "blue", "black", "#FF9900", "#0099FF"]
