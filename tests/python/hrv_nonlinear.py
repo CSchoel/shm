@@ -516,7 +516,11 @@ def sampen(data, emb_dim=2, tolerance=None, dist="chebychev", debug_plot=True, p
 				plot_data[-1].extend(dsts)
 			# count how many distances are smaller than the tolerance
 			counts[-1] += np.sum(dsts < tolerance)
-	saen = -np.log(1.0*counts[1]/counts[0])
+	if counts[1] == 0:
+		# log would be infinite => cannot determine saen
+		saen = np.inf
+	else:
+		saen = -np.log(1.0*counts[1]/counts[0])
 	if debug_plot:
 		plot_dists(plot_data, tolerance, m, title="sampEn = {:.3f}".format(saen), fname=plot_file)
 	return saen
@@ -850,8 +854,15 @@ def corr_dim(data, emb_dim, rvals=None, dist=rowwise_euler, debug_plot=False, pl
 		s = 1.0 / (n * (n-1)) * np.sum(dists < r)
 		csums.append(s)
 	csums = np.array(csums)
-	# TODO check if value in csums is zero
-	poly = np.polyfit(np.log(rvals), np.log(csums), 1)
+	# filter zeros from csums
+	nonzero = np.where(csums != 0)
+	rvals = rvals[nonzero]
+	csums = csums[nonzero]
+	if len(csums) == 0:
+		# all sums are zero => we cannot fit a line
+		poly = [np.nan, np.nan]
+	else:
+		poly = np.polyfit(np.log(rvals), np.log(csums), 1)
 	if debug_plot:
 		plot_reg(np.log(rvals), np.log(csums), poly, "log(r)", "log(C(r))", fname=plot_file)
 	return poly[0]
@@ -980,7 +991,15 @@ def dfa(data, nvals= None, overlap=True, order=1, debug_plot=False, plot_file=No
 		f_n = np.sum(flucs) / len(flucs)
 		fluctuations.append(f_n)
 	fluctuations = np.array(fluctuations)
-	poly = np.polyfit(np.log(nvals), np.log(fluctuations), 1)
+	# filter zeros from fluctuations
+	nonzero = np.where(fluctuations != 0)
+	nvals = nvals[nonzero]
+	fluctuations = fluctuations[nonzero]
+	if len(fluctuations) == 0:
+		# all fluctuations are zero => we cannot fit a line
+		poly = [np.nan, np.nan]
+	else:
+		poly = np.polyfit(np.log(nvals), np.log(fluctuations), 1)
 	if debug_plot:
 		plot_reg(np.log(nvals), np.log(fluctuations), poly, "log(n)", "std(X,n)", fname=plot_file)
 	return poly[0]
