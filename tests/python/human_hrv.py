@@ -347,7 +347,7 @@ def compare_measures(dbs, names, outdir=None):
 	for dbn, db in zip(names, dbs):
 		measurefile = os.path.join(outdir,dbn + "_nonlinear.txt")
 		with io.open(measurefile, "w", encoding="utf-8") as f:
-			f.write("name;lyap_e;lyap_r;sampen;hurst;corr_dim;dfa\n")
+			f.write(u"name;lyap_e;lyap_r;sampen;hurst;corr_dim;dfa\n")
 		sample_names = sorted(db.keys())
 		log_data = []
 		log_names = []
@@ -364,7 +364,10 @@ def compare_measures(dbs, names, outdir=None):
 					fnames = {}
 					for algo in alnames:
 						algodir = os.path.join(os.path.join(plotdir, algo),dbn)
-						os.makedirs(algodir,exist_ok=True)
+						try:
+							os.makedirs(algodir)
+						except:
+							pass
 						fn = "{}_{}_{}-{}.png".format(n, algo, s*nbeats, (s+1)*nbeats)
 						fnames[algo] = os.path.join(algodir,fn)
 				else:
