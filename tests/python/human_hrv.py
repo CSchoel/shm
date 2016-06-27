@@ -7,6 +7,7 @@ import glob
 import scipy.stats as sst
 import scipy.stats.mstats as msst
 import scipy.signal as sig
+import multiprocessing as mp
 
 import hrv_nonlinear as hnl
 
@@ -337,7 +338,33 @@ def plot_hist_with_pdf(h, bins, ymax, fname, vlines=[], pdfs=[]):
 	plt.savefig(fname)
 	plt.close()
 
-def compare_measures(dbs, names, outdir=None):
+def _compare_measures_sample(args):
+	name, rr, dnames, nbeats = args
+	alnames = dnames.keys()
+	log_data = []
+	log_names = []
+	max_chunks = 10
+	sys.stdout.flush()
+	nchunks = max(1,len(rr) // nbeats)
+	for s in range(nchunks):
+		if not max_chunks is None and s > max_chunks:
+			break
+		fnt = "{}_{{}}_{}-{}".format(name, s*nbeats, (s+1)*nbeats)
+		fnf = lambda s: (None if dnames[s] is None else os.path.join(dnames[s],fnt.format(s)))
+		rr_slice = rr[s*nbeats:(s+1)*nbeats]
+		lambda_e = np.max(hnl.lyap_e(rr_slice, emb_dim=10, matrix_dim=4, debug_plot=True, plot_file=fnf("lyap_e")))
+		lambda_r = hnl.lyap_r(rr_slice, debug_plot=True, plot_file=fnf("lyap_r"))
+		sen = hnl.sampen(rr_slice, debug_plot=True, plot_file=fnf("sampEn"))
+		h = hnl.hurst_rs(rr_slice, debug_plot=True, plot_file=fnf("hurst"))
+		cd = hnl.corr_dim(rr_slice, 2, debug_plot=True, plot_file=fnf("corrDim"))
+		dfa = hnl.dfa(rr_slice, debug_plot=True, plot_file=fnf("dfa"))
+		log_data.append([lambda_e, lambda_r, sen, h, cd, dfa])
+		log_names.append("{}_{}-{}".format(name,s*nbeats, (s+1)*nbeats))
+		print("{}: {}/{}".format(name, s+1, nchunks))
+		sys.stdout.flush()
+	return name, log_names, log_data
+
+def compare_measures(dbs, names, outdir=None, nprocs=1):
 	nparams = 6
 	nbeats = 200
 	template = "{:s};" + ";".join(["{:.3f}"] * nparams) + "\n"
@@ -351,35 +378,32 @@ def compare_measures(dbs, names, outdir=None):
 		sample_names = sorted(db.keys())
 		log_data = []
 		log_names = []
-		for i in range(len(sample_names)):
-			n = sample_names[i]
-			rr = to_rr(db[n])
-			print("processing sample {:d}/{:d}...".format(i+1, len(sample_names)))
-			print("name: {:s}, length: {:d}".format(n,len(rr)))
-			# FIXME: do we really want to use only the first x heartbeats?
-			for s in range(len(rr) // nbeats):
-				rr_slice = rr[s*nbeats:(s+1)*nbeats]
-				if not (outdir is None):
-					plotdir = os.path.join(outdir,"plots")
-					fnames = {}
-					for algo in alnames:
-						algodir = os.path.join(os.path.join(plotdir, algo),dbn)
-						try:
-							os.makedirs(algodir)
-						except:
-							pass
-						fn = "{}_{}_{}-{}.png".format(n, algo, s*nbeats, (s+1)*nbeats)
-						fnames[algo] = os.path.join(algodir,fn)
-				else:
-					fnames = {a : None for a in alnames}
-				lambda_e = np.max(hnl.lyap_e(rr_slice, emb_dim=10, matrix_dim=4, debug_plot=True, plot_file=fnames["lyap_e"]))
-				lambda_r = hnl.lyap_r(rr_slice, debug_plot=True, plot_file=fnames["lyap_r"])
-				sen = hnl.sampen(rr_slice, debug_plot=True, plot_file=fnames["sampEn"])
-				h = hnl.hurst_rs(rr_slice, debug_plot=True, plot_file=fnames["hurst"])
-				cd = hnl.corr_dim(rr_slice, 2, debug_plot=True, plot_file=fnames["corrDim"])
-				dfa = hnl.dfa(rr_slice, debug_plot=True, plot_file=fnames["dfa"])
-				log_data.append([lambda_e, lambda_r, sen, h, cd, dfa])
-				log_names.append("{}_{}".format(n,s))
+		if not (outdir is None):
+			plotdir = os.path.join(outdir,"plots")
+			dnames = {}
+			for algo in alnames:
+				algodir = os.path.join(os.path.join(plotdir, algo),dbn)
+				try:
+					os.makedirs(algodir)
+				except:
+					pass
+				dnames[algo] = algodir
+		else:
+			dnames = {a : None for a in alnames}
+		
+		rr_data = [(n, to_rr(db[n]), dnames, nbeats) for n in sample_names]
+		if nprocs > 1:
+			imp = mp.Pool(nprocs).imap_unordered(_compare_measures_sample, rr_data)
+		else:
+			# note: assumes python 3 map (else we should use it.imap)
+			imp = map(_compare_measures_sample, rr_data)
+		i = 0
+		for name, ln, ld in imp:
+			print("processed sample {:d}/{:d}".format(i+1, len(sample_names)))
+			print("name: {:s}, chunks: {:d}".format(name,len(ln)))
+			log_data.extend(ld)
+			log_names.extend(ln)
+			i += 1
 		log_data = np.array(log_data, dtype="float32")
 		all_data.append(log_data)
 		res[dbn] = dict(zip(sample_names, log_data))
@@ -437,6 +461,6 @@ if __name__ == "__main__":
 	db_s = dict(list(db_s.items())[:2])
 	db_e = dict(list(db_e.items())[:2])
 	print("comparing measures...")
-	compare_measures([db_s, db_e], ["selected", "excluded"], outdir=os.path.join(dbdir, "filter"))
+	compare_measures([db_s, db_e], ["selected", "excluded"], outdir=os.path.join(dbdir, "filter"), nprocs=2)
 	
 	#replot_compare_hists()
