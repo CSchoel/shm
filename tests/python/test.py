@@ -65,6 +65,8 @@ class TestSHMModel(unittest.TestCase):
 			fmt = "%%%s%s" % (12, match.group(2))
 		stat_line = "%%40s %s %s" % (fmt, fmt)
 		print(stat_line % (name, value, base))
+		with open(os.path.join(self.outdir,"measures.csv"),'a') as f:
+			f.write("{};{}\n".format(name, value))
 	def test_simulate(self):
 		self.assertTrue(self.loaded)
 		self.assertNotIn("failed", self.simres["messages"].lower())
