@@ -340,11 +340,10 @@ def plot_hist_with_pdf(h, bins, ymax, fname, vlines=[], pdfs=[]):
 	plt.close()
 
 def _compare_measures_sample(args):
-	name, rr, dnames, nbeats = args
+	name, rr, dnames, nbeats, max_chunks = args
 	alnames = dnames.keys()
 	log_data = []
 	log_names = []
-	max_chunks = 10
 	sys.stdout.flush()
 	nchunks = max(1,len(rr) // nbeats)
 	for s in range(nchunks):
@@ -365,7 +364,7 @@ def _compare_measures_sample(args):
 		sys.stdout.flush()
 	return name, log_names, log_data
 
-def compare_measures(dbs, names, outdir=None, nprocs=1):
+def compare_measures(dbs, names, outdir=None, nprocs=1, max_chunks=None):
 	nparams = 6
 	nbeats = 200
 	template = "{:s};" + ";".join(["{:.3f}"] * nparams) + "\n"
@@ -392,7 +391,7 @@ def compare_measures(dbs, names, outdir=None, nprocs=1):
 		else:
 			dnames = {a : None for a in alnames}
 		
-		rr_data = [(n, to_rr(db[n]), dnames, nbeats) for n in sample_names]
+		rr_data = [(n, to_rr(db[n]), dnames, nbeats, max_chunks) for n in sample_names]
 		if nprocs > 1:
 			imp = mp.Pool(nprocs).imap_unordered(_compare_measures_sample, rr_data)
 		else:
@@ -461,7 +460,11 @@ if __name__ == "__main__":
 	db_e = load_db(os.path.join(dbdir,"filter"), names=["filtered_excluded"], combine=True)
 	db_s = dict(list(db_s.items())[:2])
 	db_e = dict(list(db_e.items())[:2])
+	max_chunks = 10
 	print("comparing measures...")
-	compare_measures([db_s, db_e], ["selected", "excluded"], outdir=os.path.join(dbdir, "filter"), nprocs=2)
+	dbs = [db_s, db_e]
+	names = ["selected", "excluded"]
+	filterdir = os.path.join(dbdir, "filter")
+	compare_measures(dbs, names, outdir=filterdir, nprocs=2, max_chunks=max_chunks)
 	
 	#replot_compare_hists()
