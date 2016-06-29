@@ -362,6 +362,7 @@ def _compare_measures_sample(args):
 		log_names.append("{}_{}-{}".format(name,s*nbeats, (s+1)*nbeats))
 		print("{}: {}/{}".format(name, s+1, nchunks))
 		sys.stdout.flush()
+		sys.stderr.flush() # flush warnings so that they can be seen by the main thread
 	return name, log_names, log_data
 
 def compare_measures(dbs, names, outdir=None, nprocs=1, max_chunks=None):
@@ -373,6 +374,8 @@ def compare_measures(dbs, names, outdir=None, nprocs=1, max_chunks=None):
 	all_data = []
 	alnames = ["lyap_e", "lyap_r", "sampEn", "hurst", "corrDim", "dfa"]
 	for dbn, db in zip(names, dbs):
+		print("processing database {}...".format(dbn))
+		sys.stdout.flush()
 		measurefile = os.path.join(outdir,dbn + "_nonlinear.txt")
 		with io.open(measurefile, "w", encoding="utf-8") as f:
 			f.write(u"name;lyap_e;lyap_r;sampen;hurst;corr_dim;dfa\n")
@@ -402,9 +405,12 @@ def compare_measures(dbs, names, outdir=None, nprocs=1, max_chunks=None):
 		for name, ln, ld in imp:
 			print("processed sample {:d}/{:d}".format(i+1, len(sample_names)))
 			print("name: {:s}, chunks: {:d}".format(name,len(ln)))
+			sys.stdout.flush()
 			log_data.extend(ld)
 			log_names.extend(ln)
 			i += 1
+		print("writing logs...")
+		sys.stdout.flush()
 		log_data = np.array(log_data, dtype="float32")
 		all_data.append(log_data)
 		res[dbn] = dict(zip(sample_names, log_data))
