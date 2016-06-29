@@ -456,17 +456,17 @@ if __name__ == "__main__":
 	#db = load_db(dbdir, names=["healthy", "healthy_moving", "healthy_young", "healthy_old"], combine=True)
 	#filter_db(db, os.path.join(dbdir, "filter"), "filtered")
 
+	filterdir = os.path.join(dbdir, "filter")
 	print("loading selected...")
-	db_s = load_db(os.path.join(dbdir,"filter"), names=["filtered_selected"], combine=True)
+	db_s = load_db(filterdir, names=["filtered_selected"], combine=True)
 	print("loading excluded...")
-	db_e = load_db(os.path.join(dbdir,"filter"), names=["filtered_excluded"], combine=True)
+	db_e = load_db(filterdir, names=["filtered_excluded"], combine=True)
 	db_s = dict(list(db_s.items())[:2])
 	db_e = dict(list(db_e.items())[:2])
 	max_chunks = 10
 	print("comparing measures...")
 	dbs = [db_s, db_e]
 	names = ["selected", "excluded"]
-	filterdir = os.path.join(dbdir, "filter")
 	compare_measures(dbs, names, outdir=filterdir, nprocs=2, max_chunks=max_chunks)
 	
 	#replot_compare_hists()
