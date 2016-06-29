@@ -17,7 +17,7 @@ def load_db(dbdir, names=None, combine=False):
 	for f in glob.glob(os.path.join(dbdir,"*.npz")):
 		k = os.path.basename(f)[:-4]
 		if names is None or k in names:
-			data[k] = np.load(os.path.join(dbdir, f))
+			data[k] = np.load(f)
 	if combine:
 		d2 = {}
 		for v in data.values():
