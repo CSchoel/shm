@@ -365,6 +365,12 @@ def _compare_measures_sample(args):
 		sys.stderr.flush() # flush warnings so that they can be seen by the main thread
 	return name, log_names, log_data
 
+def _compare_measures_sample_safe(args):
+	try:
+		return _compare_measures_sample(args)
+	except Exception as e:
+		return args[0], None, e
+
 def compare_measures(dbs, names, outdir=None, nprocs=1, max_chunks=None):
 	pool = mp.Pool(nprocs)
 	nparams = 6
@@ -397,17 +403,25 @@ def compare_measures(dbs, names, outdir=None, nprocs=1, max_chunks=None):
 		
 		rr_data = [(n, to_rr(db[n]), dnames, nbeats, max_chunks) for n in sample_names]
 		if nprocs > 1:
-			imp = pool.imap_unordered(_compare_measures_sample, rr_data)
+			imp = pool.imap_unordered(_compare_measures_sample_safe, rr_data)
 		else:
 			# note: assumes python 3 map (else we should use it.imap)
-			imp = map(_compare_measures_sample, rr_data)
+			imp = map(_compare_measures_sample_safe, rr_data)
 		i = 0
 		for name, ln, ld in imp:
-			print("processed sample {:d}/{:d}".format(i+1, len(sample_names)))
-			print("name: {:s}, chunks: {:d}".format(name,len(ln)))
+			if ln is None:
+				# error encountered
+				err = ld
+				print("Error encountered in file {}!".format(name))
+				sys.stderr.write(str(err))
+				sys.stderr.write("\n")
+			else:
+				print("processed sample {:d}/{:d}".format(i+1, len(sample_names)))
+				print("name: {:s}, chunks: {:d}".format(name,len(ln)))
+				log_data.extend(ld)
+				log_names.extend(ln)
+			sys.stderr.flush()
 			sys.stdout.flush()
-			log_data.extend(ld)
-			log_names.extend(ln)
 			i += 1
 		print("writing logs...")
 		sys.stdout.flush()
