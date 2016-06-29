@@ -478,7 +478,7 @@ if __name__ == "__main__":
 
 	max_chunks = 10
 	nprocs = 3
-	nsamp = None
+	nsamp = 2
 	filterdir = os.path.join(dbdir, "filter")
 	print("loading selected...")
 	db_s = load_db(filterdir, names=["filtered_selected"], combine=True)
