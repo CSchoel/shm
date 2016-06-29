@@ -372,6 +372,7 @@ def _compare_measures_sample_safe(args):
 		return args[0], None, e
 
 def compare_measures(dbs, names, outdir=None, nprocs=1, max_chunks=None):
+	# TODO: ideal use of multiprocessing by directly submitting only individual slices as work items
 	pool = mp.Pool(nprocs)
 	nparams = 6
 	nbeats = 200
