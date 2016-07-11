@@ -1085,11 +1085,25 @@ def test_delay_embed():
 	data = np.arange(57)
 	print(delay_embedding(data,4,lag=2))
 
+def profiling():
+	import cProfile
+	n = 100000
+	data = np.cumsum(np.random.random(n)-0.5)
+	cProfile.runctx('lyap_e(data)',{'lyap_e': lyap_e},{'data': data})
+
 if __name__ == "__main__":
 	#test_hurst()
-	test_lyap()
+	#test_lyap()
 	#test_corr()
 	#test_dfa()
 	#test_delay_embed()
+	# r = 3.9
+	# logistic = lambda x : r * x * (1 - x)
+	# x = [0.1]
+	# for i in range(100):
+	# 	x.append(logistic(x[-1]))
+	# plt.plot(x)
+	# plt.show()
+	profiling()
 
 	
