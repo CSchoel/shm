@@ -414,7 +414,7 @@ def compare_measures(dbs, names, outdir=None, nprocs=1, max_chunks=None):
 				# error encountered
 				err = ld
 				print("Error encountered in file {}!".format(name))
-				sys.stderr.write(str(err))
+				sys.stderr.write(ld)
 				sys.stderr.write("\n")
 			else:
 				print("processed sample {:d}/{:d}".format(i+1, len(sample_names)))
