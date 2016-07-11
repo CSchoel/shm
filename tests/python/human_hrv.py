@@ -368,8 +368,8 @@ def _compare_measures_sample(args):
 def _compare_measures_sample_safe(args):
 	try:
 		return _compare_measures_sample(args)
-	except Exception as e:
-		return args[0], None, e
+	except BaseException as e:
+		return args[0], None, "{}: {}".format(type(e), str(e))
 
 def compare_measures(dbs, names, outdir=None, nprocs=1, max_chunks=None):
 	# TODO: ideal use of multiprocessing by directly submitting only individual slices as work items
