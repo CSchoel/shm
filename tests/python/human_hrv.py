@@ -8,7 +8,7 @@ import glob
 import scipy.stats as sst
 import scipy.stats.mstats as msst
 import scipy.signal as sig
-import multiprocessing as mp
+import concurrent.futures as fu
 
 import hrv_nonlinear as hnl
 
@@ -373,7 +373,7 @@ def _compare_measures_sample_safe(args):
 
 def compare_measures(dbs, names, outdir=None, nprocs=1, max_chunks=None):
 	# TODO: ideal use of multiprocessing by directly submitting only individual slices as work items
-	pool = mp.Pool(nprocs)
+	pool = fu.ProcessPoolExecutor(nprocs)
 	nparams = 6
 	nbeats = 200
 	template = "{:s};" + ";".join(["{:.3f}"] * nparams) + "\n"
@@ -404,7 +404,7 @@ def compare_measures(dbs, names, outdir=None, nprocs=1, max_chunks=None):
 		
 		rr_data = [(n, to_rr(db[n]), dnames, nbeats, max_chunks) for n in sample_names]
 		if nprocs > 1:
-			imp = pool.imap_unordered(_compare_measures_sample_safe, rr_data)
+			imp = pool.map(_compare_measures_sample_safe, rr_data)
 		else:
 			# note: assumes python 3 map (else we should use it.imap)
 			imp = map(_compare_measures_sample_safe, rr_data)
@@ -434,7 +434,7 @@ def compare_measures(dbs, names, outdir=None, nprocs=1, max_chunks=None):
 				f.writelines([template.format(*([n]+list(x))) for n, x in zip(log_names,log_data)])
 				f.write(template.format(*(["mean"]+list(np.mean(log_data, axis=0)))))
 				f.write("\n")
-	pool.close()
+	pool.shutdown()
 	if not outdir is None:
 		plot_measure_hists(all_data, names, alnames, os.path.join(outdir, "plots"))
 	return res
