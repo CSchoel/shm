@@ -1,6 +1,8 @@
 import OMPython
 import DyMat # https://bitbucket.org/jraedler/dymat
 
+# TODO error handling
+
 def enquote(s):
 	return "\"%s\"" % s
 
