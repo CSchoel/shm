@@ -4,7 +4,7 @@
 from __future__ import print_function # use python3-style printing
 from builtins import range            # use python3 implementation of range
 
-import hrv_nonlinear as hnl
+import nolds
 import ompython_helper as omh
 
 import unittest
@@ -215,15 +215,15 @@ class TestSHMModel(unittest.TestCase):
 		# sample entropy (SampEn)
 		# - -log(p(sim_next|sim_last_m))  (sim_next = next point is similar, sim_last_m = last m points are similar)
 		# - lower values (closer to zero) => more self-similarity
-		saen = hnl.sampen(hr[:,1], debug_plot=True, plot_file=os.path.join(self.outdir,"sampEn.png"))
+		saen = nolds.sampen(hr[:,1], debug_plot=True, plot_file=os.path.join(self.outdir,"sampEn.png"))
 		measures.append(("sample entropy", saen, 0, 100, 0)) # TODO min, max, ref?
 		
 		# Lyapunov Exponent
 		# - A positive lyapunov exponent is an indicator of chaos
 		fname_e = os.path.join(self.outdir,"lyap_e.png")
 		fname_r = os.path.join(self.outdir,"lyap_r.png")
-		lexp_e = np.max(hnl.lyap_e(hr[:,1], emb_dim=10, matrix_dim=4, debug_plot=True, plot_file=fname_e))
-		lexp_r = hnl.lyap_r(hr[:,1], debug_plot=True, plot_file=fname_r)
+		lexp_e = np.max(nolds.lyap_e(hr[:,1], emb_dim=10, matrix_dim=4, debug_plot=True, plot_file=fname_e))
+		lexp_r = nolds.lyap_r(hr[:,1], debug_plot=True, plot_file=fname_r)
 		# TODO min, max, ref?
 		measures.append(("lyapunov exponent (Eckmann)", lexp_e, -100, 100, 0))
 		measures.append(("lyapunov exponent (Rosenstein)", lexp_r, -100, 100, 0))
@@ -232,20 +232,20 @@ class TestSHMModel(unittest.TestCase):
 		# - < 0.5 : negative long-term correlations ("mean-reverting" system)
 		# - = 0.5 : no long-term correlations (random walk)
 		# - > 0.5 : positive long-term correlations ("long-term memory")
-		hexp = hnl.hurst_rs(hr[:,1], debug_plot=True, plot_file=os.path.join(self.outdir,"hurst.png"))
+		hexp = nolds.hurst_rs(hr[:,1], debug_plot=True, plot_file=os.path.join(self.outdir,"hurst.png"))
 		# TODO min, max, ref?
 		measures.append(("hurst exponent", hexp, 0, 1, 0))
 
 		# Correlation Dimension
 		# - between 0 and 1, should be < 1 for 1D-system with strange attractor
-		cdim = hnl.corr_dim(hr[:,1], 2, debug_plot=True, plot_file=os.path.join(self.outdir,"corrDim.png"))
+		cdim = nolds.corr_dim(hr[:,1], 2, debug_plot=True, plot_file=os.path.join(self.outdir,"corrDim.png"))
 		# TODO min, max, ref?
 		measures.append(("correlation dimension", cdim, 0, 2, 0))
 		
 		# Detrended Fluctuation Analysis
 		# - < 1 : stationary process with Hurst exponent H = hdfa
 		# - > 1 : non-stationary process with Hurst exponent H = hdfa - 1
-		hdfa = hnl.dfa(hr[:,1], debug_plot=True, plot_file=os.path.join(self.outdir,"dfa.png"))
+		hdfa = nolds.dfa(hr[:,1], debug_plot=True, plot_file=os.path.join(self.outdir,"dfa.png"))
 		# TODO min, max, ref?
 		measures.append(("hurst parameter (DFA)", hdfa, 0, 2, 0))
 

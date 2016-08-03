@@ -10,7 +10,7 @@ import scipy.stats.mstats as msst
 import scipy.signal as sig
 import concurrent.futures as fu
 
-import hrv_nonlinear as hnl
+import nolds
 
 def load_db(dbdir, names=None, combine=False):
 	data = {}
@@ -352,12 +352,12 @@ def _compare_measures_sample(args):
 		fnt = "{}_{{}}_{}-{}".format(name, s*nbeats, (s+1)*nbeats)
 		fnf = lambda s: (None if dnames[s] is None else os.path.join(dnames[s],fnt.format(s)))
 		rr_slice = rr[s*nbeats:(s+1)*nbeats]
-		lambda_e = np.max(hnl.lyap_e(rr_slice, emb_dim=10, matrix_dim=4, debug_plot=True, plot_file=fnf("lyap_e")))
-		lambda_r = hnl.lyap_r(rr_slice, debug_plot=True, plot_file=fnf("lyap_r"))
-		sen = hnl.sampen(rr_slice, debug_plot=True, plot_file=fnf("sampEn"))
-		h = hnl.hurst_rs(rr_slice, debug_plot=True, plot_file=fnf("hurst"))
-		cd = hnl.corr_dim(rr_slice, 2, debug_plot=True, plot_file=fnf("corrDim"))
-		dfa = hnl.dfa(rr_slice, debug_plot=True, plot_file=fnf("dfa"))
+		lambda_e = np.max(nolds.lyap_e(rr_slice, emb_dim=10, matrix_dim=4, debug_plot=True, plot_file=fnf("lyap_e")))
+		lambda_r = nolds.lyap_r(rr_slice, debug_plot=True, plot_file=fnf("lyap_r"))
+		sen = nolds.sampen(rr_slice, debug_plot=True, plot_file=fnf("sampEn"))
+		h = nolds.hurst_rs(rr_slice, debug_plot=True, plot_file=fnf("hurst"))
+		cd = nolds.corr_dim(rr_slice, 2, debug_plot=True, plot_file=fnf("corrDim"))
+		dfa = nolds.dfa(rr_slice, debug_plot=True, plot_file=fnf("dfa"))
 		log_data.append([lambda_e, lambda_r, sen, h, cd, dfa])
 		log_names.append("{}_{}-{}".format(name,s*nbeats, (s+1)*nbeats))
 		print("{}: {}/{}".format(name, s+1, nchunks))
