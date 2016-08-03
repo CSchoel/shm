@@ -36,18 +36,18 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   	initial_T_avc=heart_initial_T_avc
   ) "the heart" annotation(Placement(visible = true, transformation(origin = {0, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.Shared.Components.Compartments.BloodSystem blood(initialPressure=initial_p) "whole blood system of the body" annotation(Placement(visible = true, transformation(origin = {60, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  
+
   parameter Real initial_p = 100 "initial blood pressure";
-  
+
   parameter Real initial_sNe = 0.12 "initial postsynaptic concentration of Norepinephrine at the sinus node";
   parameter Real initial_sAc = 0.5 "initial postsynaptic concentration of Acetylcholine at the sinus node";
   parameter Real initial_vNe = 0.12 "initial vascular concentration of Norepinephrine at the ventricles";
   parameter Real initial_wNe = 0.12 "initial vascular concentration of Norepinephrine at the Windkesel arteries";
-  
+
   parameter Real sinus_T_0 = 0.9 "heart period for denervated heart";
   parameter Real sinus_k_sNe = 0.6 "sensitivity of sinus node to concentration of Norepinephrine";
   parameter Real sinus_k_sAc = 0.2 "sensitivity of sinus node to concentration of Acetylcholine";
-  
+
   parameter Real sNe_tau = 2 "time until concentration drops to zero without any nervous signal";
   parameter Real sNe_k_ex = 0.014 "scaling factor for excitatory influence of sympathetic system on sinoatrial concentration of Norepinephrine";
   parameter Real sNe_k_in = 0.006 "scaling factor for inhibitory influence of parasympathetic system on sinoatrial concentration of Norepinephrine";
@@ -66,17 +66,17 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real sAc_tau = 0.05 "time until concentration of Acetylcholine at the sinus node drops to zero without any nervous signal";
   parameter Real sAc_k_ex = 0.005 "scaling factor for excitatory influence of parasympathetic system on sinoatrial concentration of Acetylcholine";
   parameter Real sAc_delay_ex = sNe_delay_in "time until excitatory signal of parasympathetic system triggers release of sinoatrial Acetylcholine";
-  
+
   parameter Real sym_base_activity = 50 "base activity of the sympathetic nervous system";
   parameter Real sym_k_baro_resp = 0.38 "sensitivity of sympathetic system to correlated signal of baroreceptors and respiratory neurons";
   parameter Real sym_k_resp = 30 "sensitivity of sympathetic system to respiratory neurons";
   parameter Real para_base_activity = 10 "base activity of the parasympathetic nervous system";
   parameter Real para_k_baro_resp = 0.38 "sensitivity of parasympathetic system to correlated signal of baroreceptors and respiratory neurons";
   parameter Real para_k_resp = 30 "sensitivity of parasympathetic system to respiratory neurons";
-  
+
   parameter Real lung_T_r = 4 "respiratory period";
   parameter Real lung_r_start = 0.16 "respiratory phase shift in seconds";
-  
+
   parameter Real baro_p0 = 60 "minimum blood pressure needed to generate baroreceptor signal";
   parameter Real baro_kb = 0.06 "sensitivity of baroreceptors to blood pressure increase";
   parameter Real baro_sat_inflection = 120 "point of inflection for the baroreceptor saturation";
@@ -86,7 +86,7 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real baro_broad_res = 1000 "broadening calculation steps of baroreceptor signal per second";
   parameter Real baro_broad_eta = 0.01 "broadening eta for baroreceptors";
   parameter Real baro_broad_sigma = 0.001 "broadening sigma for baroreceptors";
-  
+
   parameter Real heart_T_refrac = 0.22 "refractory period that has to pass until a signal from the sinus node can take effect again";
   parameter Real heart_T_av = 1.7 "time that can pass after the beginning of a systole until the av node initiates a contraction";
   parameter Real heart_T_avc0 = 0.09 "base value for atrioventricular conduction time";
