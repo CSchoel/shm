@@ -23,6 +23,69 @@ def resample_nearest(x,y,n):
 	ny = it.interp1d(x,y,"nearest")(nx)
 	return np.dstack((nx, ny)).reshape((n,2))
 
+def fi(d, f, n):
+	"""
+	Calculates the index of a certain frequency f in np.fft.fftfreq(n, d=d)
+	
+	The result is rounded to the next integer, if there is no frequency bin
+	that fits this frequency exactly.
+
+		f(requency) = i(ndex)  / (d * n)
+		=> i = f * d * n
+
+	Args:
+		d (float):
+			step size between the samples in seconds
+		f (float):
+			frequency in hertz
+		n (int):
+			number of samples
+
+	Returns:
+		int:
+			index of frequency f in np.fft.fftfreq(n, d=d)
+	"""
+	return round(f * d * n)
+
+
+def band_power(signal, low, high, d=1, signal_is_fft=False):
+	"""
+	Calculates the power in the frequency band [low, high) from the raw signal
+	or from its Fourier transform.
+
+	Args:
+		signal (iterable of floats):
+			the input signal (or its Fourier transform if `signal_is_fft == True`)
+		low (float):
+			lower frequency bound of the band in Hz
+		high (float):
+			higher frequency bound of the band in Hz
+
+	Kwargs:
+		d (float):
+			sample spacing of the signal in seconds (default: 1)
+		signal_is_fft (boolean):
+			if true, the parameter `signal` will be interpreted as the Fourier
+			transform of the original signal (as obtained by `np.fft.fft(signal)`)
+			(default: False)
+	"""
+	n = len(signal)
+	if signal_is_fft:
+		fft_total = signal
+	else:
+		fft_total = np.fft.fft(signal)
+	# compute indices where to find frequencies in PSD
+	li = fi(d, low, n)
+	hi = fi(d, high, n)
+	# take slice from fft corresponding to frequency band
+	fft_band = fft_total[li:hi]
+	# compute PSD
+	psd = (np.abs(fft_band) / n) ** 2
+	# take sum of (normalized) PSD to calculate power
+	power = np.sum(psd)
+	# and multiply by two to also account for negative frequencies
+	return power * 2
+
 class TestSHMModel(unittest.TestCase):
 	session = None
 	loaded = None
@@ -139,13 +202,15 @@ class TestSHMModel(unittest.TestCase):
 		plt.close(f)
 	def test_ftt(self):
 		n = len(self.data_hrv_cont)
-		freq = np.absolute(np.fft.fft(self.data_hrv_cont[:,1]))/n
+		freq_raw = np.fft.fft(self.data_hrv_cont[:,1])
+		freq = np.absolute(freq_raw)/n
 		t_max = self.data_hrv_cont[-1,0]
 		sps = 1.0 * n / t_max # sampling frequency (samples/s)
+		d = 1.0 / sps # step size of samples [s]
 		f_max = 0.4 # maximum frequency that is interesting for us
 		nfreq = round(f_max * t_max) # number of samples to take
 		freq = freq[:nfreq]
-		xvals = np.fft.fftfreq(n,d=1.0/sps)[:nfreq]
+		xvals = np.fft.fftfreq(n,d=d)[:nfreq]
 		#print(",".join(["{:.6f}".format(x) for x in freq]))
 		expected = np.array([
 			0.000014, 0.000004, 0.000012, 0.000030, 0.000027, 0.000056, 0.000087,
@@ -167,10 +232,22 @@ class TestSHMModel(unittest.TestCase):
 		# - not recommended by task force of ESC and NASPE => not implemented
 		#vlf = 0
 
-		# low frequency component (lf)
-		# high frequency component (hf)
+		# low frequency component (lf) = 0.04-0.15 Hz
+		lf = band_power(freq_raw, 0.04, 0.15, d=d, signal_is_fft=True)
+		# high frequency component (hf) = 0.15 - 0.4 Hz
+		hf = band_power(freq_raw, 0.15, 0.4, d=d, signal_is_fft=True)
+		# lf/hf ratio
+		ratio_lf_hf = lf / hf
+		# total power (= variance)
+		power = np.var(self.data_hrv_cont[:,1])
 
 		self.printt("RMSE RR-interval spectral density", "%.9f", err, 0.000000292)
+		self.printt("low frequency band power (lf)","%.9f", lf, 0.0) # TODO normal value
+		self.printt("high frequency band power (hf)","%.9f", hf, 0.0) # TODO normal value
+		self.printt("lf/hf ratio","%.9f", ratio_lf_hf, 0.0) # TODO normal value
+		self.printt("total spectral power","%.9f", power, 0.0) # TODO normal value
+
+
 		self.assertLess(err,0.000001) # TODO adjust tolerance
 	def test_heart_rate(self):
 		# skip all heart beats that occured in the first 10 seconds
