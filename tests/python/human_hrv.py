@@ -532,6 +532,16 @@ def mcomp():
   compare_measures(dbs, names, outdir=filterdir,
                    nprocs=nprocs, max_chunks=max_chunks)
 
+
+def extract_median(resfile):
+  with io.open(resfile, "r", encoding="utf-8") as f:
+    names = f.readline().strip().split(";")[1:7]
+  data = np.loadtxt(resfile, usecols=range(1, 7), skiprows=1, delimiter=";")
+  res = zip(names, np.median(data, axis=0), np.std(data, axis=0))
+  for n, m, s in res:
+    print("{:10s} {:7.3f} - {:7.3f}".format(n, m - s, m + s))
+
+
 if __name__ == "__main__":
   dbdir = "D:/Daten/hrvdb"
   test_file = "../../../test-output/measures.csv"
@@ -541,5 +551,8 @@ if __name__ == "__main__":
   # db = load_db(dbdir, names=["healthy", "healthy_moving", "healthy_young", "healthy_old"], combine=True)
   # filter_db(db, os.path.join(dbdir, "filter"), "filtered")
 
-  mcomp()
+  # mcomp()
   # replot_compare_hists()
+  resfile = "D:/Dokumente/Promotion/results/chaos/nonlinear_measures_1.0/" \
+            + "selected_nonlinear.txt"
+  extract_median(resfile)
