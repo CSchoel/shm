@@ -232,7 +232,7 @@ class TestSHMModel(unittest.TestCase):
 		# - not recommended by task force of ESC and NASPE => not implemented
 		#vlf = 0
 
-		# low frequency component (lf) = 0.04-0.15 Hz
+		# low frequency component (lf) = 0.04 - 0.15 Hz
 		lf = band_power(freq_raw, 0.04, 0.15, d=d, signal_is_fft=True)
 		# high frequency component (hf) = 0.15 - 0.4 Hz
 		hf = band_power(freq_raw, 0.15, 0.4, d=d, signal_is_fft=True)
@@ -242,13 +242,21 @@ class TestSHMModel(unittest.TestCase):
 		power = np.var(self.data_hrv_cont[:,1])
 
 		self.printt("RMSE RR-interval spectral density", "%.9f", err, 0.000000292)
-		self.printt("low frequency band power (lf)","%.9f", lf, 0.0) # TODO normal value
-		self.printt("high frequency band power (hf)","%.9f", hf, 0.0) # TODO normal value
-		self.printt("lf/hf ratio","%.9f", ratio_lf_hf, 0.0) # TODO normal value
-		self.printt("total spectral power","%.9f", power, 0.0) # TODO normal value
+		self.printt("low frequency band power (lf)","%.9f", lf, 2.812e-6)
+		self.printt("high frequency band power (hf)","%.9f", hf, 9.517e-4)
+		self.printt("lf/hf ratio","%.9f", ratio_lf_hf, 2.955e-3)
+		self.printt("total spectral power","%.9f", power, 1.172e-3)
 
 
 		self.assertLess(err,0.000001) # TODO adjust tolerance
+		# normal lf (Task Force paper): 754 - 1586 ms^2
+		self.assertBetween(lf,0,1586,name="lf") # TODO adjust lower limit
+		# normal hf (Task Force paper): 772 - 1178 ms^2
+		self.assertBetween(hf,0,1178,name="hf") # TODO adjust lower limit
+		# normal lf/hf (Task Force paper): 1.5 - 2.0
+		self.assertBetween(ratio_lf_hf,0,2.0,name="lf/hf") # TODO adjust lower limit
+		# normal total power (Task Force paper): 2448 - 4484 ms^2
+		self.assertBetween(power,0,4484,name="total spectral power") # TODO adjust lower limit
 	def test_heart_rate(self):
 		# skip all heart beats that occured in the first 10 seconds
 		hr = self.data_hrv[np.where(self.data_hrv[:,0] > 10)]
@@ -279,7 +287,7 @@ class TestSHMModel(unittest.TestCase):
 		# normal values (Task Force paper): 27+-12 ms
 		rmssd = rmse(hr[1:,1],hr[:-1,1]) * 1000
 		# TODO decrease upper limit to 39 when model is changed
-		measures.append(("rmssd", rmssd, 15, 50, 0)) # TODO reference value
+		measures.append(("rmssd", rmssd, 15, 50, 47.672))
 
 		# proportion of number of successive interval differences greater than 50 ms (pnn50)
 		# - not recommended by task force of ESC and NASPE => not implemented
@@ -293,7 +301,9 @@ class TestSHMModel(unittest.TestCase):
 		# - -log(p(sim_next|sim_last_m))  (sim_next = next point is similar, sim_last_m = last m points are similar)
 		# - lower values (closer to zero) => more self-similarity
 		saen = nolds.sampen(hr[:,1], debug_plot=True, plot_file=os.path.join(self.outdir,"sampEn.png"))
-		measures.append(("sample entropy", saen, 0, 100, 0)) # TODO min, max, ref?
+		# normal sampen (hrvdb): 0.965 - 1.851
+		# TODO adjust lower limit
+		measures.append(("sample entropy", saen, 0, 1.851, 0.089)) # TODO min, max, ref?
 		
 		# Lyapunov Exponent
 		# - A positive lyapunov exponent is an indicator of chaos
@@ -301,32 +311,38 @@ class TestSHMModel(unittest.TestCase):
 		fname_r = os.path.join(self.outdir,"lyap_r.png")
 		lexp_e = np.max(nolds.lyap_e(hr[:,1], emb_dim=10, matrix_dim=4, debug_plot=True, plot_file=fname_e))
 		lexp_r = nolds.lyap_r(hr[:,1], debug_plot=True, plot_file=fname_r)
-		# TODO min, max, ref?
-		measures.append(("lyapunov exponent (Eckmann)", lexp_e, -100, 100, 0))
-		measures.append(("lyapunov exponent (Rosenstein)", lexp_r, -100, 100, 0))
+		# normal lyap_e (hrvdb): 0.019 - 0.071
+		# TODO adjust lower limit
+		measures.append(("lyapunov exponent (Eckmann)", lexp_e, - 0.1, 0.071, -0.002))
+		# normal lyap_r (hrvdb): 0.028 - 0.058
+		# TODO adjust lower limit
+		measures.append(("lyapunov exponent (Rosenstein)", lexp_r, -0.1, 0.058, 0.051))
 
 		# Hurst Exponent
 		# - < 0.5 : negative long-term correlations ("mean-reverting" system)
 		# - = 0.5 : no long-term correlations (random walk)
 		# - > 0.5 : positive long-term correlations ("long-term memory")
 		hexp = nolds.hurst_rs(hr[:,1], debug_plot=True, plot_file=os.path.join(self.outdir,"hurst.png"))
-		# TODO min, max, ref?
-		measures.append(("hurst exponent", hexp, 0, 1, 0))
+		# normal hexp (hrvdb): 0.760 - 0.966
+		# TODO adjust lower limit
+		measures.append(("hurst exponent", hexp, 0.15, 0.966, 0.187))
 
 		# Correlation Dimension
 		# - between 0 and 1, should be < 1 for 1D-system with strange attractor
+		# TODO between 0 and 1 or between 1 and 2?
 		cdim = nolds.corr_dim(hr[:,1], 2, debug_plot=True, plot_file=os.path.join(self.outdir,"corrDim.png"))
-		# TODO min, max, ref?
-		measures.append(("correlation dimension", cdim, 0, 2, 0))
+		# normal cdim (hrvdb): 1.283 -   1.863
+		# TODO adjust lower limit
+		measures.append(("correlation dimension", cdim, 1, 1.863, 1.039))
 		
 		# Detrended Fluctuation Analysis
 		# - < 1 : stationary process with Hurst exponent H = hdfa
 		# - > 1 : non-stationary process with Hurst exponent H = hdfa - 1
 		hdfa = nolds.dfa(hr[:,1], debug_plot=True, plot_file=os.path.join(self.outdir,"dfa.png"))
-		# TODO min, max, ref?
-		measures.append(("hurst parameter (DFA)", hdfa, 0, 2, 0))
+		# normal hdfa (hrvdb): 0.956 - 1.490
+		# TODO adjust lower limit
+		measures.append(("hurst parameter (DFA)", hdfa, 0.12, 1.5, 0.137))
 
-		# TODO calculate values for human sample data?
 		for name, val, v_min, v_max, v_ref in measures:
 			self.printt(name, "%.3f", val, v_ref)
 		for name, val, v_min, v_max, v_ref in measures:
@@ -343,14 +359,14 @@ class TestSHMModel(unittest.TestCase):
 		# - number of NN-intervals / number of NN-intervals in maximal bin of histogram
 		# - typical bin size: 1/128 s
 		vals2, bins2 = np.histogram(self.data_hrv[:,1],np.arange(0.0,1.5,1.0/128))
-		ti = 1.0*len(self.data_hrv)/np.max(vals2)
+		ti = 1.0*np.sum(vals2)/np.max(vals2)
 
 		self.printt("RMSE RR-interval histogram", "%.3f", error, 0.001)
-		self.printt("HRV triangular index","%.3f", ti, 0) # TODO set base value
+		self.printt("HRV triangular index","%.3f", ti, 5.514)
 
-		# TODO set limits
-		self.assertGreater(ti, 4)
-		self.assertLess(ti,6)
+		# normal ti (Task Force paper): 22 - 52
+		# TODO set lower limit to 22 once model is fixed
+		self.assertBetween(ti, 5, 52, name="ti")
 		
 		# TODO tolerance is chosen very low to not produce false positive test results
 		# TODO probably needs to be increased when this test fails repeatedly (look at the plot!)
@@ -362,15 +378,17 @@ class TestSHMModel(unittest.TestCase):
 		sd = lambda x : np.std(np.dot(poincare, x) / np.linalg.norm(x))
 		sd2 = sd(ax2)
 		sd1 = sd(ax1)
+		ratio_sd1_sd2 = sd1 / sd2
 		self.printt("Poincare SD1", "%.3f", sd1, 0.034)
 		self.printt("Poincare SD2", "%.3f", sd2, 0.035)
-		
-		# TODO adjust values
-		self.assertGreater(sd1,0.02)
-		self.assertLess(sd1,0.05)
-		
-		self.assertGreater(sd2,0.02)
-		self.assertLess(sd2,0.05)
+		self.printt("Poincare SD1/SD2", "%.3f", ratio_sd1_sd2, 0.966)
+
+		self.assertBetween(sd1, 0.02, 0.05, name="sd1")
+		self.assertBetween(sd2, 0.02, 0.05, name="sd2")
+		# normal sd1/sd2 (Acharya 2004): 0.291 - 0.762
+		# TODO adjust upper limit
+		self.assertBetween(ratio_sd1_sd2, 0.3, 1, name="sd1/sd2")
+
 
 outdir = "../../../test-output"
 if __name__ == '__main__':
