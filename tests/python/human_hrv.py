@@ -539,7 +539,8 @@ def extract_median(resfile):
   data = np.loadtxt(resfile, usecols=range(1, 7), skiprows=1, delimiter=";")
   res = zip(names, np.median(data, axis=0), np.std(data, axis=0))
   for n, m, s in res:
-    print("{:10s} {:7.3f} - {:7.3f}".format(n, m - s, m + s))
+    tmpl = "{:10s} {:7.3f} +- {:7.3f} ({:7.3f} - {:7.3f})"
+    print(tmpl.format(n, m, s, m - s, m + s))
 
 
 if __name__ == "__main__":
