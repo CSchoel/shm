@@ -163,17 +163,18 @@ class TestSHMModel(unittest.TestCase):
     self.printt("max pressure", "%.3f", bp_max, 140.912)
     self.printt("std pressure", "%.3f", bp_std, 18.639)
 
-    # normal MAP: 70 - 105 mmHg
+    # normal MAP (calculated from Klabunde 2012 values for systolic and
+    # diastolic pressure): 70 - 93
     # is already elevated in the model => shift upper range to 110
-    # TODO reduce to 105 when model is fixed
+    # TODO reduce to 93 when model is fixed
     self.assertBetween(bp_mean, 70, 110)
 
-    # normal diastolic pressure: 60 - 90 mmHg
-    self.assertBetween(bp_min, 60, 90)
+    # normal diastolic pressure (Klabunde 2012, S. 97): 60 - 80 mmHg
+    self.assertBetween(bp_min, 60, 80)
 
-    # normal systolic pressure: 100 - 140 mmHg
-    # TODO reduce to 140 when model is fixed
-    self.assertBetween(bp_max, 100, 150)
+    # normal systolic pressure (Klabunde 2012, S. 97): 90 - 120 mmHg
+    # TODO reduce to 120 when model is fixed
+    self.assertBetween(bp_max, 90, 150)
 
     # normal standard deviation: 14 - 24 mmHg
     # (taken from model run in base state)
@@ -279,7 +280,7 @@ class TestSHMModel(unittest.TestCase):
     self.assertBetween(lf, 0, 1586, name="lf")  # TODO adjust lower limit
     # normal hf (Task Force paper): 772 - 1178 ms^2
     self.assertBetween(hf, 0, 1178, name="hf")  # TODO adjust lower limit
-    # normal lf/hf (Task Force paper): 1.5 - 2.0
+    # normal lf/hf (Task Force paper, Gamelin 2006): 0.4 - 2.0
     # TODO adjust lower limit
     self.assertBetween(ratio_lf_hf, 0, 2.0, name="lf/hf")
     # normal total power (Task Force paper): 2448 - 4484 ms^2
@@ -298,15 +299,15 @@ class TestSHMModel(unittest.TestCase):
 
     # name, value, min, max, ref
     measures = []
-    # normal resting heart rate: 60 - 100 bpm
+    # normal resting heart rate (Klabunde 2012, S. 28): 60 - 100 bpm
     measures.append(("heart rate", bpm, 60, 100, 61.333))
-    measures.append(("min RR", rr_min, 0.5, 1.0, 0.930))
-    measures.append(("max RR", rr_max, 0.6, 1.2, 1.029))
+    # normal min RR (Task Force, Gamelin 2006): 700 ms
+    measures.append(("min RR", rr_min, 0.4, 1.0, 0.930))
+    # normal max RR (Task Force, Gamelin 2006): 1100 ms
+    measures.append(("max RR", rr_max, 0.6, 1.3, 1.029))
     # standard deviation of nn-inverval (sdnn)
-    # normal values (Task Force paper): 141 +- 39 ms
-    # TODO increase lower bound to 102 when model is fixed (only possible
-    # with noise?)
-    measures.append(("std RR (sdnn)", sdnn, 30, 180, 34))
+    # normal values (Voss 2008, Gamelin 2006): 30 - 100 ms
+    measures.append(("std RR (sdnn)", sdnn, 30, 100, 34))
 
     # standard deviation of average (over 5 minutes) NN interval (sdann)
     # - estimate for changes in heart rate due to cycles longer than 5 min
@@ -314,10 +315,9 @@ class TestSHMModel(unittest.TestCase):
     # sdann = 0
 
     # root mean squared successive differences (rmssd)
-    # normal values (Task Force paper): 27+-12 ms
+    # normal values (Voss 2008, Gamelin 2006): 15 - 100 ms
     rmssd = rmse(hr[1:, 1], hr[:-1, 1]) * 1000
-    # TODO decrease upper limit to 39 when model is changed
-    measures.append(("rmssd", rmssd, 15, 50, 47.672))
+    measures.append(("rmssd", rmssd, 15, 100, 47.672))
 
     # proportion of number of successive interval differences
     # greater than 50 ms (pnn50)
@@ -336,7 +336,6 @@ class TestSHMModel(unittest.TestCase):
                         plot_file=os.path.join(self.outdir, "sampEn.png"))
     # normal sampen (hrvdb): 0.965 - 1.851
     # TODO adjust lower limit
-    # TODO min, max, ref?
     measures.append(("sample entropy", saen, 0, 1.851, 0.089))
 
     # Lyapunov Exponent
@@ -430,11 +429,15 @@ class TestSHMModel(unittest.TestCase):
     self.printt("Poincare SD2", "%.3f", sd2, 0.035)
     self.printt("Poincare SD1/SD2", "%.3f", ratio_sd1_sd2, 0.966)
 
-    self.assertBetween(sd1, 0.02, 0.05, name="sd1")
-    self.assertBetween(sd2, 0.02, 0.05, name="sd2")
-    # normal sd1/sd2 (Acharya 2004): 0.291 - 0.762
-    # TODO adjust upper limit
-    self.assertBetween(ratio_sd1_sd2, 0.3, 1, name="sd1/sd2")
+    # normal sd1 (Voss 2008, Gamelin 2006, Hautala 2009): 10 - 70 ms
+    self.assertBetween(sd1, 0.010, 0.070, name="sd1")
+    # normal sd2 (Voss 2008, Gamelin 2006, Hautala 2009): 48 - 150 ms
+    # TODO adjust lower limit (small sd2 may be due to low recording length)
+    self.assertBetween(sd2, 0.03, 0.150, name="sd2")
+    # normal sd1/sd2 (Acharya 2004, Voss 2008, Gamelin 2006, Hautala 2009):
+    # 0.2 - 0.762
+    # TODO adjust upper limit (small sd2 may be due to low recording length)
+    self.assertBetween(ratio_sd1_sd2, 0.2, 1, name="sd1/sd2")
 
 
 outdir = "../../../test-output"
