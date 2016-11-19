@@ -352,7 +352,7 @@ class TestSHMModel(unittest.TestCase):
     # normal lyap_r (hrvdb): 0.028 - 0.058
     # TODO adjust lower limit
     measures.append(("lyapunov exponent (Rosenstein)",
-                    lexp_r, -0.1, 0.058, 0.051))
+                    lexp_r, -0.1, 0.058, -0.019))
 
     # Hurst Exponent
     # - < 0.5 : negative long-term correlations ("mean-reverting" system)
@@ -362,7 +362,7 @@ class TestSHMModel(unittest.TestCase):
                           plot_file=os.path.join(self.outdir, "hurst.png"))
     # normal hexp (hrvdb): 0.760 - 0.966
     # TODO adjust lower limit
-    measures.append(("hurst exponent", hexp, 0.15, 0.966, 0.187))
+    measures.append(("hurst exponent", hexp, 0.15, 0.966, 0.180))
 
     # Correlation Dimension
     # - between 0 and 1, should be < 1 for 1D-system with strange attractor
@@ -380,7 +380,7 @@ class TestSHMModel(unittest.TestCase):
                      plot_file=os.path.join(self.outdir, "dfa.png"))
     # normal hdfa (hrvdb): 0.956 - 1.490
     # TODO adjust lower limit
-    measures.append(("hurst parameter (DFA)", hdfa, 0.12, 1.5, 0.137))
+    measures.append(("hurst parameter (DFA)", hdfa, 0, 1.5, 0.058))
 
     for name, val, v_min, v_max, v_ref in measures:
       self.printt(name, "%.3f", val, v_ref)
