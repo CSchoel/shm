@@ -344,7 +344,8 @@ class TestSHMModel(unittest.TestCase):
     fname_r = os.path.join(self.outdir, "lyap_r.png")
     lexp_e = np.max(nolds.lyap_e(hr[:, 1], emb_dim=10, matrix_dim=4,
                                  debug_plot=True, plot_file=fname_e))
-    lexp_r = nolds.lyap_r(hr[:, 1], debug_plot=True, plot_file=fname_r)
+    lexp_r = nolds.lyap_r(hr[:, 1], emb_dim=10, lag=1, min_tsep=20,
+                          debug_plot=True, plot_file=fname_r)
     # normal lyap_e (hrvdb): 0.019 - 0.071
     # TODO adjust lower limit
     measures.append(("lyapunov exponent (Eckmann)",
@@ -352,7 +353,7 @@ class TestSHMModel(unittest.TestCase):
     # normal lyap_r (hrvdb): 0.028 - 0.058
     # TODO adjust lower limit
     measures.append(("lyapunov exponent (Rosenstein)",
-                    lexp_r, -0.1, 0.058, -0.019))
+                    lexp_r, -0.1, 0.058, -0.011))
 
     # Hurst Exponent
     # - < 0.5 : negative long-term correlations ("mean-reverting" system)

@@ -386,7 +386,8 @@ def _compare_measures_sample(args):
     rr_slice = rr[s * nbeats:(s + 1) * nbeats]
     lambda_e = np.max(nolds.lyap_e(rr_slice, emb_dim=10, matrix_dim=4,
                                    debug_plot=True, plot_file=fnf("lyap_e")))
-    lambda_r = nolds.lyap_r(rr_slice, debug_plot=True, plot_file=fnf("lyap_r"))
+    lambda_r = nolds.lyap_r(rr_slice, emb_dim=10, lag=1, min_tsep=20,
+                            debug_plot=True, plot_file=fnf("lyap_r"))
     sen = nolds.sampen(rr_slice, debug_plot=True, plot_file=fnf("sampEn"))
     h = nolds.hurst_rs(rr_slice, debug_plot=True, plot_file=fnf("hurst"))
     cd = nolds.corr_dim(rr_slice, 2, debug_plot=True, plot_file=fnf("corrDim"))
