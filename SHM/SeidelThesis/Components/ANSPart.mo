@@ -6,9 +6,9 @@ partial model ANSPart
   SHM.Shared.Connectors.NerveInput baro "input from the baroreceptors" annotation(Placement(visible = true, transformation(origin = {-148.568, 35.5947}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-60, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.Shared.Connectors.NerveInput resp "input from the respiratory neurons" annotation(Placement(visible = true, transformation(origin = {17.8036, 4.7749}, extent = {{-14.85, -10.5}, {14.85, 10.5}}, rotation = 0), iconTransformation(origin = {100, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.Shared.Connectors.NerveOutput signal "output signal" annotation(Placement(visible = true, transformation(origin = {0, -104.614}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {20, -100}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-protected 
+protected
   Real baro_eq = (1 + k_baro_resp*resp.activation) * baro.activation "equation for baroreceptor influence";
-  Real resp_eq = k_resp * resp.activation "equation for respiratory influence"; 
+  Real resp_eq = k_resp * resp.activation "equation for respiratory influence";
 annotation(Documentation(info="<html>
   <p>Models a part of the autonomic nervous system (sympathicus or parasympathicus).</p>
   <p>The equation from Seidel is split into a respiratory part and a part that sums up baroreceptor influence and influence of correlated signal between baroreceptor and respiration.</p>
