@@ -6,7 +6,7 @@ model RefractoryDelayExample
 equation
   der(test) = 1;
   connect(cd.inp, gate.outp);
-  when cd.outp then
+  when cd.outp.s then
     reinit(test, 0);
   end when;
 end RefractoryDelayExample;
