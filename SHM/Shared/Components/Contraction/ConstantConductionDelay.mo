@@ -1,7 +1,7 @@
 within SHM.Shared.Components.Contraction;
 model ConstantConductionDelay
   extends SHM.Shared.Components.Contraction.ConductionDelay;
-  parameter Real delayConstant = 1;
+  parameter Real delay_constant = 1;
 equation
-  delayTime = delayConstant;
+  delay_time = delay_constant;
 end ConstantConductionDelay;
