@@ -1,7 +1,7 @@
 within SHM.Shared.Components.Contraction;
 partial model ConductionDelay
-  Real delayTime(start=0, fixed=true);
   import SHM.Shared.Connectors.{TriggerInput, TriggerOutput};
+  Real delayTime(start=0, fixed=true);
   TriggerInput inp;
   TriggerOutput outp;
 protected
