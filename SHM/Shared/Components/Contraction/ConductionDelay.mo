@@ -10,6 +10,6 @@ protected
 equation
   outp.s = edge(outb);
   when inp.s then
-    t_next = time;
+    t_next = time + delayTime;
   end when;
 end ConductionDelay;
