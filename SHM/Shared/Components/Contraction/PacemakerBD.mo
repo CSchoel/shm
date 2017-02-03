@@ -5,9 +5,9 @@ model PacemakerBD
 protected
   Boolean tick = phase >= 1;
 equation
-  up.outgoing = down.incoming or tick;
-  down.outgoing = up.incoming or tick;
-  when up.outgoing or down.outgoing then
+  up_outgoing = down_incoming or tick;
+  down_outgoing = up_incoming or tick;
+  when up_outgoing or down_outgoing then
     reinit(phase, 0);
   end when;
 end PacemakerBD;

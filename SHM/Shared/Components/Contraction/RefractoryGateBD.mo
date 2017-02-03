@@ -9,9 +9,9 @@ protected
   Real t_last(start=t_first);
   Boolean refractory = time - pre(t_last) <= T_refrac;
 equation
-  up.outgoing = down.incoming and not refractory;
-  down.outgoing = up.incoming and not refractory;
-  when up.incoming or down.incoming then
+  up_outgoing = down_incoming and not refractory;
+  down_outgoing = up_incoming and not refractory;
+  when up_incoming or down_incoming then
     t_last = time;
   end when;
 end RefractoryGateBD;
