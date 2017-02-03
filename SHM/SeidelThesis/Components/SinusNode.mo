@@ -18,7 +18,7 @@ equation
     reinit(phase,0);
     signal0 = not pre(signal0);
   end when;
-  signal.s = change(signal0);
+  signal = change(signal0);
 annotation(Documentation(info="<html>
   <p>Models the sinus node as an integrate-and-fire model with postsynaptic concentrations of Norepinephrine and Acetylcholine as input.</p>
   <p>The effect of Acetylcholine is additionally modulated by a phase effectiveness curve.</p>

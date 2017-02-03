@@ -4,5 +4,5 @@ model PeriodicTrigger
   parameter Real T = 1;
   parameter Real start = 0;
 equation
-  outp.s = sample(start, T);
+  outp = sample(start, T);
 end PeriodicTrigger;

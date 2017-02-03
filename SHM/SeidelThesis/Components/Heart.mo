@@ -37,7 +37,7 @@ initial equation
   psys = pdia "there is already a connection between one of these variables and artery.pressure";
   S = initial_S;
 equation
-  contraction.signal = sinus.s;
+  contraction.signal = sinus;
   progress = (time - contraction.cont_last) / tau_sys;
   der(psys) = 1 / tau_sys * S/compliance * (1 - progress) * exp(1 - progress);
   der(pdia) = -(pdia-p_wind0) / tau_wind;
@@ -51,7 +51,7 @@ equation
     reinit(pdia,psys);
   end when;
   artery.pressure = if systole then psys else pdia;
-  
+
   vNe.rate = 0;
   wNe.rate = 0;
 annotation(Documentation(info="<html>

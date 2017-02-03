@@ -5,8 +5,8 @@ model Pacemaker
   TriggerOutput signal;
   Real phase(start=0, fixed=true);
 equation
-  signal.s = external_stimulus.s or phase >= 1;
-  when pre(signal.s) then
+  signal = external_stimulus or phase >= 1;
+  when pre(signal) then
     reinit(phase, 0);
   end when;
 end Pacemaker;

@@ -11,8 +11,8 @@ partial model RefractoryGate
 protected
   Real t_last(start=t_first);
 equation
-  outp.s = inp.s and time - pre(t_last) > T_refrac;
-  when outp.s then
+  outp = inp and time - pre(t_last) > T_refrac;
+  when outp then
     t_last = time;
   end when;
 end RefractoryGate;

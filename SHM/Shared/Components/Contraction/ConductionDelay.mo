@@ -8,8 +8,8 @@ protected
   Real t_next(start=0, fixed=true);
   Boolean outb = time > t_next;
 equation
-  outp.s = edge(outb);
-  when inp.s then
+  outp = edge(outb);
+  when inp then
     t_next = time + delay_time;
   end when;
 end ConductionDelay;

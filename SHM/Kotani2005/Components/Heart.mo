@@ -51,7 +51,7 @@ equation
   progress = (time - tlast) / Tsys;
   tauv = tauv0 - facCvneWind * satCvne.satx;
   artery.rate = if systole then -rsys else -rdia;
-  when sinusSignal.s then
+  when sinusSignal then
     S = S0 + facCcne * ccne.concentration + facT * (time - pre(tlast)) + facCvne * cvne.concentration;
     tlast = time;
     plast = pre(artery.pressure);
