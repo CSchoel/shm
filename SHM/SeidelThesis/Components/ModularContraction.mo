@@ -4,13 +4,13 @@ model ModularContraction
     ConstantRefractoryGate, ConstantPacemaker
   };
   import SHM.Shared.Connectors.{
-    TriggerInput, TriggerOutput
+    ExcitationInput, ExcitationOutput
   };
   import SHM.SeidelThesis.Components.{
     AVConductionDelay
   };
-  TriggerInput sinus;
-  TriggerOutput contraction;
+  ExcitationInput sinus;
+  ExcitationOutput contraction;
   ConstantRefractoryGate sinus_refrac;
   AVConductionDelay av_delay;
   ConstantPacemaker av_node;

@@ -1,5 +1,5 @@
 within SHM.Shared.Connectors;
-connector TriggerInput = input Boolean "discrete signal for pacemaker"
+connector ExcitationInput = input Boolean "discrete signal for pacemaker"
   annotation(
     Diagram(
       coordinateSystem(

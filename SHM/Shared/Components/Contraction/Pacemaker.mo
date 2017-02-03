@@ -1,8 +1,8 @@
 within SHM.Shared.Components.Contraction;
 model Pacemaker
-  import SHM.Shared.Connectors.{TriggerInput, TriggerOutput};
-  TriggerInput external_stimulus;
-  TriggerOutput signal;
+  import SHM.Shared.Connectors.{ExcitationInput, ExcitationOutput};
+  ExcitationInput external_stimulus;
+  ExcitationOutput signal;
   Real phase(start=0, fixed=true);
 equation
   signal = external_stimulus or phase >= 1;

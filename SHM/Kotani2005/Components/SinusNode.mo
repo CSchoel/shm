@@ -1,6 +1,6 @@
 within SHM.Kotani2005.Components;
 model SinusNode "sinus node integrate-and-fire model"
-  SHM.Shared.Connectors.TriggerOutput signal "generated signal" annotation(Placement(visible = true, transformation(origin = {0, -90}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  SHM.Shared.Connectors.ExcitationOutput signal "generated signal" annotation(Placement(visible = true, transformation(origin = {0, -90}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.Shared.Connectors.NerveInput parasympathicus "parasympathetic input signal" annotation(Placement(visible = true, transformation(origin = {40, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {40, 70}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.Shared.Connectors.NeurotransmitterConcentration ccne "Cardiac Concentration of Norepinephrine" annotation(Placement(visible = true, transformation(origin = {-40, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-40, 70}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Real phase "phase for integrate-and-fire; when this variable reaches a value greater than 1, the sinus node fires";

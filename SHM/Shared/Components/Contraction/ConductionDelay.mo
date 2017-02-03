@@ -1,9 +1,9 @@
 within SHM.Shared.Components.Contraction;
 partial model ConductionDelay
-  import SHM.Shared.Connectors.{TriggerInput, TriggerOutput};
+  import SHM.Shared.Connectors.{ExcitationInput, ExcitationOutput};
   Real delay_time(start=0, fixed=true);
-  TriggerInput inp;
-  TriggerOutput outp;
+  ExcitationInput inp;
+  ExcitationOutput outp;
 protected
   Real t_next(start=0, fixed=true);
   Boolean outb = time > t_next;

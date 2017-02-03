@@ -6,5 +6,5 @@ RespirationOutput
 HormoneConcentration
 NeurotransmitterConcentration
 SubstanceConcentration
-TriggerInput
-TriggerOutput
+ExcitationInput
+ExcitationOutput
