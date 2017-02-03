@@ -33,7 +33,7 @@ initial equation
   T_avc = initial_T_avc;
 equation
   when terminal() then
-    Modelica.Utilities.Streams.print("Simulation stopped, closing "+outfile);
+    Modelica.Utilities.Streams.print( "Simulation stopped, closing "+outfile);
     Modelica.Utilities.Streams.close(outfile);
   end when;
   signal_received = sig_last > cont_last;
@@ -73,7 +73,7 @@ annotation(Documentation(info="<html>
     begin with the second contraction of the heart. The time period between these two events is called the &quot;atrioventricular conduction time&quot;.
   </ul>
   <p><i>Note: The formulas in this model differ from the formulas found in the c-implementation by Seidel because OpenModelica is currently
-  not capable of handling discrete equation systems. Therefore it was necessary to introduce the continuous phases <b>av_phase</b>, 
+  not capable of handling discrete equation systems. Therefore it was necessary to introduce the continuous phases <b>av_phase</b>,
   <b>sinus_phase</b> and <b>refrac_countdown</b>, as well as the continuous variable condition <b>signal_received_cont</b>.</i></p>
 </html>"));
 end Contraction;
