@@ -13,4 +13,6 @@ protected
 equation
   refrac_signal = up_incoming or down_incoming or pace.tick;
   pacemaker_reset = refrac_signal and not refractory;
+  up_outgoing = (pace.tick or down_incoming) and not refractory;
+  down_outgoing = (pace.tick or up_incoming) and not refractory;
 end RefractoryPacemaker;
