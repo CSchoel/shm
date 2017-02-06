@@ -4,5 +4,5 @@ model ConstantPacemakerMixin
           PacemakerMixin;
   parameter Real T = 1;
 equation
-  der(phase) = T;
+  der(phase) = 1/T;
 end ConstantPacemakerMixin;
