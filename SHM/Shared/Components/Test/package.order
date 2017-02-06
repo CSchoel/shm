@@ -3,4 +3,4 @@ LinearBloodPressure
 LinearNerveSignal
 RectRampBloodPressure
 StaticNerveSignal
-PeriodicTrigger
+PeriodicExcitation
