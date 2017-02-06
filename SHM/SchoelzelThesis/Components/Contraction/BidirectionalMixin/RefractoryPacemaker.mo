@@ -11,8 +11,8 @@ model RefractoryPacemaker
 protected
   inner Boolean refrac_signal;
 equation
-  refrac_signal = up_outgoing or down_outgoing;
+  refrac_signal = up.upward or down.downward;
   pacemaker_reset = refrac_signal and not refractory;
-  up_outgoing = (pace.tick or down_incoming) and not refractory;
-  down_outgoing = (pace.tick or up_incoming) and not refractory;
+  up.upward = (pace.tick or down.upward) and not refractory;
+  down.downward = (pace.tick or up.downward) and not refractory;
 end RefractoryPacemaker;

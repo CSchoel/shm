@@ -10,19 +10,19 @@ protected
   Direction direction_next(start=Direction.None, fixed=true);
   Boolean delay_passed = time > pre(t_next);
 equation
-  up_outgoing = edge(delay_passed) and pre(direction_next) == Direction.Up;
-  down_outgoing = edge(delay_passed) and pre(direction_next) == Direction.Down;
-  when up_incoming and delay_passed then
+  up.upward = edge(delay_passed) and pre(direction_next) == Direction.Up;
+  down.downward = edge(delay_passed) and pre(direction_next) == Direction.Down;
+  when up.downward and delay_passed then
     t_next = time + duration;
     direction_next = Direction.Down;
-  elsewhen down_incoming and delay_passed then
+  elsewhen down.upward and delay_passed then
     t_next = time + duration;
     direction_next = Direction.Up;
-  elsewhen up_incoming
+  elsewhen up.downward
        and not delay_passed
        and pre(direction_next) == Direction.Up then
     direction_next = Direction.None;
-  elsewhen down_incoming
+  elsewhen down.upward
        and not delay_passed
        and pre(direction_next) == Direction.Down then
     direction_next = Direction.None;

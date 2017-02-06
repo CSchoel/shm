@@ -21,8 +21,8 @@ model BidirectionalPacemakerExample
   );
   DiracToSawtooth up, down;
 equation
-  connect(ex.ex, pm.up_incoming);
-  connect(up.dirac, pm.up_outgoing);
-  connect(down.dirac, pm.down_outgoing);
-  pm.down_incoming = false;
+  connect(ex.ex, pm.up.downward);
+  connect(up.dirac, pm.up.upward);
+  connect(down.dirac, pm.down.downward);
+  pm.down.upward = false;
 end BidirectionalPacemakerExample;

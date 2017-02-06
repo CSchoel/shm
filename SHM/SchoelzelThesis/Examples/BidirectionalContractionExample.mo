@@ -23,10 +23,9 @@ model BidirectionalContractionExample
   );
   DiracToSawtooth up, down;
 equation
-  connect(ex.ex, pm.up_incoming);
-  connect(pm.down_outgoing, cd.up_incoming);
-  connect(pm.down_incoming, cd.up_outgoing);
-  cd.down_incoming = false;
-  connect(up.dirac, pm.up_outgoing);
-  connect(down.dirac, cd.down_outgoing);
+  connect(ex.ex, pm.up.downward);
+  connect(pm.down, cd.up);
+  cd.down.upward = false;
+  connect(up.dirac, pm.up.upward);
+  connect(down.dirac, cd.down.downward);
 end BidirectionalContractionExample;
