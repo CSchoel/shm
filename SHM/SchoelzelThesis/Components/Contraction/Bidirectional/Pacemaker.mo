@@ -2,7 +2,7 @@ within SHM.SchoelzelThesis.Components.Contraction.Bidirectional;
 model Pacemaker
   extends SHM.SchoelzelThesis.Components.Contraction.BidirectionalContractionComponent;
   Real phase(start=0, fixed=true);
-  SHM.SchoelzelThesis.Connectors.ExcitationInput refractory;
+  SHM.Shared.Connectors.ExcitationInput refractory;
 protected
   Boolean tick = phase >= 1;
 equation

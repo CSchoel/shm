@@ -5,7 +5,7 @@ partial model RefractoryGate
   extends SHM.SchoelzelThesis.Components.Contraction.BidirectionalContractionComponent;
   parameter Real t_first(start=0, fixed=true);
   Real T_refrac;
-  SHM.SchoelzelThesis.Connectors.ExcitationOutput refractory;
+  SHM.Shared.Connectors.ExcitationOutput refractory;
 protected
   Real t_last(start=t_first);
 equation

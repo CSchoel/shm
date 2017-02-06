@@ -1,6 +1,6 @@
 within SHM.SchoelzelThesis.Components.Contraction;
 model Pacemaker
-  import SHM.SchoelzelThesis.Connectors.{ExcitationInput, ExcitationOutput};
+  import SHM.Shared.Connectors.{ExcitationInput, ExcitationOutput};
   ExcitationInput external_stimulus;
   ExcitationOutput signal;
   Real phase(start=0, fixed=true);

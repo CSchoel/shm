@@ -2,8 +2,8 @@ within SHM.SchoelzelThesis.Components.Contraction;
 partial model RefractoryGate
   "lets signals pass only when a given"
   +"refractory time has passed since the last signal"
-  import SHM.SchoelzelThesis.Connectors.ExcitationInput;
-  import SHM.SchoelzelThesis.Connectors.ExcitationOutput;
+  import SHM.Shared.Connectors.ExcitationInput;
+  import SHM.Shared.Connectors.ExcitationOutput;
   parameter Real t_first(start=0, fixed=true);
   ExcitationInput inp;
   ExcitationOutput outp;
