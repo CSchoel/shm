@@ -1,5 +1,5 @@
-within SHM.Shared.Components.Contraction;
-model PacemakerMixinBD
+within SHM.Shared.Components.Contraction.BidirectionalMixin;
+model PacemakerMixin
   Real phase(start=0, fixed=true);
   outer Boolean pacemaker_reset;
 protected
@@ -8,4 +8,4 @@ equation
   when pacemaker_reset then
     reinit(phase, 0);
   end when;
-end PacemakerMixinBD;
+end PacemakerMixin;

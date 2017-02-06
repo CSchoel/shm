@@ -1,5 +1,5 @@
-within SHM.Shared.Components.Contraction;
-partial model RefractoryGateBD
+within SHM.Shared.Components.Contraction.Bidirectional;
+partial model RefractoryGate
   "lets signals pass only when a given"
   +"refractory time has passed since the last signal"
   extends SHM.Shared.Components.Contraction.BidirectionalContractionComponent;
@@ -15,4 +15,4 @@ equation
   when up_incoming or down_incoming then
     t_last = time;
   end when;
-end RefractoryGateBD;
+end RefractoryGate;

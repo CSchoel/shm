@@ -1,5 +1,5 @@
-within SHM.Shared.Components.Contraction;
-partial model ConductionDelayBD
+within SHM.Shared.Components.Contraction.Bidirectional;
+partial model ConductionDelay
   extends SHM.Shared.Components.Contraction.BidirectionalContractionComponent;
   Real delay_time(start=0, fixed=true);
   type Direction = enumeration(Up, Down, None);
@@ -25,4 +25,4 @@ equation
        and direction_next == Direction.Down then
     direction_next = Direction.None;
   end when;
-end ConductionDelayBD;
+end ConductionDelay;

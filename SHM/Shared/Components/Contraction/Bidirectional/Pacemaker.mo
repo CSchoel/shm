@@ -1,5 +1,5 @@
-within SHM.Shared.Components.Contraction;
-model PacemakerBD
+within SHM.Shared.Components.Contraction.Bidirectional;
+model Pacemaker
   extends SHM.Shared.Components.Contraction.BidirectionalContractionComponent;
   Real phase(start=0, fixed=true);
   SHM.Shared.Connectors.ExcitationInput refractory;
@@ -11,4 +11,4 @@ equation
   when up_outgoing or down_outgoing then
     reinit(phase, 0);
   end when;
-end PacemakerBD;
+end Pacemaker;

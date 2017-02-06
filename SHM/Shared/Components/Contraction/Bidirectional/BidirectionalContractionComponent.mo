@@ -1,4 +1,5 @@
-within SHM.Shared.Components.Contraction;
+within SHM.Shared.Components.Contraction.Bidirectional;
+// TODO this should be an interface
 model BidirectionalContractionComponent
   import SHM.Shared.Connectors.{ExcitationInput, ExcitationOutput};
   ExcitationInput up_incoming;

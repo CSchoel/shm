@@ -1,5 +1,5 @@
-within SHM.Shared.Components.Contraction;
-model RefractoryPacemakerBDMix
+within SHM.Shared.Components.Contraction.BidirectionalMixin;
+model RefractoryPacemaker
   extends SHM.Shared.Components.Contraction.BidirectionalContractionComponent;
   import SHM.Shared.Components.Contraction.{
     RefractoryMixinBD, PacemakerMixinBD
@@ -13,4 +13,4 @@ protected
 equation
   refrac_signal = up_incoming or down_incoming or pace.tick;
   pacemaker_reset = refrac_signal and not refractory;
-end RefractoryPacemakerBDMix;
+end RefractoryPacemaker;
