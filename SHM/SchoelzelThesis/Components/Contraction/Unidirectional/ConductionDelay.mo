@@ -1,7 +1,7 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional;
 partial model ConductionDelay
   import SHM.Shared.Connectors.{ExcitationInput, ExcitationOutput};
-  Real delay_time(start=0, fixed=true);
+  Real duration(start=0, fixed=true);
   ExcitationInput inp;
   ExcitationOutput outp;
 protected
@@ -10,6 +10,6 @@ protected
 equation
   outp = edge(outb);
   when inp then
-    t_next = time + delay_time;
+    t_next = time + duration;
   end when;
 end ConductionDelay;

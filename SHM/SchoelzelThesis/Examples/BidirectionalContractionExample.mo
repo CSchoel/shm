@@ -9,12 +9,12 @@ model BidirectionalContractionExample
   };
   parameter Real pacemaker_cycle = 0.9;
   parameter Real T_refrac = 0.4;
-  parameter Real delay_constant = 0.2;
+  parameter Real duration_constant = 0.2;
   RefractoryPacemaker pm(
     replaceable ConstantPacemaker pm(T=pacemaker_cycle),
     replaceable ConstantRefractoryGate gate(duration=T_refrac)
   );
-  ConstantConductionDelay cd(delay_constant=delay_constant);
+  ConstantConductionDelay cd(duration_constant=duration_constant);
   ThreePhasesExcitation ex(
     T_phase1 = 0.6 * T_refrac,
     T_phase2 = 1.1 * T_refrac,

@@ -2,7 +2,7 @@ within SHM.SchoelzelThesis.Components.Contraction.Bidirectional;
 model ConstantConductionDelay
   extends SHM.SchoelzelThesis.Components.Contraction.Bidirectional.
           ConductionDelay;
-  parameter Real delay_constant = 1;
+  parameter Real duration_constant = 1;
 equation
-  delay_time = delay_constant;
+  duration = duration_constant;
 end ConstantConductionDelay;
