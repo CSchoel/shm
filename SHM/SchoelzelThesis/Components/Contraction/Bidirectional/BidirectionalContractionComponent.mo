@@ -1,7 +1,7 @@
-within SHM.Shared.Components.Contraction.Bidirectional;
+within SHM.SchoelzelThesis.Components.Contraction.Bidirectional;
 // TODO this should be an interface
 model BidirectionalContractionComponent
-  import SHM.Shared.Connectors.{ExcitationInput, ExcitationOutput};
+  import SHM.SchoelzelThesis.Connectors.{ExcitationInput, ExcitationOutput};
   ExcitationInput up_incoming;
   ExcitationOutput up_outgoing;
   ExcitationInput down_incoming;

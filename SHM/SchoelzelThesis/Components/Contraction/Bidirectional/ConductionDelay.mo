@@ -1,6 +1,6 @@
-within SHM.Shared.Components.Contraction.Bidirectional;
+within SHM.SchoelzelThesis.Components.Contraction.Bidirectional;
 partial model ConductionDelay
-  extends SHM.Shared.Components.Contraction.BidirectionalContractionComponent;
+  extends SHM.SchoelzelThesis.Components.Contraction.BidirectionalContractionComponent;
   Real delay_time(start=0, fixed=true);
   type Direction = enumeration(Up, Down, None);
 protected

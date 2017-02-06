@@ -1,6 +1,6 @@
-within SHM.Shared.Components.Contraction;
+within SHM.SchoelzelThesis.Components.Contraction;
 model TimeDependentCD
-  extends SHM.Shared.Components.Contraction.ConductionDelay;
+  extends SHM.SchoelzelThesis.Components.Contraction.ConductionDelay;
   Real T(start=0, fixed=true);
   Real t_last(start=0, fixed=true);
 equation

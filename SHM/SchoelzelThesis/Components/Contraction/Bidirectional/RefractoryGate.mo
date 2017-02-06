@@ -1,11 +1,11 @@
-within SHM.Shared.Components.Contraction.Bidirectional;
+within SHM.SchoelzelThesis.Components.Contraction.Bidirectional;
 partial model RefractoryGate
   "lets signals pass only when a given"
   +"refractory time has passed since the last signal"
-  extends SHM.Shared.Components.Contraction.BidirectionalContractionComponent;
+  extends SHM.SchoelzelThesis.Components.Contraction.BidirectionalContractionComponent;
   parameter Real t_first(start=0, fixed=true);
   Real T_refrac;
-  SHM.Shared.Connectors.ExcitationOutput refractory;
+  SHM.SchoelzelThesis.Connectors.ExcitationOutput refractory;
 protected
   Real t_last(start=t_first);
 equation

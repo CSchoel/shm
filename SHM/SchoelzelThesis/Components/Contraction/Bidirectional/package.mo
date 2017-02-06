@@ -1,4 +1,4 @@
-within SHM.Shared.Components.Contraction;
+within SHM.SchoelzelThesis.Components.Contraction;
 package Bidirectional
 annotation(Documentation(info="<html>
   <p>Contains bidirectional components that have an upper input/output

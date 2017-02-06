@@ -1,4 +1,4 @@
-within SHM.Shared.Components.Contraction.BidirectionalMixin;
+within SHM.SchoelzelThesis.Components.Contraction.BidirectionalMixin;
 model PacemakerMixin
   Real phase(start=0, fixed=true);
   outer Boolean pacemaker_reset;

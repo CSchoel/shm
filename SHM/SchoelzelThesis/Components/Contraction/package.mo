@@ -1,4 +1,4 @@
-within SHM.Shared.Components;
+within SHM.SchoelzelThesis.Components;
 package Contraction
 annotation(Documentation(info="<html>
   <p>Contains components that model the conduction properties for contraction

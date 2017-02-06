@@ -1,4 +1,4 @@
-within SHM.Shared.Components.Contraction.BidirectionalMixin;
+within SHM.SchoelzelThesis.Components.Contraction.BidirectionalMixin;
 model RefractoryMixin
   parameter Real t_first(start=0, fixed=true);
   outer Boolean refractory = time - pre(t_last) <= T_refrac;

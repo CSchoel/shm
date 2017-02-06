@@ -1,4 +1,4 @@
-within SHM.Shared.Components.Contraction;
+within SHM.SchoelzelThesis.Components.Contraction;
 package BidirectionalMixin
 annotation(Documentation(info="<html>
   <p>Contains bidirectional contraction components that are realized

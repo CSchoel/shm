@@ -1,4 +1,4 @@
-within SHM.Shared.Components.Contraction;
+within SHM.SchoelzelThesis.Components.Contraction;
 package Unidirectional
 annotation(Documentation(info="<html>
   <p>Contains unidirectional contration components that have one input
