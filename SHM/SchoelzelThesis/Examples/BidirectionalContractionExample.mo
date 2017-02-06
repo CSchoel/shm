@@ -1,5 +1,5 @@
 within SHM.SchoelzelThesis.Examples;
-model BidirectionalContraction
+model BidirectionalContractionExample
   import SHM.SchoelzelThesis.Components.Contraction.Bidirectional.{
     ConstantPacemaker, ConstantRefractoryGate, ConstantConductionDelay,
     RefractoryPacemaker
@@ -18,9 +18,12 @@ model BidirectionalContraction
     T_phase3 = 1.5 * pacemaker_cycle,
     phase_duration = 5
   );
+  SHM.Shared.Components.Test.DiracToSawtooth up, down;
 equation
   connect(ex.ex, pm.up_incoming);
   connect(pm.down_outgoing, cd.up_incoming);
   connect(pm.down_incoming, cd.up_outgoing);
   cd.down_incoming = false;
-end BidirectionalContraction;
+  connect(up.dirac, pm.up_outgoing);
+  connect(down.dirac, cd.down_outgoing);
+end BidirectionalContractionExample;
