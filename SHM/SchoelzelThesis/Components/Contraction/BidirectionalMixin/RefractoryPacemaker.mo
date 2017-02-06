@@ -1,11 +1,11 @@
 within SHM.SchoelzelThesis.Components.Contraction.BidirectionalMixin;
 model RefractoryPacemaker
   extends SHM.SchoelzelThesis.Components.Contraction.Bidirectional.BidirectionalContractionComponent;
-  import SHM.SchoelzelThesis.Components.Contraction.{
-    RefractoryMixinBD, PacemakerMixinBD
+  import SHM.SchoelzelThesis.Components.Contraction.BidirectionalMixin.{
+    RefractoryMixin, PacemakerMixin
   };
-  replaceable RefractoryMixinBD refrac;
-  replaceable PacemakerMixinBD pace;
+  replaceable RefractoryMixin refrac;
+  replaceable PacemakerMixin pace;
   inner Boolean refractory;
   inner Boolean pacemaker_reset;
 protected
