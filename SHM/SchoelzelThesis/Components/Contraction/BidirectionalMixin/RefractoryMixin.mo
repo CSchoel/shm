@@ -5,7 +5,7 @@ model RefractoryMixin
 protected
   Real t_last(start=t_first);
   Real T_refrac;
-  outer Boolean refrac_signal(start=false, fixed=true);
+  outer Boolean refrac_signal;
 equation
   refractory = time - pre(t_last) <= T_refrac;
   when refrac_signal then
