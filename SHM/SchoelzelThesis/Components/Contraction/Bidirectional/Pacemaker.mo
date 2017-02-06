@@ -1,6 +1,7 @@
 within SHM.SchoelzelThesis.Components.Contraction.Bidirectional;
 model Pacemaker
-  extends SHM.SchoelzelThesis.Components.Contraction.BidirectionalContractionComponent;
+  extends SHM.SchoelzelThesis.Components.Contraction.Bidirectional.
+          BidirectionalContractionComponent;
   Real phase(start=0, fixed=true);
   SHM.Shared.Connectors.ExcitationInput refractory;
 protected

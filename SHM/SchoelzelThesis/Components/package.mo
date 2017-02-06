@@ -1,4 +1,4 @@
-within SHM.SeidelThesis;
+within SHM.SchoelzelThesis;
 package Components
 annotation(Documentation(info="<html>
   <p>Contains models of the individual components of the SHM.</p>

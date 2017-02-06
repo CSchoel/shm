@@ -1,6 +1,7 @@
 within SHM.SchoelzelThesis.Components.Contraction.Bidirectional;
 partial model RefractoryPacemaker
-  extends SHM.SchoelzelThesis.Components.Contraction.BidirectionalContractionComponent;
+  extends SHM.SchoelzelThesis.Components.
+          Contraction.Bidirectional.BidirectionalContractionComponent;
   import SHM.SchoelzelThesis.Components.Contraction.Bidirectional.{
     Pacemaker, RefractoryGate
   };

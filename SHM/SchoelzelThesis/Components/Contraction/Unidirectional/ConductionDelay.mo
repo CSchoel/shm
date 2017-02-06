@@ -1,4 +1,4 @@
-within SHM.SchoelzelThesis.Components.Contraction;
+within SHM.SchoelzelThesis.Components.Contraction.Unidirectional;
 partial model ConductionDelay
   import SHM.Shared.Connectors.{ExcitationInput, ExcitationOutput};
   Real delay_time(start=0, fixed=true);

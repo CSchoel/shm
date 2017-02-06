@@ -1,4 +1,4 @@
-within SHM.SchoelzelThesis.Components.Contraction;
+within SHM.SchoelzelThesis.Components.Contraction.Unidirectional;
 partial model RefractoryGate
   "lets signals pass only when a given"
   +"refractory time has passed since the last signal"

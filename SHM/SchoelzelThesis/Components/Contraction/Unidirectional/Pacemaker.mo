@@ -1,4 +1,4 @@
-within SHM.SchoelzelThesis.Components.Contraction;
+within SHM.SchoelzelThesis.Components.Contraction.Unidirectional;
 model Pacemaker
   import SHM.Shared.Connectors.{ExcitationInput, ExcitationOutput};
   ExcitationInput external_stimulus;
