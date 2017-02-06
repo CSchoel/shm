@@ -1,4 +1,6 @@
 within SHM.SchoelzelThesis.Components.Contraction.Bidirectional;
+/* Note: This model can only hold one signal on delay. If another signal occurs
+   while one singal is still delayed, the second signal will be ignored. */
 partial model ConductionDelay
   extends SHM.SchoelzelThesis.Components.Contraction.Bidirectional.BidirectionalContractionComponent;
   Real delay_time(start=0, fixed=true);
