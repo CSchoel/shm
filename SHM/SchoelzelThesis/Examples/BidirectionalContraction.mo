@@ -22,4 +22,5 @@ equation
   connect(ex.ex, pm.up_incoming);
   connect(pm.down_outgoing, cd.up_incoming);
   connect(pm.down_incoming, cd.up_outgoing);
+  cd.down_incoming = false;
 end BidirectionalContraction;
