@@ -4,5 +4,5 @@ model ConstantRefractoryGate
           RefractoryGate;
   parameter Real duration = 1;
 equation
-  T_refrac = 1;
+  T_refrac = duration;
 end ConstantRefractoryGate;
