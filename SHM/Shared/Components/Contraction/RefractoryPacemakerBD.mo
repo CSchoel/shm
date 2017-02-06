@@ -13,4 +13,5 @@ equation
   connect(pm.down_outgoing, gate.up_incoming);
   connect(gate.up_outgoing, up_outgoing);
   connect(gate.down_outgoing, down_outgoing);
+  connect(pm.refractory, gate.refractory);
 end RefractoryPacemakerBD;
