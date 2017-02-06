@@ -4,7 +4,7 @@ model DiracToSawtooth "small helper model to make discrete
   SHM.Shared.Connectors.ExcitationInput dirac;
   parameter Real slope = -1;
   parameter Real start = 1;
-  Real sawtooth;
+  Real sawtooth(start=start, fixed=true);
 equation
   der(sawtooth) = slope;
   when dirac then
