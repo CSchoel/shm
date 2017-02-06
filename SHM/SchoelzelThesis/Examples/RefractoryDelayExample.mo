@@ -1,7 +1,7 @@
-within SHM.Shared.Examples;
+within SHM.SchoelzelThesis.Examples;
 model RefractoryDelayExample
-  extends SHM.Shared.Examples.RefractoryExample;
-  SHM.Shared.Components.Contraction.ConstantConductionDelay cd(delayConstant=0.2);
+  extends SHM.SchoelzelThesis.Examples.RefractoryExample;
+  SHM.SchoelzelThesis.Components.Contraction.ConstantConductionDelay cd(delayConstant=0.2);
   Real test(start=0, fixed=true);
 equation
   der(test) = 1;
