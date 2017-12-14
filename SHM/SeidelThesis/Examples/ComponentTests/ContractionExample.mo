@@ -1,6 +1,7 @@
 within SHM.SeidelThesis.Examples.ComponentTests;
 model ContractionExample "test model for contraction component"
   SHM.SeidelThesis.Components.Contraction cont "contraction model";
+  SHM.SeidelThesis.Components.Contraction2 cont2(signal=cont.signal) "simplified contraction model";
 equation
   if time < 5 then
     cont.signal = sample(0,1);
@@ -10,9 +11,9 @@ equation
     cont.signal = sample(0,0.05);
   end if;
 annotation(Documentation(info="<html>
-  <p>Test model for contraction model that simulates a changing sinus frequency which is in the normal value range for 5 
+  <p>Test model for contraction model that simulates a changing sinus frequency which is in the normal value range for 5
   seconds, too slow for another 10 seconds and then too fast.</p>
   <p style=\"color:red;\">This model does not have graphical annotations. It is only designed for testing the component.</p>
 </html>"));
-  
+
 end ContractionExample;

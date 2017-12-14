@@ -1,5 +1,5 @@
 within SHM.SeidelThesis.Components;
-model Contraction2 "contraction model for the heart (simplified version that does not compile with OpenModelica)"
+model Contraction2 "contraction model for the heart (simplified version)"
   parameter String outfile = "heartbeats.csv" "output file name where RR-Intervals are saved";
   parameter Real T_refrac = 0.9 "refractory period that has to pass until a signal from the sinus node can take effect again";
   parameter Real T_av = 1.7 "av-node cycle duration";
@@ -33,13 +33,13 @@ equation
   sinus_contraction = time > sig_last + T_avc "sinus node contracts when T_avc has passed since last sinus signal";
   T_passed = time - cont_last;
   //sinus signal is recognized if refractory period has passed and there is no other sinus signal already in effect
-  when signal and refrac_passed and sig_last < cont_last then
+  when signal and pre(refrac_passed) and pre(sig_last) < pre(cont_last) then
     T_avc = T_avc0 + k_avc_t * exp(-T_passed / tau_avc) "'enables' sinus_phase which will trigger contraction if it reaches 1 faster than av_phase";
     sig_last = time "record timestamp of recognized sinus signal";
     T = time - pre(sig_last);
     //TODO can also be done in contraction clause. which one is better? (currently we stick to Seidel's choice)
   end when;
-  when contraction then
+  when pre(contraction) then
     cont_last = time "record timestamp of contraction";
   end when;
   annotation(Documentation(info = "<html>
@@ -52,7 +52,7 @@ equation
     begin with the second contraction of the heart. The time period between these two events is called the &quot;atrioventricular conduction time&quot;.
   </ul>
   <p><i>Note: The formulas in this model differ from the formulas found in the c-implementation by Seidel because OpenModelica is currently
-  not capable of handling discrete equation systems. Therefore it was necessary to introduce the continuous phases <b>av_phase</b>, 
+  not capable of handling discrete equation systems. Therefore it was necessary to introduce the continuous phases <b>av_phase</b>,
   <b>sinus_phase</b> and <b>refrac_countdown</b>, as well as the continuous variable condition <b>signal_received_cont</b>.</i></p>
 </html>"));
 end Contraction2;
