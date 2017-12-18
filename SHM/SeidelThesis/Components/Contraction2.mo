@@ -33,7 +33,7 @@ equation
   contraction_event = (av_contraction or sinus_contraction) and refrac_passed "contraction can come from av-node or sinus node";
   contraction = edge(contraction_event);
   av_contraction = time > cont_last + T_av "av-node contracts when T_av has passed since last contraction";
-  sinus_contraction = time > sig_last + T_avc "sinus node contracts when T_avc has passed since last sinus signal";
+  sinus_contraction = signal_received and time > sig_last + T_avc "sinus node contracts when T_avc has passed since last sinus signal";
   T_passed = time - cont_last;
   //sinus signal is recognized if refractory period has passed and there is no other sinus signal already in effect
   when signal and pre(refrac_passed) and not pre(signal_received) then
