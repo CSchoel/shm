@@ -33,7 +33,7 @@ equation
   sinus_contraction = time > sig_last + T_avc "sinus node contracts when T_avc has passed since last sinus signal";
   T_passed = time - cont_last;
   //sinus signal is recognized if refractory period has passed and there is no other sinus signal already in effect
-  when signal and pre(refrac_passed) and pre(sig_last) < pre(cont_last) then
+  when signal and pre(refrac_passed) and not pre(signal_received) then
     T_avc = T_avc0 + k_avc_t * exp(-T_passed / tau_avc) "'enables' sinus_phase which will trigger contraction if it reaches 1 faster than av_phase";
     sig_last = time "record timestamp of recognized sinus signal";
     T = time - pre(sig_last);
