@@ -20,6 +20,8 @@ model Contraction2 "contraction model for the heart (simplified version)"
   Real T_passed "helper variable; time passed since last contraction";
   Boolean signal_received "true, if a sinus signal has already been received since the last contraction";
   discrete Real sig_last "time of last received sinus signal";
+protected
+  Boolean contraction_event;
 initial equation
   cont_last = initial_cont_last;
   sig_last = 0;
@@ -28,7 +30,8 @@ initial equation
 equation
   signal_received = sig_last > cont_last;
   refrac_passed = time > cont_last + T_refrac;
-  contraction = (av_contraction or sinus_contraction) and refrac_passed "contraction can come from av-node or sinus node";
+  contraction_event = (av_contraction or sinus_contraction) and refrac_passed "contraction can come from av-node or sinus node";
+  contraction = edge(contraction_event);
   av_contraction = time > cont_last + T_av "av-node contracts when T_av has passed since last contraction";
   sinus_contraction = time > sig_last + T_avc "sinus node contracts when T_avc has passed since last sinus signal";
   T_passed = time - cont_last;
