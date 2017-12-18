@@ -1,6 +1,6 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional;
 partial model RefractoryGate
-  "lets signals pass only when a given"
+  "lets signals pass only when a given "
   +"refractory time has passed since the last signal"
   extends UnidirectionalContractionComponent;
   parameter Real t_first(start=0, fixed=true);
