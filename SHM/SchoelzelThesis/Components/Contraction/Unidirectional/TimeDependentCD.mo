@@ -6,7 +6,7 @@ model TimeDependentCD
   parameter Real delay_max(start=1);
   Real duration(start=1);
 equation
-  outp = delay(continuous_inp, duration, delay_max) > 0.5;
+  continuous_outp = delay(continuous_inp, duration, delay_max);
   when inp then
     T = time - pre(t_last);
     t_last = time;
