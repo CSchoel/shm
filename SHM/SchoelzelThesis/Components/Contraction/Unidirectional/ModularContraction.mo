@@ -4,12 +4,10 @@ model ModularContraction
   import SHM.SchoelzelThesis.Components.Contraction.Unidirectional.{
     AVConductionDelay, ConstantPacemaker, ConstantRefractoryGate
   };
-  AVConductionDelay av_delay;
-  ConstantPacemaker av;
-  ConstantRefractoryGate san_refrac;
+  AVConductionDelay av_delay(delay_max=3);
+  RefractoryPacemaker av(gate.duration=0.9, pace.T=1.7);
 equation
-  connect(inp, san_refrac.inp);
-  connect(san_refrac.outp, av.inp);
-  connect(av.outp, av_delay.inp);
-  connect(av_delay.outp, outp);
+  connect(inp, av_delay.inp);
+  connect(av_delay.outp, av.inp);
+  connect(av.outp, outp);
 end ModularContraction;
