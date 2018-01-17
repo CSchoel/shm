@@ -4,7 +4,7 @@ model ModularContraction
   import SHM.SchoelzelThesis.Components.Contraction.Unidirectional.{
     ConstantPacemaker, ConstantRefractoryGate
   };
-  import SHM.SchoelzelThesis.Components.Contraction.Unidirectional.InternalDelay.AVConductionDelay;
+  import SHM.SchoelzelThesis.Components.Contraction.Unidirectional.BuiltinDelay.AVConductionDelay;
   AVConductionDelay av_delay(delay_max=3);
   RefractoryPacemaker av(gate.duration=0.9, pace.T=1.7);
 equation

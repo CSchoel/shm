@@ -1,4 +1,4 @@
-within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.InternalDelay;
+within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.BuiltinDelay;
 model ConstantConductionDelay
   extends ConductionDelay;
   parameter Real duration = 1;

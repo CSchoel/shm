@@ -1,4 +1,4 @@
-within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.InternalDelay;
+within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.BuiltinDelay;
 model AVConductionDelay
   extends TimeDependentCD;
   parameter Real k_avc_t = 0.78 "sensitivity of the atrioventricular conduction time to the time passed since the last ventricular conduction";

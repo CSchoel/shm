@@ -1,4 +1,4 @@
-within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.InternalDelay;
+within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.BuiltinDelay;
 model SafeTimeDependentCD
   extends ConductionDelay;
   Real T(start=0, fixed=true);
