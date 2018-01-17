@@ -1,7 +1,7 @@
 within SHM.SchoelzelThesis.Examples;
 model AVDelayExample
-  SHM.SchoelzelThesis.Components.Contraction.Unidirectional.AVConductionDelay del;
-  SHM.SchoelzelThesis.Components.Contraction.Unidirectional.SafeAVConductionDelay dels;
+  SHM.SchoelzelThesis.Components.Contraction.Unidirectional.InternalDelay.AVConductionDelay del;
+  SHM.SchoelzelThesis.Components.Contraction.Unidirectional.InternalDelay.SafeAVConductionDelay dels;
   discrete Real countIn(start=0, fixed=true);
   discrete Real countOut(start=0, fixed=true);
   discrete Real countOuts(start=0, fixed=true);

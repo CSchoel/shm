@@ -1,4 +1,4 @@
-within SHM.SchoelzelThesis.Components.Contraction.Unidirectional;
+within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.InternalDelay;
 partial model ConductionDelay
   extends UnidirectionalContractionComponent;
 protected

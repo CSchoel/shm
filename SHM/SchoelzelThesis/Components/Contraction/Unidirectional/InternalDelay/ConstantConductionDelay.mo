@@ -1,6 +1,6 @@
-within SHM.SchoelzelThesis.Components.Contraction.Unidirectional;
+within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.InternalDelay;
 model ConstantConductionDelay
-  extends SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ConductionDelay;
+  extends ConductionDelay;
   parameter Real duration = 1;
 equation
   continuous_outp = delay(continuous_inp, duration);
