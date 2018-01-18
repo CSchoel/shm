@@ -20,7 +20,7 @@ equation
     assert(n_signals <= n, "number of signals exceeds buffer length");
   end when;
   when outp then
-    buffer[0:n-1] = pre(buffer[1:n]);
+    buffer[1:end-1] = pre(buffer[2:end]);
     buffer[n] = 0;
   end when;
 end MultiConductionDelay;
