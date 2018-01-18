@@ -3,7 +3,7 @@ partial model ConductionDelay
   extends UnidirectionalContractionComponent;
   Real duration(start=0, fixed=true);
 protected
-  Real t_next(start=0, fixed=true);
+  Real t_next(start=-1, fixed=true);
   Boolean outb = time > t_next;
 equation
   outp = edge(outb);
