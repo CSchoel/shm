@@ -16,9 +16,9 @@ equation
   outp = time > t_first;
 algorithm
   when inp and (pre(n_signals) == 0 or t_next > t_last) then
-    buffer[1+n_signals] := t_next;
+    assert(pre(n_signals) < n, "signal buffer overflow, increase n!");
+    buffer[1+pre(n_signals)] := t_next;
     n_signals := pre(n_signals) + 1;
-    assert(n_signals <= n, "number of signals exceeds buffer length");
   end when;
   when outp then
     buffer[1:end-1] := buffer[2:end];
