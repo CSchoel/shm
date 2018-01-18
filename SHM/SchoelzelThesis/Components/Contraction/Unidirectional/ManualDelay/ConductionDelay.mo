@@ -1,7 +1,6 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ManualDelay;
-partial model ConductionDelay
-  extends UnidirectionalContractionComponent;
-  Real duration(start=0, fixed=true);
+model ConductionDelay
+  extends ConductionDelayStrategy;
 protected
   Real t_next(start=-1, fixed=true);
   Boolean outb = time > t_next;

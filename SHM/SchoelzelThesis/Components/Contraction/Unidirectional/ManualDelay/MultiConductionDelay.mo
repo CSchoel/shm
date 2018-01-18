@@ -1,13 +1,12 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ManualDelay;
 model MultiConductionDelay
-  extends UnidirectionalContractionComponent;
+  extends ConductionDelayStrategy;
   // Note: We use a buffer of fixed size for incoming signals.
   // If a signal would overtake another signal, the overtaking
   // signal is considered to vanish.
   parameter Integer n = 100;
   discrete Real[n] buffer(fixed=true, start=-ones(n));
   Integer n_signals(start=0, fixed=true);
-  Real duration;
 protected
   Real t_next = time + duration;
   Real t_first = pre(buffer[1]);
