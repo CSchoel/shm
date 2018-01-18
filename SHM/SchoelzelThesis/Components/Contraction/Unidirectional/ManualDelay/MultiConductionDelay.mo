@@ -21,6 +21,7 @@ algorithm
     n_signals := pre(n_signals) + 1;
   end when;
   when outp then
+    // shift all signals to the left, filling the last with -1
     buffer[1:end-1] := buffer[2:end];
     buffer[end] := -1;
     n_signals := pre(n_signals) - 1;
