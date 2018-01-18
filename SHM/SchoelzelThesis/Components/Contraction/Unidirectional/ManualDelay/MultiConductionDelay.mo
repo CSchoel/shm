@@ -22,5 +22,6 @@ equation
   when outp then
     buffer[1:end-1] = pre(buffer[2:end]);
     buffer[n] = 0;
+    n_signals = pre(n_signals) - 1;
   end when;
 end MultiConductionDelay;
