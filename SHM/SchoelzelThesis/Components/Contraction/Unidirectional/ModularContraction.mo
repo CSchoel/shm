@@ -10,7 +10,7 @@ model ModularContraction
   AVConductionDelay2 av_delay(redeclare MultiConductionDelay strategy);
   RefractoryPacemaker av(gate.duration=0.9, pace.T=1.7);
 equation
-  connect(inp, av_delay.inp);
-  connect(av_delay.outp, av.inp);
-  connect(av.outp, outp);
+  connect(inp, av.inp);
+  connect(av.outp, av_delay.inp);
+  connect(av_delay.outp, outp);
 end ModularContraction;
