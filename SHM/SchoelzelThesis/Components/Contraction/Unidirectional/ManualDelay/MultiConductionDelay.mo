@@ -5,23 +5,25 @@ model MultiConductionDelay
   // If a signal would overtake another signal, the overtaking
   // signal is considered to vanish.
   parameter Integer n = 100;
-  discrete Real[n] buffer;
+  discrete Real[n] buffer(fixed=true, start=-ones(n));
   Integer n_signals(start=0, fixed=true);
   Real duration;
 protected
   Real t_next = time + duration;
-  Real t_first = buffer[0];
-  Real t_last = buffer[pre(n_signals)-1];
+  Real t_first = pre(buffer[1]);
+  Real t_last = if n_signals == 0 then -1 else pre(buffer[n_signals]);
 equation
   outp = time > t_first;
+algorithm
   when inp and (pre(n_signals) == 0 or t_next > t_last) then
-    buffer[n_signals] = time + duration;
-    n_signals = pre(n_signals) + 1;
+    buffer[1+n_signals] := t_next;
+    n_signals := pre(n_signals) + 1;
     assert(n_signals <= n, "number of signals exceeds buffer length");
   end when;
   when outp then
-    buffer[1:end-1] = pre(buffer[2:end]);
-    buffer[n] = 0;
-    n_signals = pre(n_signals) - 1;
+    buffer[1:end-1] := buffer[2:end];
+    buffer[end] := -1;
+    n_signals := pre(n_signals) - 1;
+    assert(n_signals >= 0, "more outputs than inputs?!?!");
   end when;
 end MultiConductionDelay;
