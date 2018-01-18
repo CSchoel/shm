@@ -5,7 +5,7 @@ model MultiConductionDelay
   // If a signal would overtake another signal, the overtaking
   // signal is considered to vanish.
   parameter Integer n = 100;
-  discrete Real[n] buffer(fixed=true, start=-ones(n));
+  discrete Real[n] buffer(each fixed=true, each start=-1);
   Integer n_signals(start=0, fixed=true);
 protected
   Real t_next = time + duration;
