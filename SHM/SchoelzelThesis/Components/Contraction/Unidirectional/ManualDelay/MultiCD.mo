@@ -1,5 +1,5 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ManualDelay;
-model MultiConductionDelay
+model MultiCD
   extends ConductionDelayStrategy;
   // Note: We use a buffer of fixed size for incoming signals.
   // If a signal would overtake another signal, the overtaking
@@ -29,4 +29,4 @@ algorithm
     n_signals := pre(n_signals) - 1;
     assert(n_signals >= 0, "more outputs than inputs?!?!");
   end when;
-end MultiConductionDelay;
+end MultiCD;
