@@ -1,6 +1,6 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ManualDelay;
 model SingleCD
-  extends ConductionDelayStrategy;
+  extends ConductionDelay;
 protected
   Real t_next(start=-1, fixed=true);
   Boolean outb = time > t_next;
