@@ -12,8 +12,9 @@ protected
   Real t_first = pre(buffer[1]);
   Real t_last = if n_signals == 0 then -1 else pre(buffer[n_signals]);
   Boolean overtake = t_next <= t_last;
+  Boolean delay_passed = time > t_first;
 equation
-  outp = time > t_first;
+  outp = edge(delay_passed);
 algorithm
   when inp and not(overtake) then
     assert(pre(n_signals) < n, "signal buffer overflow, increase n!");
