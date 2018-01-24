@@ -3,9 +3,9 @@ model SingleCD
   extends ConductionDelay;
 protected
   Real t_next(start=-1, fixed=true);
-  Boolean outb = time > t_next;
+  Boolean delay_passed = time > t_next;
 equation
-  outp = edge(outb);
+  outp = edge(delay_passed);
   when inp then
     t_next = time + duration;
     assert(time > pre(t_next), "previous signal must have passed the" +
