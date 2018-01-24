@@ -5,9 +5,9 @@ model ModularContraction
     ConstantPacemaker, ConstantRefractoryGate
   };
   import SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ManualDelay.{
-    AVConductionDelay2, MultiConductionDelay
+    AVConductionDelay, MultiCD
   };
-  AVConductionDelay2 av_delay(redeclare MultiConductionDelay strategy);
+  AVConductionDelay av_delay(redeclare model Strategy = MultiCD);
   RefractoryPacemaker av(gate.duration=0.9, pace.T=1.7);
 equation
   connect(inp, av.inp);
