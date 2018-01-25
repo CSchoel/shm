@@ -9,6 +9,6 @@ initial equation
   duration = initial_T_avc;
 equation
   when inp then
-    duration = T_avc0 + k_avc_t * exp(-pre(T)/tau_avc);
+    duration = T_avc0 + k_avc_t * exp(-T/tau_avc);
   end when;
 end AVConductionDelay;

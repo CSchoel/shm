@@ -6,6 +6,8 @@ partial model TimeDependentCD
 equation
   when inp then
     T = time - pre(t_last);
+  end when;
+  when outp then
     t_last = time;
   end when;
 end TimeDependentCD;
