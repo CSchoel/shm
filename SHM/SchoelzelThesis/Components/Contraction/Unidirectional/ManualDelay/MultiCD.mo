@@ -5,18 +5,19 @@ partial model MultiCD
   // If a signal would overtake another signal, the overtaking
   // signal is considered to vanish.
   parameter Integer n = 100;
+  parameter Real min_dist = 0.22;
   discrete Real[n] buffer(each fixed=true, each start=-1);
   Integer n_signals(start=0, fixed=true);
 protected
   Real t_next = time + duration;
   Real t_first = pre(buffer[1]);
   Real t_last = if n_signals == 0 then -1 else pre(buffer[n_signals]);
-  Boolean overtake = t_next <= t_last;
+  Boolean ignore = t_next - t_last < min_dist;
   Boolean delay_passed = time > t_first;
 equation
   outp = edge(delay_passed);
 algorithm
-  when inp and not(overtake) then
+  when inp and not(ignore) then
     assert(pre(n_signals) < n, "signal buffer overflow, increase n!");
     // put the signal in the buffer
     buffer[1+pre(n_signals)] := t_next;
