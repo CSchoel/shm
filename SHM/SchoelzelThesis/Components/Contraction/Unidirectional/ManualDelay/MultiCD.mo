@@ -1,5 +1,5 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ManualDelay;
-model MultiCD
+partial model MultiCD
   extends ConductionDelay;
   // Note: We use a buffer of fixed size for incoming signals.
   // If a signal would overtake another signal, the overtaking

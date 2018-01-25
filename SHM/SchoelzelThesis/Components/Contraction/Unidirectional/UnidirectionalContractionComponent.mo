@@ -1,5 +1,5 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional;
-model UnidirectionalContractionComponent
+partial model UnidirectionalContractionComponent
   import SHM.Shared.Connectors.{ExcitationInput, ExcitationOutput};
   ExcitationInput inp;
   ExcitationOutput outp;

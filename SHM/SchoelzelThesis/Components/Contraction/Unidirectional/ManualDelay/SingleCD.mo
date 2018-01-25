@@ -1,5 +1,5 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ManualDelay;
-model SingleCD
+partial model SingleCD
   extends ConductionDelay;
 protected
   Real t_next(start=-1, fixed=true);

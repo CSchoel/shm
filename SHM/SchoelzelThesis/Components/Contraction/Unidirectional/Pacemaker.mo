@@ -1,5 +1,5 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional;
-model Pacemaker
+partial model Pacemaker
   extends UnidirectionalContractionComponent;
   Real phase(start=0, fixed=true);
   SHM.Shared.Connectors.ExcitationInput reset;

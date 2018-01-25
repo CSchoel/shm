@@ -1,5 +1,5 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ManualDelay;
-model TimeDependentCD
+partial model TimeDependentCD
   extends BaseCD;
   Real T(start=0, fixed=true);
   Real t_last(start=0, fixed=true);
