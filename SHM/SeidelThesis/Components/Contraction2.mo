@@ -1,7 +1,7 @@
 within SHM.SeidelThesis.Components;
 model Contraction2 "contraction model for the heart (simplified version)"
   parameter String outfile = "heartbeats.csv" "output file name where RR-Intervals are saved";
-  parameter Real T_refrac = 0.9 "refractory period that has to pass until a signal from the sinus node can take effect again";
+  parameter Real T_refrac = 0.22 "refractory period that has to pass until a signal from the sinus node can take effect again";
   parameter Real T_av = 1.7 "av-node cycle duration";
   parameter Real k_avc_t = 0.78 "sensitivity of the atrioventricular conduction time to the time passed since the last ventricular conduction";
   parameter Real T_avc0 = 0.09 "base value for atrioventricular conduction time";
