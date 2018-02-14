@@ -6,8 +6,8 @@ model MultiDelayExample
   parameter Real d = 1;
   parameter Real sample_freq = 1.2;
   parameter Boolean use_single = true;
-  ConstantMultiCD mcd(duration_constant=d);
-  ConstantConductionDelay ccd(duration_constant=d) if use_single;
+  ConstantMultiCD mcd(duration=d);
+  ConstantConductionDelay ccd(duration=d) if use_single;
   Integer count_multi(start=0, fixed=true);
   Integer count_single(start=0, fixed=true) if use_single;
 equation
