@@ -1,13 +1,13 @@
 within SHM.SchoelzelThesis.Examples;
 model MultiDelayExample
   import SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ManualDelay.{
-    ConstantMultiCD, ConstantConductionDelay
+    ConstantConductionDelay, MultiCD
   };
   parameter Real d = 1;
   parameter Real sample_freq = 1.2;
   parameter Boolean use_single = true;
-  ConstantMultiCD mcd(duration=d);
-  ConstantConductionDelay ccd(duration=d) if use_single;
+  ConstantConductionDelay mcd(duration_constant=d, redeclare model Strategy = MultiCD);
+  ConstantConductionDelay ccd(duration_constant=d) if use_single;
   Integer count_multi(start=0, fixed=true);
   Integer count_single(start=0, fixed=true) if use_single;
 equation

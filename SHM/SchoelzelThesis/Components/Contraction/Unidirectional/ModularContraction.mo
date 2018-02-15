@@ -13,7 +13,7 @@ model ModularContraction "modular contraction model using unidirectional compone
   AVConductionDelay av_delay(
     redeclare model Strategy = MultiCD(min_dist=T_refrac)
   ) "internal delay of the AV node (from atria to His bundle)";
-  RefractoryPacemaker av(gate.T_refrac=T_refrac, pace.T=T_av) "AV node";
+  RefractoryPacemaker av(gate.duration=T_refrac, pace.T=T_av) "AV node";
 equation
   connect(inp, av.inp);
   connect(av.outp, av_delay.inp);

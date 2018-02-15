@@ -1,8 +1,9 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional;
 model ConstantRefractoryGate "refractory gate with a constant refractory period"
   extends SHM.SchoelzelThesis.Components.Contraction.Unidirectional.RefractoryGate;
-  //restrict variability of T_refrac from variable to parameter
-  redeclare parameter Real T_refrac = 1 "refractory period";
+  parameter Real duration = 1 "duration of refractory period";
+equation
+  T_refrac = duration;
   annotation(Documentation(info="<html>
     <p>Represents a refractory gate with a constant refractory period.</p>
     <p>This component will let signals pass only if the time since the
