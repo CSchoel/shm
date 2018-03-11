@@ -1,1 +1,1 @@
-setwd("D:/Software/OneModelica/workspace/SHM/output");
+setwd("D:/Dokumente/Promotion/code/SHM/output");
