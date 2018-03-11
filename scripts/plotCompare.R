@@ -2,6 +2,7 @@
 #Compares modelica output to SeidelThesis output
 library(stats) #for fft
 library(plotrix) #for gap.plot
+library(ggplot2)
 phinames <- c(
   "time",
   "c_s",
@@ -181,6 +182,31 @@ compare.plot.all.gap <- function(phinames,dataMo,dataC,gap,combine=F,outdir="plo
     dev.off() #flush/close output file
   }
 }
+
+compare.plot2 <- function(phinames, dataMo, dataC, from, to) {
+  crop <- function(data) { data[which(data[,"time"] >= from & data[,"time"] < to),] }
+  dataMo2 <- data.frame(crop(dataMo))
+  dataC2 <- data.frame(crop(dataC))
+  ggplot() +
+    theme_classic() +
+    geom_line(data=dataMo2, aes(x=time, y=blood.vessel.pressure, colour="Modelica"), size=1.5) +
+    geom_line(data=dataC2, aes_string(x="time",y=phinames["blood.vessel.pressure"], colour="\"C\""), size=1.5) +
+    labs(x = "time[s]", y = "blood pressure [mmHg]") +
+    theme(axis.text = element_text(size=20),
+          axis.title=element_text(size=25),
+          legend.text = element_text(size=20),
+          legend.title = element_text(size=22),
+          panel.grid.major = element_line(size=0.5, color="#AAAAAA"),
+          axis.line = element_line(size=1.5, arrow=arrow(), lineend="square"),
+          axis.ticks = element_line(size=1.5),
+          axis.ticks.length = unit(10, "pt")) +
+    labs(color="") +
+    scale_x_continuous(expand=c(0,0))
+  ggsave("plot2.pdf", width=9, height=6)
+  #qplot(timeC, dataC2[,phinames["blood.vessel.pressure"]]) + geom_line()
+  #qplot(timeMo, dataMo2[,"blood.vessel.pressure"]) + geom_line()
+}
+
 data.resample <- function(data.src,ktime,from,to,step) {
   span <- to - from
   size.src <- length(data.src[,ktime])
@@ -319,3 +345,6 @@ compare.plot.all.gap(phinames,dataMo2,dataC2,gap,F)
 #compare.diff(dataMo2,dataC2,"time","time","blood.vessel.pressure",phinames["blood.vessel.pressure"])
 #compare.diff(dataMo2,dataC2,"time","time","heart.contraction.T",phinames["heart.contraction.T"])
 compare.beats(dataC.beats,dataMo.beats)
+
+#make ggplot2 plots
+compare.plot2(phinames, dataMo2, dataC2)
