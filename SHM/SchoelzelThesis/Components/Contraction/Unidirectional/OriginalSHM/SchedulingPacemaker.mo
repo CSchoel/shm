@@ -1,6 +1,5 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.OriginalSHM;
 model SchedulingPacemaker
-  extends UnidirectionalContractionComponent;
   SHM.Shared.Connectors.ExcitationInput reset;
   output Real t_next(start=-1, fixed=true);
   parameter Real T(start=1, fixed=true);
