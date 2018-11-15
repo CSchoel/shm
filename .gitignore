@@ -3,3 +3,5 @@
 *.zip
 *.pyc
 mope-project.json
+img/*.pdf
+img/*.mo
