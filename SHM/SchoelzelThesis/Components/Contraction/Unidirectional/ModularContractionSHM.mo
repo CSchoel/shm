@@ -14,7 +14,7 @@ model ModularContractionSHM "modular contraction model using unidirectional comp
   ReferenceTimeDependentAVCD av_delay(
     redeclare model Strategy = MultiCD(min_dist=T_refrac)
   ) "internal delay of the AV node (from atria to His bundle)";
-  SchedulingPacemaker pace "AV node pacemaker";
+  SchedulingPacemaker pace(T=T_av) "AV node pacemaker";
   RaceCondition race "race condition between AV and sinus signal";
   DecoupledRefractoryGate refrac(T_refrac=T_refrac) "refractory gate for sinus signal";
 equation
