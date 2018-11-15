@@ -18,10 +18,12 @@ model ModularContractionSHM "modular contraction model using unidirectional comp
   RaceCondition race "race condition between AV and sinus signal";
   DecoupledRefractoryGate refrac(T_refrac=T_refrac) "refractory gate for sinus signal";
 equation
+  race.inp = false;
   connect(inp, refrac.inp);
   connect(refrac.outp, av_delay.inp);
   connect(pace.t_next, race.next_a);
   connect(av_delay.t_next, race.next_b);
+  connect(outp, race.outp);
   connect(race.outp, pace.reset);
   connect(race.outp, av_delay.reference);
   connect(race.outp, refrac.reference);
