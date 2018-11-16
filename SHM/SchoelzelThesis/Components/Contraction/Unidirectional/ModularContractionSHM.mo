@@ -9,7 +9,7 @@ model ModularContractionSHM "modular contraction model using unidirectional comp
     MultiCD
   };
   // TODO find good value for pacemaker delay (should be 0.22 + average conduction delay)
-  parameter Real T_refrac = 0.42 "refractory period";
+  parameter Real T_refrac = 0.22 "refractory period";
   parameter Real T_av = 1.7 "time after which AV node generates a signal";
   ReferenceTimeDependentAVCD av_delay(
     redeclare model Strategy = MultiCD(min_dist=T_refrac)
