@@ -2,15 +2,23 @@ within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.OriginalSHM;
 model ReferenceTimeDependentAVCD
   "conduction delay for AV node where duration depends on the time that "
   + "has passed since the last reference signal was emitted"
-  extends SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ManualDelay.BaseCD;
+  extends SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ManualDelay.BaseCD(
+    redeclare model Strategy = MultiCD(min_dist=min_dist)
+  );
+  import SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ManualDelay.{
+    MultiCD
+  };
   import SHM.Shared.Connectors.ExcitationInput;
   ExcitationInput reference "reference signal";
+  parameter Real min_dist = 0 "minimal distance between two signals";
   parameter Real k_avc_t = 0.78 "sensitivity of the atrioventricular conduction time to the time passed since the last ventricular conduction";
   parameter Real T_avc0 = 0.09 "base value for atrioventricular conduction time";
   parameter Real tau_avc = 0.11 "reference time for atrioventricular conduction time";
   parameter Real initial_T_avc = 0.15 "initial value for conduction delay";
   Real T(start=0, fixed=true);
   Real t_last(start=0, fixed=true);
+  Real t_next = if internalCD.t_next > 0 then internalCD.t_next else 1e100
+    "time for which next signal is scheduled (1e100 if there is no such signal)";
 initial equation
   duration = initial_T_avc;
 equation

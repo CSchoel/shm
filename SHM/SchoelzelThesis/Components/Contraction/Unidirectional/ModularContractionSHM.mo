@@ -11,9 +11,7 @@ model ModularContractionSHM "modular contraction model using unidirectional comp
   // TODO find good value for pacemaker delay (should be 0.22 + average conduction delay)
   parameter Real T_refrac = 0.22 "refractory period";
   parameter Real T_av = 1.7 "time after which AV node generates a signal";
-  ReferenceTimeDependentAVCD av_delay(
-    redeclare model Strategy = MultiCD(min_dist=T_refrac)
-  ) "internal delay of the AV node (from atria to His bundle)";
+  ReferenceTimeDependentAVCD av_delay(min_dist=T_refrac) "internal delay of the AV node (from atria to His bundle)";
   SchedulingPacemaker pace(T=T_av) "AV node pacemaker";
   RaceCondition race "race condition between AV and sinus signal";
   DecoupledRefractoryGate refrac(T_refrac=T_refrac) "refractory gate for sinus signal";
@@ -22,7 +20,7 @@ equation
   connect(inp, refrac.inp);
   connect(refrac.outp, av_delay.inp);
   connect(pace.t_next, race.next_a);
-  connect(av_delay.internalCD.t_next, race.next_b);
+  connect(av_delay.t_next, race.next_b);
   connect(outp, race.outp);
   connect(race.outp, pace.reset);
   connect(race.outp, av_delay.reference);
