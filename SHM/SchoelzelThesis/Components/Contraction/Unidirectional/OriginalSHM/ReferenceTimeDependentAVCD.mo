@@ -11,15 +11,12 @@ model ReferenceTimeDependentAVCD
   parameter Real initial_T_avc = 0.15 "initial value for conduction delay";
   Real T(start=0, fixed=true);
   Real t_last(start=0, fixed=true);
-  output Real t_next;
 initial equation
   duration = initial_T_avc;
-  t_next = t_last + duration;
 equation
   when inp then
     T = time - pre(t_last);
     duration = T_avc0 + k_avc_t * exp(-T/tau_avc);
-    t_next = time + duration;
   end when;
   when reference then
     t_last = time;

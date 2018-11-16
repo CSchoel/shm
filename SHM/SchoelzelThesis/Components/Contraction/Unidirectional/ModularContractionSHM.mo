@@ -22,7 +22,7 @@ equation
   connect(inp, refrac.inp);
   connect(refrac.outp, av_delay.inp);
   connect(pace.t_next, race.next_a);
-  connect(av_delay.t_next, race.next_b);
+  connect(av_delay.internalCD.t_next, race.next_b);
   connect(outp, race.outp);
   connect(race.outp, pace.reset);
   connect(race.outp, av_delay.reference);
