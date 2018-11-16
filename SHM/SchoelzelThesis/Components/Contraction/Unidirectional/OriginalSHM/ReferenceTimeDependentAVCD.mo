@@ -17,7 +17,7 @@ model ReferenceTimeDependentAVCD
   parameter Real initial_T_avc = 0.15 "initial value for conduction delay";
   Real T(start=0, fixed=true);
   Real t_last(start=0, fixed=true);
-  Real t_next = if internalCD.t_next > 0 then internalCD.t_next else 1e100
+  discrete Real t_next = if internalCD.t_next > 0 then internalCD.t_next else 1e100
     "time for which next signal is scheduled (1e100 if there is no such signal)";
 initial equation
   duration = initial_T_avc;
