@@ -4,7 +4,7 @@ model SchedulingPacemaker
   output Real t_next(start=T, fixed=true);
   parameter Real T(start=1, fixed=true);
 equation
-  when time > pre(t_next) or reset then
+  when reset then
     t_next = time + T;
   end when;
 end SchedulingPacemaker;
