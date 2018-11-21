@@ -10,14 +10,16 @@ model RaceCondition
 initial equation
   next = initial_next;
 equation
-  when outp then
-    next = initial_next;
-  elsewhen change(next_a) and change(next_b) and next_min < pre(next) then
-    next = next_min;
-  elsewhen change(next_a) and next_a < pre(next) then
-    next = next_a;
-  elsewhen change(next_b) and next_b < pre(next) then
-    next = next_b;
-  end when;
   outp = edge(next_passed);
+algorithm
+  when outp then
+    next := initial_next;
+  end when;
+  when change(next_a) and change(next_b) and next_min < next then
+    next := next_min;
+  elsewhen change(next_a) and next_a < next then
+    next := next_a;
+  elsewhen change(next_b) and next_b < next then
+    next := next_b;
+  end when;
 end RaceCondition;
