@@ -6,7 +6,7 @@ model RaceCondition
   discrete input Real next_b;
   Real next;
   discrete Real next_min = min(next_a, next_b);
-  Boolean next_passed = time > pre(next);
+  Boolean next_passed = time >= pre(next);
 initial equation
   next = initial_next;
 equation
