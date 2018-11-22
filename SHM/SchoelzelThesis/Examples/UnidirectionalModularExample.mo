@@ -1,6 +1,6 @@
 within SHM.SchoelzelThesis.Examples;
 model UnidirectionalModularExample
-  SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ModularContraction mc;
+  SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ModularContraction mc(T_refrac=0.364);
   SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ModularContractionSHM mco;
   SHM.SeidelThesis.Components.Contraction2 c2;
   Real count_mc(start=0, fixed=true);
@@ -13,8 +13,12 @@ equation
     c2.signal = sample(0,1);
   elseif time < 15 then
     c2.signal = sample(0,3);
-  else
+  elseif time < 20 then
     c2.signal = sample(0,0.05);
+  elseif time < 30 then
+    c2.signal = sample(0,0.8);
+  else
+    c2.signal = sample(0,0.2);
   end if;
   when c2.contraction then
     count_c2 = pre(count_c2) + 1;
