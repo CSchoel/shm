@@ -7,6 +7,7 @@ model Contraction2 "contraction model for the heart (simplified version)"
   parameter Real T_avc0 = 0.09 "base value for atrioventricular conduction time";
   parameter Real tau_avc = 0.11 "reference time for atrioventricular conduction time"; //TODO find better description
   parameter Real initial_T = 1 "initial value for T";
+  parameter Real initial_T_cont = 1 "initial value for T_cont";
   parameter Real initial_cont_last = 0 "initial value for last ventricular contraction time";
   parameter Real initial_T_avc = 0.15 "initial value for atrioventricular conduction time";
   discrete Real cont_last "time of last contraction";
@@ -16,7 +17,8 @@ model Contraction2 "contraction model for the heart (simplified version)"
   output Boolean av_contraction "true when the av-node triggers a contraction";
   output Boolean sinus_contraction "true when the sinus node triggers a contraction";
   output Boolean refrac_passed "true when the refractory period has passed";
-  discrete output Real T "duration of last heart cycle";
+  discrete output Real T "time between the last two sinus signals that did trigger a contraction";
+  discrete output Real T_cont "time between the last two contractions";
   Real T_passed "helper variable; time passed since last contraction";
   Boolean signal_received "true, if a sinus signal has already been received since the last contraction";
   discrete Real sig_last "time of last received sinus signal";
@@ -26,6 +28,7 @@ initial equation
   cont_last = initial_cont_last;
   sig_last = 0;
   T = initial_T;
+  T_cont = initial_T_cont;
   T_avc = initial_T_avc;
 equation
   signal_received = sig_last > cont_last;
@@ -44,6 +47,7 @@ equation
   end when;
   when pre(contraction) then
     cont_last = time "record timestamp of contraction";
+    T_cont = time - pre(cont_last);
   end when;
   annotation(Documentation(info = "<html>
   <p>Models the contraction of the heart as described in Seidel's thesis.</p>
