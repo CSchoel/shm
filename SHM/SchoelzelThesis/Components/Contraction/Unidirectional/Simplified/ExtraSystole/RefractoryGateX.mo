@@ -1,7 +1,7 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.Simplified.ExtraSystole;
 model RefractoryGateX
   extends UnidirectionalContractionComponent;
-  parameter Real t_first(start=0, fixed=true) "time of first signal";
+  parameter Real t_first = 0 "time of first signal";
   parameter Real T_refrac = 1 "refractory period";
   input Boolean reset;
 protected
