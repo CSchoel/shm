@@ -17,8 +17,10 @@ equation
     c2.signal = sample(0,0.05);
   elseif time < 30 then
     c2.signal = sample(0,0.8);
-  else
+  elseif time < 40 then
     c2.signal = sample(0,0.2);
+  else
+    c2.signal = sample(0,1.8);
   end if;
   when c2.contraction then
     count_c2 = pre(count_c2) + 1;
