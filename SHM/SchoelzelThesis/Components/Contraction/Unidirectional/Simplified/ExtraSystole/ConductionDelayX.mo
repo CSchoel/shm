@@ -6,14 +6,19 @@ partial model ConductionDelayX
   Real t_last(start=0, fixed=true);
   Real t_next(start=-1, fixed=true);
   Boolean delay_passed = time > t_next;
+  input Boolean clear;
 equation
   outp = edge(delay_passed);
-  when inp then
+  when clear or inp then
     T = time - pre(t_last);
+  end when;
+  when clear then
+    t_next = 1e100;
+  elsewhen inp then
     t_next = time + duration;
     assert(time > pre(t_next), "still on hold!");
   end when;
-  when outp then
+  when outp or clear then
     t_last = time;
   end when;
 end ConductionDelayX;
