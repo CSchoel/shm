@@ -1,8 +1,8 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.Simplified.ExtraSystole;
 model ModularContractionX
   extends UnidirectionalContractionComponent;
-  RefractoryGateX refrac;
-  ConstantPacemaker pace;
+  RefractoryGateX refrac(T_refrac=0.364);
+  ConstantPacemaker pace(T=1.7);
   AVConductionDelayX cdelay;
   input Boolean extra;
 equation
