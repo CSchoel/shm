@@ -30,7 +30,6 @@ initial equation
 equation
   signal_received = sig_last > cont_last;
   refrac_passed = T_passed > T_refrac;
-  contraction = (av_contraction or sinus_contraction) and refrac_passed "contraction can come from av-node or sinus node";
   contraction_event = (av_contraction or sinus_contraction) and refrac_passed "contraction can come from av-node or sinus node";
   contraction = edge(contraction_event);
   av_contraction = T_passed > T_av "av-node contracts when T_av has passed since last contraction";
