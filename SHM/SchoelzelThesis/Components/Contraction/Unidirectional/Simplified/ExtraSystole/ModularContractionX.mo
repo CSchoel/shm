@@ -10,7 +10,8 @@ equation
   connect(pace.outp, refrac.inp);
   //connect(refrac.outp, pace.reset);
   connect(refrac.outp, cdelay.inp);
-  connect(cdelay.outp, outp);
+  outp = extra or cdelay.outp;
+  // TODO we need an additional refractory component for the ventricles here
   pace.reset = extra or refrac.outp;
   connect(extra, refrac.reset);
   connect(extra, cdelay.clear);
