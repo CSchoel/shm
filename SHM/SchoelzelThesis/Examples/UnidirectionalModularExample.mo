@@ -14,6 +14,8 @@ equation
   elseif time < 15 then
     c2.signal = sample(0,3);
   elseif time < 20 then
+    // during Afib, atrial impulses occur at up to 600/min => with distance 0.1s
+    // source: https://my.clevelandclinic.org/health/diseases/16765-atrial-fibrillation-afib
     c2.signal = sample(0,0.05);
   elseif time < 30 then
     c2.signal = sample(0,0.8);
