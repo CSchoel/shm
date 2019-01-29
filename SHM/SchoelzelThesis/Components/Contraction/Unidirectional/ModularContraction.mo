@@ -14,10 +14,18 @@ model ModularContraction "modular contraction model using unidirectional compone
     redeclare model Strategy = MultiCD(min_dist=T_refrac)
   ) "internal delay of the AV node (from atria to His bundle)";
   RefractoryPacemaker av(gate.duration=T_refrac, pace.T=T_av) "AV node";
+  discrete Real T(start=initial_T, fixed=true) "duration of last heart cycle";
+  discrete Real cont_last(start=initial_cont_last, fixed=true) "time of last contraction";
+  parameter Real initial_T = 1 "initial value for duration of last heart cycle";
+  parameter Real initial_cont_last = 0 "initial value for time of last contraction";
 equation
   connect(inp, av.inp);
   connect(av.outp, av_delay.inp);
   connect(av_delay.outp, outp);
+  when outp then
+    T = time - pre(cont_last);
+    cont_last = time;
+  end when;
   annotation(Documentation(info="<html>
     <p>This model essentially describes the signal conduction pathway from
     the AV node to the ventricles.</p>
