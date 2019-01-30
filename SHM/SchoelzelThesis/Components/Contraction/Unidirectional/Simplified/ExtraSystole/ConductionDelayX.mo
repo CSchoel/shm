@@ -16,7 +16,7 @@ equation
     t_next = 1e100;
   elsewhen inp then
     t_next = time + duration;
-    assert(time > pre(t_next) or pre(t_next) == 1e100, "still on hold!");
+    assert(time > pre(t_next) or pre(t_next) > 1e99, "still on hold!");
   end when;
   when outp or clear then
     t_last = time;
