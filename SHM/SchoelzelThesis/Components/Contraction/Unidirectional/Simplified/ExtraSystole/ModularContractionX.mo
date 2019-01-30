@@ -15,5 +15,5 @@ equation
   connect(vref.outp, outp);
   pace.reset = extra or refrac.outp;
   connect(extra, refrac.reset);
-  connect(extra, cdelay.clear);
+  connect(extra, cdelay.reset);
 end ModularContractionX;
