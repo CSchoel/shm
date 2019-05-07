@@ -4,24 +4,30 @@ model ExtraSystoleExample
   Real T(start=1, fixed=true);
   Real t_last(start=0, fixed=true);
   Integer count(start=0, fixed=true);
+  Boolean trigger;
   parameter Boolean with_sinus = true;
+  parameter Real T_normal = if with_sinus then 0.8 else con.pace.T;
+  Real t_passed = time - pre(t_last);
 equation
+  // TODO: is it better to use magic numbers than strange formulas?
+  trigger =
+    // while 6th beat is delayed
+    (pre(count) == 5 and t_passed > T_normal - con.cdelay.T_avc0/2)
+    // after 12th beat within refractory period
+    or (pre(count) == 12 and t_passed > con.refrac.T_refrac/2)
+    // between 18th and 19th beat (after refractory period)
+    or (pre(count) == 18 and t_passed > T_normal/2)
+    // just before the 24th beat was signalled
+    or (pre(count) == 23 and t_passed > T_normal - con.cdelay.T_avc0 * 1.5);
+  con.pvc = edge(trigger);
   if with_sinus then
-    con.inp = sample(0, 0.8) "75 bpm";
-    con.extra = sample(0.8 * 6 + 0.01, 100)   // while 6th beat is delayed
-             or sample(0.8 * 12 + 0.15, 100)  // after 12th beat within refractory period
-             or sample(0.8 * 18 + 0.4, 100)   // after 18th beat after refractory period
-             or sample(0.8 * 24 - 0.01, 100); // just before the 24th beat
+    con.inp = sample(0, T_normal) "75 bpm";
   else
     con.inp = false "no sinus, only AVN";
-    con.extra = sample(1.7 * 6 + 0.01, 100)   // while 6th AV beat is delayed
-             or sample(1.7 * 12 + 0.15, 100)  // after 12th AV beat within refractory period
-             or sample(1.7 * 18 + 0.8, 100)   // after 18th AV beat after refractory period
-             or sample(1.7 * 24 - 0.01, 100); // just before the 24th AV beat
   end if;
   when con.outp then
     t_last = time;
-    T = time - pre(t_last);
+    T = t_passed;
     count = pre(count) + 1;
   end when;
   annotation(
