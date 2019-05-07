@@ -24,4 +24,8 @@ equation
     T = time - pre(t_last);
     count = pre(count) + 1;
   end when;
+  annotation(
+    experiment(StartTime = 0, StopTime = 50, Tolerance = 1e-6, Interval = 0.002),
+    __OpenModelica_simulationFlags(lv = "LOG_STATS", s = "dassl")
+  );
 end ExtraSystoleExample;

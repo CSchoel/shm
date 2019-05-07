@@ -33,4 +33,8 @@ equation
   when mco.outp then
     count_mco = pre(count_mco) + 1;
   end when;
+  annotation(
+    experiment(StartTime = 0, StopTime = 50, Tolerance = 1e-6, Interval = 0.002),
+    __OpenModelica_simulationFlags(lv = "LOG_STATS", s = "dassl")
+  );
 end UnidirectionalModularExample;
