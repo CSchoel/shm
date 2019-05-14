@@ -30,7 +30,7 @@ def plot_pvc(time_s, modular_s, time_nos, modular_nos, outname=None):
   ax1.set_title("With sinus node")
   ax1.minorticks_on()
   #ax1.grid(alpha=0.5, which="both")
-  for (x, y, s) in [(6, 0.95, "a)"), (11, 0.85, "b)"), (15, 0.85, "c)"), (20, 0.95, "d)")]:
+  for (x, y, s) in [(6, 0.95, "a)"), (11, 0.85, "b)"), (14.5, 0.85, "c)"), (20, 1.00, "d)")]:
     ax1.annotate(s, (x, y))
   ax2.plot(time_nos, modular_nos)
   ax2.set_ylabel("RR interval length [s]")
@@ -60,13 +60,13 @@ if __name__ == "__main__":
   pvc_sinus = pd.read_csv(
     os.path.join(
       result_folder,
-      "SHM.SchoelzelThesis.Examples.ExtraSystoleExample_res.csv"
+      "ExtraSystoleExample_pvc_upward_sinus.csv"
     )
   )
   pvc_nosinus = pd.read_csv(
     os.path.join(
       result_folder,
-      "SHM.SchoelzelThesis.Examples.ExtraSystoleExample_res_nosinus.csv"
+      "ExtraSystoleExample_pvc_upward_nosinus.csv"
     )
   )
   plot_mc(
