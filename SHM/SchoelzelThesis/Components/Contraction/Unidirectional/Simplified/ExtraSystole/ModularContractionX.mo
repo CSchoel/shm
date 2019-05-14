@@ -2,7 +2,7 @@ within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.Simplified.Extr
 model ModularContractionX
   extends UnidirectionalContractionComponent;
   RefractoryGateX refrac(T_refrac=0.364);
-  ConstantPacemaker pace;
+  ConstantPacemaker pace(T=1.7);
   AVConductionDelayX cdelay;
   RefractoryGate vref(T_refrac=0.2);
   input Boolean pvc;
