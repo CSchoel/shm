@@ -16,7 +16,7 @@ equation
     // after 12th beat within refractory period
     or (pre(count) == 12 and t_passed > con.refrac.T_refrac/2)
     // between 18th and 19th beat (after refractory period)
-    or (pre(count) == 18 and t_passed > T_normal/2)
+    or (pre(count) == 18 and t_passed > T_normal/2 - con.cdelay.T_avc0)
     // just before the 24th beat was signalled
     or (pre(count) == 23 and t_passed > T_normal - con.cdelay.T_avc0 * 1.5);
   con.pvc = edge(trigger);
