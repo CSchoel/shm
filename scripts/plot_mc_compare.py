@@ -22,12 +22,12 @@ def plot_mc(time, modular, orig, outname=None):
   plt.close()
 
 def plot_pvc(time_s, modular_s, time_nos, modular_nos, outname=None):
-  f, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
+  f, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(10, 4))
   ax1.plot(time_s, modular_s)
   ax1.set_ylabel("RR interval length [s]")
   ax1.set_xlabel("time[s]")
   ax1.set_xlim(0, 30)
-  ax1.set_title("With sinus node")
+  ax1.set_title("With SA node")
   ax1.minorticks_on()
   #ax1.grid(alpha=0.5, which="both")
   for (x, y, s) in [(6, 0.95, "a)"), (11, 0.85, "b)"), (14.5, 0.85, "c)"), (20, 1.00, "d)")]:
@@ -37,17 +37,46 @@ def plot_pvc(time_s, modular_s, time_nos, modular_nos, outname=None):
   ax2.set_xlabel("time[s]")
   ax2.set_xlim(0, 50)
   ax2.set_ylim(0.5, 2)
-  ax2.set_title("Without sinus node")
+  ax2.set_title("Without SA node")
   ax2.minorticks_on()
   #ax2.grid(alpha=0.5, which="both")
   for (x, y, s) in [(12, 1.9, "a)"), (23, 1.9, "b)"), (32, 1.9, "c)"), (42, 1.9, "d)")]:
     ax2.annotate(s, (x, y))
+  plot_scenarios(ax3)
   f.tight_layout()
   if outname is None:
     plt.show(f)
   else:
     f.savefig(outname)
   plt.close(f)
+
+def plot_scenarios(ax=None):
+  if ax is None:
+    f = plt.figure(figsize=(5, 4))
+    ax = f.axes
+  h_signal = 1
+  dist = 0.2
+  t_delay = 0.09
+  t_refrac_avn = 0.34
+  t_refrac_vent = 0.2
+  ax.vlines(x=[0.8, 1.6], ymin=0, ymax=h_signal, label="SA/AV signal")
+  kwargs = dict(marker="|", solid_capstyle="butt")
+  ax.plot([0.8, 0.8 + t_delay], [h_signal + dist*1, h_signal + dist*1], label="AV node delay", **kwargs)
+  l = ax.plot([0.8, 0.8 + t_refrac_avn], [h_signal + dist*2, h_signal + dist*2], label="AV refractory period", **kwargs)
+  c = l[0].get_color()
+  ax.plot([1.2, 1.2 + t_refrac_avn], [h_signal + dist*1, h_signal + dist*1], "--", color=c, **kwargs) # , label="AV ref. per. (after PVC)"
+  ax.plot([1.5, 1.5 + t_refrac_avn], [h_signal + dist*2, h_signal + dist*2], "--", color=c, **kwargs)
+  ax.plot([0.8 + t_delay, 0.8 + t_delay + t_refrac_vent], [h_signal + dist*3, h_signal + dist*3], label="ventr. refractory period", **kwargs)
+  ax.set_xlim(0.7, 2)
+  ax.set_ylim(0, h_signal + dist*10)
+  ax.set_yticks([])
+  ax.set_xticks([0.8 + t_delay/2, 0.8 + t_refrac_avn/2, 1.2, 1.5])
+  ax.set_xticklabels(["a)", "b)", "c)", "d)"])
+  ax.set_xlabel("time")
+  ax.legend(loc="best")
+
+
+
 
 if __name__ == "__main__":
   result_folder = "/home/cslz90/Documents/Promotion/results/modular-contraction/"
