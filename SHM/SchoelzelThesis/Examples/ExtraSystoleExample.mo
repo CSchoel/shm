@@ -35,7 +35,7 @@ equation
     T = t_since_cont;
   end when;
   annotation(
-    experiment(StartTime = 0, StopTime = 50, Tolerance = 1e-6, Interval = 0.002),
+    experiment(StartTime = 0, StopTime = 55, Tolerance = 1e-6, Interval = 0.002),
     __OpenModelica_simulationFlags(lv = "LOG_STATS", s = "dassl")
   );
 end ExtraSystoleExample;
