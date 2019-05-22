@@ -92,24 +92,24 @@ if __name__ == "__main__":
   orig_vs_modular = pd.read_csv(
     os.path.join(
       result_folder,
-      "SHM.SchoelzelThesis.Examples.UnidirectionalModularExample_res.csv"
+      "SHMContraction.Examples.UnidirectionalModularExample_res.csv"
     )
   )
   pvc_sinus = pd.read_csv(
     os.path.join(
       result_folder,
-      "ExtraSystoleExample_pvc_upward_sinus.csv"
+      "SHMContraction.Examples.PVCExample_res.csv"
     )
   )
   pvc_nosinus = pd.read_csv(
     os.path.join(
       result_folder,
-      "ExtraSystoleExample_pvc_upward_nosinus.csv"
+      "SHMContraction.Examples.PVCExample_nosinus_res.csv"
     )
   )
   plot_mc(
     orig_vs_modular["time"],
-    orig_vs_modular["c2.T_cont"],
+    orig_vs_modular["c.T_cont"],
     orig_vs_modular["mc.T"],
     outname=os.path.join(result_folder, "plot_mc.pdf")
   )
