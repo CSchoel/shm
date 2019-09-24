@@ -1,0 +1,3 @@
+[submodule "subprojects/shm-conduction"]
+	path = subprojects/shm-conduction
+	url = git@github.com:CSchoel/shm-conduction.git
