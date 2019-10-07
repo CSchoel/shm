@@ -7,4 +7,4 @@ fi
 echo Copying files from ../SHM to $deploy
 mkdir "$deploy"
 cp -R ../SHM "$deploy/"
-cp -R ../subprojects/shm-contraction/SHMContraction "$deploy/"
+cp -R ../subprojects/shm-conduction/SHMConduction "$deploy/"
