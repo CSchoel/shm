@@ -21,10 +21,17 @@ def plot_mc(time, modular, orig, outname=None):
     plt.savefig(outname)
   plt.close()
 
+def add_axes_identifier(ax, msg):
+  ax.annotate(
+    msg,
+    xy=(-0.1, 1.1), xycoords="axes fraction",
+    fontweight="bold", fontsize="large"
+  )  
+
 def plot_pvc(time_s, modular_s, pvc_s, time_nos, modular_nos, pvc_nos, outname=None):
   x_pvc_s = time_s.values[pvc_s]
   x_pvc_nos = time_nos.values[pvc_nos]
-  pvc_labels = ["a)", "b)", "c)", "d)"]
+  pvc_labels = ["$P_a$", "$P_b$", "$P_c$", "$P_d$"]
   f, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(10, 4))
   for x in x_pvc_s:
     ax1.axvline(x, label="PVC", color="black", linestyle="--", alpha=0.5)
@@ -32,24 +39,28 @@ def plot_pvc(time_s, modular_s, pvc_s, time_nos, modular_nos, pvc_nos, outname=N
   ax1.set_ylabel("RR interval length [s]")
   ax1.set_xlabel("time[s]")
   ax1.set_xlim(0, 30)
+  ax1.set_ylim(0.25, 2)
   ax1.set_title("With SA node")
+  add_axes_identifier(ax1, "a)")
   ax1.minorticks_on()
   #ax1.grid(alpha=0.5, which="both")
   for (x, s) in zip(x_pvc_s, pvc_labels):
-    ax1.annotate(s, xy=(x, 1), xytext=(4, 0), textcoords="offset points")
+    ax1.annotate(s, xy=(x, 1.9), xytext=(4, 0), textcoords="offset points")
   for x in x_pvc_nos:
     ax2.axvline(x, label="PVC", color="black", linestyle="--", alpha=0.5)
   ax2.plot(time_nos, modular_nos)
   ax2.set_ylabel("RR interval length [s]")
   ax2.set_xlabel("time[s]")
   ax2.set_xlim(0, 55)
-  ax2.set_ylim(0.5, 2)
+  ax2.set_ylim(0.25, 2)
   ax2.set_title("Without SA node")
+  add_axes_identifier(ax2, "b)")
   ax2.minorticks_on()
   #ax2.grid(alpha=0.5, which="both")
   for (x, s) in zip(x_pvc_nos, pvc_labels):
-    ax2.annotate(s, xy=(x, 1.93), xytext=(4, 0), textcoords="offset points")
+    ax2.annotate(s, xy=(x, 1.9), xytext=(4, 0), textcoords="offset points")
   plot_scenarios(ax3)
+  add_axes_identifier(ax3, "c)")
   f.tight_layout()
   if outname is None:
     plt.show(f)
@@ -78,7 +89,7 @@ def plot_scenarios(ax=None):
   ax.set_ylim(0, h_signal + dist*10)
   ax.set_yticks([])
   ax.set_xticks([0.8 + t_delay/2, 0.8 + t_refrac_avn/2, 1.2, 1.6 - t_delay/2])
-  ax.set_xticklabels(["a)", "b)", "c)", "d)"])
+  ax.set_xticklabels(["$P_a$", "$P_b$", "$P_c$", "$P_d$"])
   ax.set_xlabel("time")
   ax.legend(loc="best")
   ax.set_title("PVC locations in SA/AV cycle")
