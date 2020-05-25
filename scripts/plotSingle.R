@@ -1,4 +1,4 @@
-#Author: Christopher Schölzel
+#Author: Christopher SchÃ¶lzel
 #Makes plots from a single dataset
 
 plot.all <- function(data,combine=F,outdir="plots") {
@@ -9,7 +9,7 @@ plot.all <- function(data,combine=F,outdir="plots") {
   #             must contain the name of the corresponding variable in dataMo
   #   dataMo: modelica data as matrix
   #   dataJ: java data as matrix
-  #   combine: if TRUE, a single PDF (named "compare.pdf") will be created, otherwise 
+  #   combine: if TRUE, a single PDF (named "compare.pdf") will be created, otherwise
   #           one PDF will be created for each variable (named "compare-<variable>.pdf")
   #   outdir: the directory where to place the plots
   pdfheight <- 5
