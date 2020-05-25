@@ -50,7 +50,7 @@ def fi(d, f, n):
     int:
       index of frequency f in np.fft.fftfreq(n, d=d)
   """
-  return round(f * d * n)
+  return int(round(f * d * n))
 
 
 def band_power(signal, low, high, d=1, signal_is_fft=False):
@@ -235,7 +235,7 @@ class TestSHMModel(unittest.TestCase):
     sps = 1.0 * n / t_max  # sampling frequency (samples/s)
     d = 1.0 / sps  # step size of samples [s]
     f_max = 0.4  # maximum frequency that is interesting for us
-    nfreq = round(f_max * t_max)  # number of samples to take
+    nfreq = int(round(f_max * t_max))  # number of samples to take
     freq = freq[:nfreq]
     xvals = np.fft.fftfreq(n, d=d)[:nfreq]
     # print(",".join(["{:.6f}".format(x) for x in freq]))
