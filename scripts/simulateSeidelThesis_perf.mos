@@ -2,6 +2,8 @@
 //assumes that working directory points to output directory that is a sibling of the source directory named 'src'
 //Reminder: change working directory with cd(..)
 //Warning: Will produce 2GB of data with current settings
+//NOTE: this script does not work, because I cannot seem to understand loops in
+//      modelica scripting logic
 loadModel(Modelica);
 windows := false;
 if windows then
