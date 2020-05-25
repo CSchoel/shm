@@ -1,6 +1,12 @@
 loadModel(Modelica);
-if Modelica.Utilities.Strings.find(getModelicaPath(),";../src") == 0 then
-  setModelicaPath(getModelicaPath()+";../src");
+windows := false;
+if windows then
+  sep := ";";
+else
+  sep := ":";
+end if;
+if Modelica.Utilities.Strings.find(getModelicaPath(),"SHM") == 0 then
+  setModelicaPath(getModelicaPath()+sep+Modelica.Utilities.Files.loadResource("../src"));
 end if;
 loadModel(SHM);
 stopTime := 1000.0;
@@ -322,4 +328,3 @@ Modelica.Utilities.Streams.print(
   +String(t_tp)+" "+String(t_cp)+" "+String(t_sm)+" "+String(t_to),
   outfile
 );
-
