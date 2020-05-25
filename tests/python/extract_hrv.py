@@ -70,7 +70,7 @@ def load_nsr(dname, prefix="nsr"):
 def load_prcp(dname):
 	name = lambda x: "prcp_" + os.path.basename(x)[:-13]
 	data = [(name(x), ra(x)) for x in glob.glob(os.path.join(dname, "*_ann_wqrs.txt"))]
-	return {"healthy_moving" : data}	
+	return {"healthy_moving" : data}
 
 def update_lst(dct, dct2):
 	all_keys = set(list(dct.keys()) + list(dct2.keys()))

@@ -60,7 +60,7 @@ names.display["para.signal.activation"] <- expression(nu[p])
 
 compare.print.first <- function(phinames,dataMo,dataC) {
   # Prints starting values for given variables and highlights differences
-  # 
+  #
   # Args:
   #   phinames: (named) vector of variablenames found in dataC; the names(phinames)
   #             must contain the name of the corresponding variable in dataMo
@@ -85,7 +85,7 @@ compare.plot.all <- function(phinames,dataMo,dataC,combine=F,outdir="plots") {
   #             must contain the name of the corresponding variable in dataMo
   #   dataMo: modelica data as matrix
   #   dataC: java data as matrix
-  #   combine: if TRUE, a single PDF (named "compare.pdf") will be created, otherwise 
+  #   combine: if TRUE, a single PDF (named "compare.pdf") will be created, otherwise
   #           one PDF will be created for each variable (named "compare-<variable>.pdf")
   #   outdir: the directory where to place the plots
   pdfheight <- 5
@@ -132,7 +132,7 @@ compare.plot.all.gap <- function(phinames,dataMo,dataC,gap,combine=F,outdir="plo
   #             must contain the name of the corresponding variable in dataMo
   #   dataMo: modelica data as matrix
   #   dataC: java data as matrix
-  #   combine: if TRUE, a single PDF (named "compare.pdf") will be created, otherwise 
+  #   combine: if TRUE, a single PDF (named "compare.pdf") will be created, otherwise
   #           one PDF will be created for each variable (named "compare-<variable>.pdf")
   #   outdir: the directory where to place the plots
   pdfheight <- 5
@@ -224,7 +224,7 @@ data.resample <- function(data.src,ktime,from,to,step) {
       data.dest[idx.dest,] <- data.src[idx.src,]
     } else {
       t.src <- data.src[idx.src,ktime]
-      dt.src <- t.src - data.src[idx.src-1,ktime] 
+      dt.src <- t.src - data.src[idx.src-1,ktime]
       if(dt.src == 0) {
         #TODO we should actually take the next value
         fac.right <- 0
