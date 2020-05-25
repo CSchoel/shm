@@ -22,10 +22,10 @@ class MyFancyOMCSession(OMPython.OMCSessionZMQ):
 	def loadModel(self, name):
 		res = self.send("loadModel(%s)" % name)
 		return res
-	def simulate(self, model, startTime=0, stopTime=1, 
-							 method="dassl", dt = 0.001, tolerance=1e-6, 
-							 fileNamePrefix="simulation_output", 
-							 outputFormat="mat", variables=None, 
+	def simulate(self, model, startTime=0, stopTime=1,
+							 method="dassl", dt = 0.001, tolerance=1e-6,
+							 fileNamePrefix="simulation_output",
+							 outputFormat="mat", variables=None,
 							 variableFilter=None):
 		params = {
 			"startTime": startTime,
