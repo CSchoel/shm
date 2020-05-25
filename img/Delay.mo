@@ -1,75 +1,74 @@
 model Delay
-  annotation(
-    Icon(
-      coordinateSystem(
-        preserveAspectRatio= false,
-        extent= {{0,-100.0},{100.0,0}}
-      ),
-      graphics= {
-        Polygon(
-          origin= {0.0,952.36223},
-          rotation= 0.0,
-          points= {{25.0, -957.36223},{75.0, -957.36223},{25.0, -1047.3622},{75.0, -1047.3622}},
-          lineColor= {0,0,0},
-          pattern= LinePattern.Solid,
-          fillPattern= FillPattern.None,
-          lineThickness= 1.0
-        ),
-        Polygon(
-          origin= {0.0,952.36223},
-          rotation= 0.0,
-          points= {{36.666671, -978.36223},{63.333329000000006, -978.36223},{50.0, -1002.3622}},
-          fillColor= {0,0,0},
-          pattern= LinePattern.None,
-          fillPattern= FillPattern.Solid,
-          lineThickness= 1.0
-        ),
-        Polygon(
-          origin= {0.0,952.36223},
-          rotation= 0.0,
-          points= {{25.0, -1047.3622},{50.0, -1037.3622},{75.0, -1047.3622}},
-          fillColor= {0,0,0},
-          pattern= LinePattern.None,
-          fillPattern= FillPattern.Solid,
-          lineThickness= 1.0
-        ),
-        Ellipse(
-          origin= {0.0,952.36223},
-          rotation= 0.0,
-          fillColor= {0,0,0},
-          pattern= LinePattern.None,
-          fillPattern= FillPattern.Solid,
-          lineThickness= 1.0,
-          extent= {{49.0,-1010.3622},{51.0,-1012.3622}}
-        ),
-        Ellipse(
-          origin= {0.0,952.36223},
-          rotation= 0.0,
-          fillColor= {0,0,0},
-          pattern= LinePattern.None,
-          fillPattern= FillPattern.Solid,
-          lineThickness= 1.0,
-          extent= {{49.0,-1017.3622},{51.0,-1019.3622}}
-        ),
-        Ellipse(
-          origin= {0.0,952.36223},
-          rotation= 0.0,
-          fillColor= {0,0,0},
-          pattern= LinePattern.None,
-          fillPattern= FillPattern.Solid,
-          lineThickness= 1.0,
-          extent= {{49.0,-1024.3622},{51.0,-1026.3622}}
-        ),
-        Ellipse(
-          origin= {0.0,952.36223},
-          rotation= 0.0,
-          fillColor= {0,0,0},
-          pattern= LinePattern.None,
-          fillPattern= FillPattern.Solid,
-          lineThickness= 1.0,
-          extent= {{49.0,-1031.3622},{51.0,-1033.3622}}
+    annotation(
+        Icon(
+            coordinateSystem(
+                preserveAspectRatio= false,
+                extent= {{-100,-100},{100,100}}
+            ),
+            graphics= {
+                Polygon(
+                    origin= {-100,100},
+                    lineThickness= 4,
+                    pattern= LinePattern.Solid,
+                    points= {{60.25, -28.44}, {139.75, -28.44}, {60.25, -171.56}, {139.75, -171.56}},
+                    fillPattern= FillPattern.None,
+                    rotation= 0
+                ),
+                Polygon(
+                    origin= {-100,100},
+                    lineThickness= 0.56,
+                    pattern= LinePattern.None,
+                    points= {{78.80, -61.84}, {121.20, -61.84}, {100, -100}},
+                    fillPattern= FillPattern.Solid,
+                    fillColor= {0,0,0},
+                    rotation= 0
+                ),
+                Polygon(
+                    origin= {-100,100},
+                    lineThickness= 0.56,
+                    pattern= LinePattern.None,
+                    points= {{60.25, -171.56}, {100, -155.65}, {139.75, -171.56}},
+                    fillPattern= FillPattern.Solid,
+                    fillColor= {0,0,0},
+                    rotation= 0
+                ),
+                Ellipse(
+                    origin= {-100,100},
+                    lineThickness= 0.56,
+                    pattern= LinePattern.None,
+                    fillPattern= FillPattern.Solid,
+                    fillColor= {0,0,0},
+                    extent= {{98.41,-112.72},{101.59,-115.90}},
+                    rotation= 0
+                ),
+                Ellipse(
+                    origin= {-100,100},
+                    lineThickness= 0.56,
+                    pattern= LinePattern.None,
+                    fillPattern= FillPattern.Solid,
+                    fillColor= {0,0,0},
+                    extent= {{98.41,-123.85},{101.59,-127.03}},
+                    rotation= 0
+                ),
+                Ellipse(
+                    origin= {-100,100},
+                    lineThickness= 0.56,
+                    pattern= LinePattern.None,
+                    fillPattern= FillPattern.Solid,
+                    fillColor= {0,0,0},
+                    extent= {{98.41,-134.98},{101.59,-138.16}},
+                    rotation= 0
+                ),
+                Ellipse(
+                    origin= {-100,100},
+                    lineThickness= 0.56,
+                    pattern= LinePattern.None,
+                    fillPattern= FillPattern.Solid,
+                    fillColor= {0,0,0},
+                    extent= {{98.41,-146.11},{101.59,-149.29}},
+                    rotation= 0
+                )
+            }
         )
-      }
-    )
-  );
+    );
 end Delay;
