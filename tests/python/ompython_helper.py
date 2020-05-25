@@ -37,6 +37,10 @@ class MyFancyOMCSession(OMPython.OMCSessionZMQ):
 			"outputFormat": enquote(outputFormat),
 		}
 		self.outputFormat = outputFormat
+		self.resFile = os.path.join(
+			self.send("cd()"),
+			"simulation_output_res.%s" % outputFormat
+		)
 		if not (variables is None):
 			params["variableFilter"] = enquote("^("+"|".join(variables)+")$")
 		elif not (variableFilter is None):
@@ -49,8 +53,7 @@ class MyFancyOMCSession(OMPython.OMCSessionZMQ):
 	def getResults(self, *varnames):
 		if self.outputFormat != "mat":
 			raise "unable to retrieve results from CSV-file, choose outputFormat=\"mat\" instead"
-		resFile = self.send("currentSimulationResult")
-		data = DyMat.DyMatFile(resFile)
+		data = DyMat.DyMatFile(self.resFile)
 		return data.getVarArray(varnames).T
 	def closeResultFile(self):
 		self.send("closeSimulationResultFile()")
