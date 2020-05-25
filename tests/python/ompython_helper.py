@@ -1,5 +1,6 @@
 import OMPython
 import DyMat # https://bitbucket.org/jraedler/dymat
+import os
 
 # TODO error handling
 
@@ -11,7 +12,9 @@ class MyFancyOMCSession(OMPython.OMCSessionZMQ):
 		OMPython.OMCSessionZMQ.__init__(self)
 		self.debug = False
 	def appendToMoPath(self, path):
-		self.send("setModelicaPath(getModelicaPath()+\";%s\")" % path)
+		ap = os.path.abspath(path)
+		delim = ";" if os.name == "nt" else ":"
+		self.send("setModelicaPath(getModelicaPath()+\"%s%s\")" % (delim, ap))
 	def send(self, command):
 		if self.debug:
 			print(">", command)
