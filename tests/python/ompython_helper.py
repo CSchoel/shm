@@ -6,9 +6,9 @@ import DyMat # https://bitbucket.org/jraedler/dymat
 def enquote(s):
 	return "\"%s\"" % s
 
-class MyFancyOMCSession(OMPython.OMCSession):
+class MyFancyOMCSession(OMPython.OMCSessionZMQ):
 	def __init__(self):
-		OMPython.OMCSession.__init__(self)
+		OMPython.OMCSessionZMQ.__init__(self)
 		self.debug = False
 	def appendToMoPath(self, path):
 		self.send("setModelicaPath(getModelicaPath()+\";%s\")" % path)
