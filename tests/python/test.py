@@ -441,7 +441,7 @@ class TestSHMModel(unittest.TestCase):
     self.assertBetween(ratio_sd1_sd2, 0.2, 1, name="sd1/sd2")
 
 
-outdir = "../../../test-output"
+outdir = "../../test-output"
 if __name__ == '__main__':
   if os.path.exists(outdir):
     try:
