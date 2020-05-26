@@ -126,11 +126,11 @@ This analysis includes the following tasks:
 
 ## References
 
+<a name="ref1">[1]</a> H. Seidel, “Nonlinear dynamics of physiological rhythms,” PhD thesis, Technische Universität Berlin, Berlin, Germany, 1997.
+
 <a name="ref2">[2]</a> C. Schölzel, A. Goesmann, G. Ernst, and A. Dominik, “Modeling biology in Modelica: The human baroreflex,” in Proceedings of the 11th International Modelica Conference, Versailles, France, 2015, pp. 367–376, doi: [10.3384/ecp15118367](https://www.ep.liu.se/ecp/article.asp?issue=118%26article=39).
 
 <a name="ref3">[3]</a> H. Seidel and H. Herzel, “Modelling heart rate variability due to respiration and baroreflex,” in Modelling the Dynamics of Biological Systems, E. Mosekilde and O. G. Mouritsen, Eds. Berlin, Heidelberg: Springer, 1995, pp. 205–229, doi: [10.1007/978-3-642-79290-8_11](https://doi.org/10.1007/978-3-642-79290-8_11).
-
-<a name="ref1">[1]</a> H. Seidel, “Nonlinear dynamics of physiological rhythms,” PhD thesis, Technische Universität Berlin, Berlin, Germany, 1997.
 
 <a name="ref4">[4]</a> H. Seidel and H. Herzel, “Bifurcations in a nonlinear model of the baroreceptor-cardiac reflex,” Physica D: Nonlinear Phenomena, vol. 115, no. 1–2, pp. 145–160, 1998, doi: [10.1016/S0167-2789(97)00229-7](https://doi.org/10.1016/S0167-2789%2897%2900229-7).
 
