@@ -1,8 +1,13 @@
 .project
 .settings/*
 *.zip
+*.tar.gz
+*.tar.xz
 *.pyc
 mope-project.json
 img/*.pdf
 img/*.mo
 test-output
+
+# Merge conflicts
+*.orig
