@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - reference data from simulation of Seidel's original C code
-- CHANGELOG and README files
+- CHANGELOG, README, and LICENSE files
 
 ### Changed
 
