@@ -18,13 +18,31 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - nothing
 
+## [1.4]
+
+### Added
+
+- reference data from simulation of Seidel's original C code
+- CHANGELOG and README files
+
+### Changed
+
+- removed unused scripts `fftTest.R`, `compareFrequencies.R`
+- deploy script now does not remove whole deploy folder but only subfolders
+- script to plot modular contraction examples is moved to subproject
+- updates test script to use Python 3 with OMCSessionZMQ
+- `test-output` folder is now create inside the repo instead of outside
+
+### Fixed
+
+- updates `.mos` scripts and Python test suite to current OpenModelica version and code structure
+
 ## [1.3]
 
 ### Added
 
 - modular version of the contraction (or more aptly termed *conduction*) model with extension for premature ventricular contractions (PVCs)
   - implementation began in this repository, but model is now included as submodule with [a separate repository](https://github.com/CSchoel/shm-conduction)
-- CHANGELOG and README files
 
 ### Changed
 
