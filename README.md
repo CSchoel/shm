@@ -66,6 +66,7 @@ This project has grown considerably since its first commit in January 2014 and h
 
 * The nonlinear measures for dynamical systems used to test the physiological plausibility of the model output now reside in the [python package nolds](https://github.com/CSchoel/nolds).
 * A modular implementation of the cardiac conduction system that is part of the Seidel-Herzel model (SHM) now resides in the GitHub project [shm-conduction](https://github.com/CSchoel/shm-conduction) and is included in this project as a git submodule.
+    To download it you can use the command `git submodule update --init`.
 
 ### Files and folders in this repository
 
