@@ -1,11 +1,13 @@
 within SHM.SchoelzelThesis.Examples;
 model AVDelayExample
   SHM.SchoelzelThesis.Components.Contraction.Unidirectional.BuiltinDelay.AVConductionDelay del;
+  SHMConduction.Components.AVConductionDelay del2;
   SHM.SchoelzelThesis.Components.Contraction.Unidirectional.BuiltinDelay.SafeAVConductionDelay dels;
   discrete Real countIn(start=0, fixed=true);
   discrete Real countOut(start=0, fixed=true);
   discrete Real countOuts(start=0, fixed=true);
 equation
+  del2.inp = del.inp;
   dels.inp = del.inp;
   if time < 5 then
     del.inp = sample(0,1);
