@@ -16,7 +16,7 @@ To run simulations with the model developed in this project you need [OpenModeli
 Once you have installed OpenModelica, you can run simulations with the model as follows:
 
 1. Clone this repository with Git or download a [ZIP file of the current master branch](https://github.com/CSchoel/shm/archive/master.zip) and extract it with an archive manager of your choice.
-2. Start OMEdit and open the folder `SHMConduction` with "File" → "Load Library".
+2. Start OMEdit and open the folder `SHM` with "File" → "Load Library".
 3. Open the example of your choice (e.g. `SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample`) with a double click and simulate it by clicking the simulate button and adjusting simulation parameters as desired.
 
 Some of the scripts and tests have additional dependencies, which are listed in the following.
