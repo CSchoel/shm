@@ -1,7 +1,7 @@
 using ModelicaScriptingTools
 using Test
 
-refdir = nothing
+refdir = ""
 
 withOMC("test-output", ".") do omc
     @testset "Kotani2005" begin
