@@ -16,4 +16,8 @@ withOMC("test-output", ".") do omc
         testmodel(omc, "SHM.SchoelzelThesis.Examples.BidirectionalContractionExample"; refdir=refdir)
         testmodel(omc, "SHM.SchoelzelThesis.Examples.BidirectionalContractionMixinExample"; refdir=refdir)
     end
+    # TODO fix symlink
+    @testset "shm-conduction" begin
+        testmodel(omc, "SHMConduction.Examples.ModularExample"; refdir=refdir)
+    end
 end
