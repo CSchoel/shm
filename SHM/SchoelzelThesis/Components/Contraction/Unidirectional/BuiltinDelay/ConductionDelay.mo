@@ -7,8 +7,8 @@ protected
   // impulses of the input to something that survives the discretization
   // and interpolation that is applied to delay-expressions.
   // An alternating step function is the easiest choice for this.
-  Real continuous_inp(start=0) "auxiliary variable";
-  Real continuous_outp(start=0);
+  Real continuous_inp(start=0, fixed=true) "auxiliary variable";
+  Real continuous_outp(start=0, fixed=true);
   Boolean discrete_outp;
 equation
   der(continuous_inp) = 0;

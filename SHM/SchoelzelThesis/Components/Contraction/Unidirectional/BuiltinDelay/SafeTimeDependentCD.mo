@@ -4,7 +4,7 @@ model SafeTimeDependentCD
   Real T(start=0, fixed=true);
   Real t_last(start=0, fixed=true);
   parameter Real delay_max = 1;
-  Real duration(start=1);
+  Real duration(start=1, fixed=true);
 protected
   Real silentUntil(start=-1, fixed=true);
   Real holdValue(start=0, fixed=true);

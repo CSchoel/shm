@@ -13,17 +13,17 @@ model Contraction2 "contraction model for the heart (simplified version)"
   discrete Real cont_last "time of last contraction";
   discrete Real T_avc "atrioventricular conduction time (delay for sinus signal to trigger contraction)";
   input Boolean signal "the sinus signal";
-  output Boolean contraction "true when a contraction is triggered";
+  output Boolean contraction(start=false, fixed=true) "true when a contraction is triggered";
   output Boolean av_contraction "true when the av-node triggers a contraction";
   output Boolean sinus_contraction "true when the sinus node triggers a contraction";
-  output Boolean refrac_passed "true when the refractory period has passed";
+  output Boolean refrac_passed(start=true, fixed=true) "true when the refractory period has passed";
   discrete output Real T "time between the last two sinus signals that did trigger a contraction";
   discrete output Real T_cont "time between the last two contractions";
   Real T_passed "helper variable; time passed since last contraction";
-  Boolean signal_received "true, if a sinus signal has already been received since the last contraction";
+  Boolean signal_received(start=false, fixed=true) "true, if a sinus signal has already been received since the last contraction";
   discrete Real sig_last "time of last received sinus signal";
 protected
-  Boolean contraction_event;
+  Boolean contraction_event(start=false, fixed=true);
 initial equation
   cont_last = initial_cont_last;
   sig_last = 0;

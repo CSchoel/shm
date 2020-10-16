@@ -3,7 +3,7 @@ model RefractoryMixin
   parameter Real t_first = 0;
   outer Boolean refractory;
 protected
-  Real t_last(start=t_first);
+  Real t_last(start=t_first, fixed=true);
   Real T_refrac;
   outer Boolean refrac_signal;
 equation

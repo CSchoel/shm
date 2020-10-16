@@ -4,7 +4,7 @@ model TimeDependentCD
   Real T(start=0, fixed=true);
   Real t_last(start=0, fixed=true);
   parameter Real delay_max = 1;
-  Real duration(start=1);
+  Real duration(start=1, fixed=true);
 equation
   continuous_outp = delay(continuous_inp, duration, delay_max);
   when inp then

@@ -8,7 +8,7 @@ partial model RefractoryGate
   Real T_refrac;
   SHM.Shared.Connectors.ExcitationOutput refractory;
 protected
-  Real t_last(start=t_first);
+  Real t_last(start=t_first, fixed=true);
 equation
   refractory = time - pre(t_last) <= T_refrac;
   up.upward = down.upward and not refractory;
