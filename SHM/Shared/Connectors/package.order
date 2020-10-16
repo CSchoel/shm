@@ -8,3 +8,5 @@ NeurotransmitterConcentration
 SubstanceConcentration
 ExcitationInput
 ExcitationOutput
+BidirectionalExcitationOutput
+BidirectionalExcitationInput
