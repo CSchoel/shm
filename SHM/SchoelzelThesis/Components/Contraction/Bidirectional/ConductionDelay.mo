@@ -8,7 +8,7 @@ partial model ConductionDelay
 protected
   Real t_next(start=0, fixed=true);
   Direction direction_next(start=Direction.None, fixed=true);
-  Boolean delay_passed = time > pre(t_next);
+  Boolean delay_passed(start=false, fixed=true) = time > pre(t_next); // FIXME why does this need an initial value?
 equation
   up.upward = edge(delay_passed) and pre(direction_next) == Direction.Up;
   down.downward = edge(delay_passed) and pre(direction_next) == Direction.Down;
