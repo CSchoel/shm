@@ -1,6 +1,6 @@
 within SHM.SchoelzelThesis.Components.Contraction.BidirectionalMixin;
 model RefractoryMixin
-  parameter Real t_first(start=0, fixed=true);
+  parameter Real t_first = 0;
   outer Boolean refractory;
 protected
   Real t_last(start=t_first);

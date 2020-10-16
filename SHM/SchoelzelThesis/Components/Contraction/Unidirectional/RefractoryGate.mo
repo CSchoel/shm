@@ -3,7 +3,7 @@ partial model RefractoryGate
   "lets signals pass only when a given "
   + "refractory time has passed since the last signal"
   extends UnidirectionalContractionComponent;
-  parameter Real t_first(start=0, fixed=true) "time stamp of last signal at the beginning of the simulation";
+  parameter Real t_first = 0 "time stamp of last signal at the beginning of the simulation";
   Real T_refrac "refractory period";
 protected
   Real t_last(start=t_first);

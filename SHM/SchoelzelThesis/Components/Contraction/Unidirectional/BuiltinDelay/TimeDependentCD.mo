@@ -3,7 +3,7 @@ model TimeDependentCD
   extends ConductionDelay;
   Real T(start=0, fixed=true);
   Real t_last(start=0, fixed=true);
-  parameter Real delay_max(start=1);
+  parameter Real delay_max = 1;
   Real duration(start=1);
 equation
   continuous_outp = delay(continuous_inp, duration, delay_max);

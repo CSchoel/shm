@@ -4,7 +4,7 @@ partial model RefractoryGate
   +"refractory time has passed since the last signal"
   extends SHM.SchoelzelThesis.Components.Contraction.Bidirectional.
           BidirectionalContractionComponent;
-  parameter Real t_first(start=0, fixed=true);
+  parameter Real t_first = 0;
   Real T_refrac;
   SHM.Shared.Connectors.ExcitationOutput refractory;
 protected
