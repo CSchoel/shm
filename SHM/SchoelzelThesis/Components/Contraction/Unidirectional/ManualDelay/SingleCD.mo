@@ -6,7 +6,7 @@ partial model SingleCD
 protected
   Real t_next(start=-1, fixed=true)
     "time when the next signal will leave the component";
-  Boolean delay_passed = time > t_next;
+  Boolean delay_passed(start=false, fixed=true) = time > t_next; // FIXME why does this need an initial value?
 equation
   outp = edge(delay_passed);
   when inp then

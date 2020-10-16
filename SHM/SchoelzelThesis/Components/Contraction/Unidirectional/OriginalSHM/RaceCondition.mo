@@ -2,11 +2,11 @@ within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.OriginalSHM;
 model RaceCondition
   extends UnidirectionalContractionComponent;
   parameter Real initial_next = 1e100;
-  discrete input Real next_a;
-  discrete input Real next_b;
+  discrete input Real next_a(start=initial_next, fixed=true); // FIXME why does this need an initial value?
+  discrete input Real next_b(start=initial_next, fixed=true); // FIXME why does this need an initial value?
   Real next;
   discrete Real next_min = min(next_a, next_b);
-  Boolean next_passed = time >= pre(next);
+  Boolean next_passed(start=false, fixed=true) = time >= pre(next); // FIXME why does this need an initial value?
 initial equation
   next = initial_next;
 equation

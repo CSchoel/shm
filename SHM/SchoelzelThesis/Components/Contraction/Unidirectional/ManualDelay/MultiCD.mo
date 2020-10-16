@@ -20,7 +20,7 @@ protected
     "last signal that will leave the component";
   Boolean ignore = t_emit - t_last < min_dist
     "condition when an arriving signal should be ignored";
-  Boolean delay_passed = time > t_next;
+  Boolean delay_passed(start=false, fixed=true) = time > t_next;  // FIXME why does this need an initial value?
 equation
   outp = edge(delay_passed);
 algorithm
