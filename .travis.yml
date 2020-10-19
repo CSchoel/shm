@@ -5,7 +5,7 @@ install:
   - wget -q http://build.openmodelica.org/apt/openmodelica.asc -O- | sudo apt-key add -
   - sudo apt update
   - sudo apt install openmodelica
-  - pip3 install --user -r tests/python/requirements.txt
+  - python3 -m pip install --user -r tests/python/requirements.txt
   - export PYTHON=""
   - julia -e 'using Pkg; Pkg.add(PackageSpec(url="https://github.com/THM-MoTE/ModelicaScriptingTools.jl.git"))'
 #  - julia --project=docs/ -e "using Pkg; Pkg.instantiate()"
