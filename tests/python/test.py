@@ -147,6 +147,7 @@ class TestSHMModel(unittest.TestCase):
     self.assertTrue(self.loaded)
     self.assertNotIn("failed", self.simres["messages"].lower())
     self.assertIn("Simulation stopped", self.simres["messages"])
+    print()
     self.printt("simulation time", "%.3f",
                 self.simres["timeSimulation"], 19.889)
 
@@ -158,6 +159,7 @@ class TestSHMModel(unittest.TestCase):
     bp_min = np.min(bp)
     bp_std = np.std(bp)
 
+    print()
     self.printt("MAP", "%.3f", bp_mean, 106.842)
     self.printt("min pressure", "%.3f", bp_min, 74.979)
     self.printt("max pressure", "%.3f", bp_max, 140.912)
@@ -208,6 +210,7 @@ class TestSHMModel(unittest.TestCase):
     error = rmse(vals, expected)
     self.plot_hist(bins, vals, "pressure_hist.png",
                    "pressure", "mmHg", expected)
+    print()
     self.printt("RMSE pressure histogram", "%.3f", error, 0.002)
     # TODO tolerance is chosen very low to not produce false positive
     # test results
@@ -268,6 +271,7 @@ class TestSHMModel(unittest.TestCase):
     # total power (= variance)
     power = np.var(self.data_hrv_cont[:, 1])
 
+    print()
     self.printt("RMSE RR-interval spectral density",
                 "%.9f", err, 0.000000292)
     self.printt("low frequency band power (lf)", "%.9f", lf, 2.812e-6)
@@ -383,6 +387,7 @@ class TestSHMModel(unittest.TestCase):
     # TODO adjust lower limit
     measures.append(("hurst parameter (DFA)", hdfa, 0, 1.5, 0.058))
 
+    print()
     for name, val, v_min, v_max, v_ref in measures:
       self.printt(name, "%.3f", val, v_ref)
     for name, val, v_min, v_max, v_ref in measures:
@@ -403,6 +408,7 @@ class TestSHMModel(unittest.TestCase):
         self.data_hrv[:, 1], np.arange(0.0, 1.5, 1.0 / 128))
     ti = 1.0 * np.sum(vals2) / np.max(vals2)
 
+    print()
     self.printt("RMSE RR-interval histogram", "%.3f", error, 0.001)
     self.printt("HRV triangular index", "%.3f", ti, 5.514)
 
@@ -426,6 +432,7 @@ class TestSHMModel(unittest.TestCase):
     sd2 = sd(ax2)
     sd1 = sd(ax1)
     ratio_sd1_sd2 = sd1 / sd2
+    print()
     self.printt("Poincare SD1", "%.3f", sd1, 0.034)
     self.printt("Poincare SD2", "%.3f", sd2, 0.035)
     self.printt("Poincare SD1/SD2", "%.3f", ratio_sd1_sd2, 0.966)
