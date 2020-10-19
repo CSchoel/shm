@@ -1,0 +1,7 @@
+future
+numpy
+matplotlib
+scipy
+OMPython
+DyMat
+nolds
