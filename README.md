@@ -32,6 +32,15 @@ The test suite in `tests/python/test.py` needs [Python 3](https://www.python.org
 * `DyMat` for reading result files in MATLAB format
 * `nolds` for nonlinear measures of HRV
 
+Additionally there are unit tests written in Julia with [MoST.jl](https://github.com/THM-MoTE/ModelicaScriptingTools.jl) in `scripts/unittests.jl`.
+These can be run with the following commands after installing Julia:
+
+* `julia -e 'ENV["PYTHON"]=""; using Pkg; Pkg.add(PackageSpec(url="https://github.com/THM-MoTE/ModelicaScriptingTools.jl.git"))'`
+* `julia scripts/unittests.jl`
+
+If the unit tests for `SHMConduction` are failing because the model cannot be found, you may have to manually create the symlink `SHMCondcution` that points to the folder `subprojects/shm-conduction/SHMConduction`.
+This symlink should be created automatically by Git both on Windows and Linux (unless the git setting `core.symlinks` is set to false), but it will, for example, not be contained in a download of the repository as ZIP archive.
+
 
 ### Extraction and analysis of PhysioNet data
 
@@ -81,6 +90,7 @@ This project has grown considerably since its first commit in January 2014 and h
     * `Examples` contains full models that can be simulated
     * `Functions` contains function definitions
     * `Connectors` contains connectors that are used to connect components
+* `SHMConduction` is a symlink to `subprojects/shm-conduction/SHMConduction` that is needed to run the unit tests
 * `img` contains icons as scalable vector graphics (SVG) files. These have been translated to Modelica with an (currently unpublished) export script for the vector graphics editor [Inkscape](https://inkscape.org/).
     The translated versions can be found as `annotation()` statements in the Modelica code.
 * `scripts` contains various scripts and utility functions
@@ -94,6 +104,7 @@ This project has grown considerably since its first commit in January 2014 and h
   * `setWd.R` small helper script to set the working directory to the output directory
   * `simulateKotani.mos` and `simulateSeidelThesis.mos` are scripts to run simulations of the full models in `Kotani2005` and `SeidelThesis` respectively.
   * `testHurst.R` and `testLyap.R` are small test scripts to compare the implementation of nonlinear measures in `nolds` against established R packages
+  * `unittests.jl` is a Julia script with unit tests that are used to check the models through continuous integration
 * `refData` contains simulation results of the C implementation by H. Seidel
 * `subprojects` contains projects that are related to this project but have evolved enough to be hosted as standalone repositories
   * `shm-conduction` contains a modular version of the cardiac conduction system of the SHM
