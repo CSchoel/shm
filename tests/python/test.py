@@ -275,7 +275,7 @@ class TestSHMModel(unittest.TestCase):
     self.printt("lf/hf ratio", "%.9f", ratio_lf_hf, 2.955e-3)
     self.printt("total spectral power", "%.9f", power, 1.172e-3)
 
-    self.assertLess(err, 0.000001)  # TODO adjust tolerance
+    self.assertLess(err, 0.00001)
     # normal lf (Task Force paper): 754 - 1586 ms^2
     self.assertBetween(lf, 0, 1586, name="lf")  # TODO adjust lower limit
     # normal hf (Task Force paper): 772 - 1178 ms^2
@@ -359,11 +359,11 @@ class TestSHMModel(unittest.TestCase):
     # - < 0.5 : negative long-term correlations ("mean-reverting" system)
     # - = 0.5 : no long-term correlations (random walk)
     # - > 0.5 : positive long-term correlations ("long-term memory")
-    hexp = nolds.hurst_rs(hr[:, 1], debug_plot=True,
+    hexp = nolds.hurst_rs(hr[:, 1], debug_plot=True, fit="poly",
                           plot_file=os.path.join(self.outdir, "hurst.png"))
     # normal hexp (hrvdb): 0.760 - 0.966
     # TODO adjust lower limit
-    measures.append(("hurst exponent", hexp, 0.15, 0.966, 0.180))
+    measures.append(("hurst exponent", hexp, -0.01, 0.01, -0.003))
 
     # Correlation Dimension
     # - between 0 and 1, should be < 1 for 1D-system with strange attractor
