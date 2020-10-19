@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - nothing
 
-## [1.4]
+## [1.4] - 2020-05-26
 
 ### Added
 
@@ -37,7 +37,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - updates `.mos` scripts and Python test suite to current OpenModelica version and code structure
 
-## [1.3]
+## [1.3] - 2020-05-25
 
 ### Added
 
@@ -53,7 +53,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `Contraction2` needed to use `pre()` in the equation for the variable `signal`, the model now compiles without errors
 - `sinus_contraction` in `Contraction2` should only be true if there was a "fresh" sinus signal
 
-## [1.2]
+## [1.2] - 2016-08-03
 
 ### Added
 
@@ -70,7 +70,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - nothing
 
-## [1.1]
+## [1.1] - 2015-07-29
 
 ### Added
 
@@ -86,7 +86,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - nothing
 
-## [1.0]
+## [1.0] - 2015-04-22
 
 ### Added
 
@@ -116,7 +116,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - fuses double annotation declarations that were accidentally introduced to some models in Kotani2005
 - DiscreteSignal should produce a `Boolean` value
 
-## [0.6]
+## [0.6] - 2014-12-06
 
 ### Added
 
@@ -133,7 +133,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - LinearNerveSignal should only be determined via rate in order to allow initial value for NerveSystem activity
 - uses `der(artery.pressure)` instead of `artery.rate` in Baroreceptor
 
-## [0.5]
+## [0.5] - 2014-07-04
 
 ### Added
 
