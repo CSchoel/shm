@@ -4,7 +4,6 @@ using Test
 refdir = ""
 
 withOMC("test-output", ".") do omc
-    # TODO add experiment annotations
     @testset "Kotani2005" begin
         testmodel(omc, "SHM.Kotani2005.Examples.FullModel.KotaniFullExample"; refdir=refdir)
     end

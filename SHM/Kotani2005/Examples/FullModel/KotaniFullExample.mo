@@ -1,5 +1,5 @@
 within SHM.Kotani2005.Examples.FullModel;
-model KotaniFullExample 
+model KotaniFullExample
   "Full Kotani model with all components"
   //Ininitial values
   parameter Real conc_cNe = 0.025 "Initial cardiac concentration of Norepinephrine";
@@ -78,5 +78,11 @@ equation
   connect(cNeEmit.con, cNeAmount.con) annotation(Line(points = {{-45, 40}, {-44.7932, 40}, {-44.7932, 24.5567}, {-60.0275, 24.5567}, {-60.0275, 16.3711}, {-60.0275, 16.3711}}));
   connect(symp.signal, cNeEmit.trigger) annotation(Line(points = {{-56.5645, 62.8226}, {-81.4009, 62.8226}, {-81.4009, 39.7909}, {-75.0343, 39.7909}, {-75.0343, 39.7909}}));
   connect(symp.signal, vNeEmit.trigger) annotation(Line(points = {{-56.5645, 62.8226}, {-35.2434, 62.8226}, {-35.2434, 52.0693}, {-35.2434, 52.0693}}));
-  annotation(Documentation(info="Full Kotani model with standard parameters."),Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), experiment(StartTime = 0, StopTime = 10, Tolerance = 0.000001));
+annotation(
+  Documentation(info="Full Kotani model with standard parameters."),
+  Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})),
+  Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})),
+  experiment(StartTime = 0, StopTime = 10, Interval=0.0001, Tolerance = 1e-6),
+  __OpenModelica_simulationFlags(s = "dassl")
+);
 end KotaniFullExample;

@@ -30,4 +30,8 @@ equation
   cd.down.upward = false;
   connect(up.dirac, pm.up.upward);
   connect(down.dirac, cd.down.downward);
+annotation(
+  experiment(StartTime=0, StopTime=20, Tolerance=1e-6, Interval=0.002),
+  __OpenModelica_simulationFlags(s = "dassl")
+);
 end BidirectionalContractionMixinExample;

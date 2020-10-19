@@ -129,4 +129,8 @@ equation
   connect(heart.vNe,vNe.con) annotation(Line(points = {{0, -68}, {0, -68}, {0, -74.1005}, {-37.1517, -74.1005}, {-37.1517, 7.91758}, {20.3015, 7.91758}, {20.3015, 5.07537}, {20.3015, 5.07537}}));
   connect(heart.wNe,wNe.con) annotation(Line(points = {{0, -52}, {0.40603, -52}, {0.40603, -12.5869}, {27.001, -12.5869}, {27.001, 28.8281}, {20.0985, 28.8281}, {20.0985, 25.1739}, {20.0985, 25.1739}}));
   connect(heart.sinus,sinus.signal) annotation(Line(points = {{-20, -48}, {-20.3015, -48}, {-20.3015, -59.8894}, {-5.27839, -59.8894}, {-5.27839, -59.8894}}));
+annotation(
+  experiment(StartTime=0, StopTime=200, Tolerance=1e-6, Interval=0.001),
+  __OpenModelica_simulationFlags(s = "dassl")
+);
 end SeidelThesisFullExample;
