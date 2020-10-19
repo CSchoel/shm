@@ -25,6 +25,7 @@ Some of the scripts and tests have additional dependencies, which are listed in 
 
 The test suite in `tests/python/test.py` needs [Python 3](https://www.python.org/) with the following packages:
 
+* `future` for python 2 support
 * `numpy` for basic vectorized scientific computing
 * `matplotlib` for plotting
 * `scipy` for interpolation of data
