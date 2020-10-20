@@ -40,7 +40,7 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   ) "the heart" annotation(Placement(visible = true, transformation(origin = {0, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.Shared.Components.Compartments.BloodSystem blood(initialPressure=initial_p) "whole blood system of the body" annotation(Placement(visible = true, transformation(origin = {60, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 
-  inner Modelica.Blocks.Noise.GlobalSeed globalSeed(generateNoise=use_noise) "global seed for all noise terms in the model";
+  inner Modelica.Blocks.Noise.GlobalSeed globalSeed(enableNoise=use_noise) "global seed for all noise terms in the model";
 
   parameter Real initial_p = 100 "initial blood pressure";
 
