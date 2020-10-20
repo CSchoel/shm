@@ -3,7 +3,7 @@ partial model TriggeredNoise
   // NOTE: generator sample period must be smaller than trigger distances!
   replaceable Modelica.Blocks.Noise.NormalNoise generator;
   input Boolean trigger;
-  output discrete Real noise;
+  discrete output Real noise;
 protected
   discrete Real noise_raw(start=0, fixed=true);
 equation
