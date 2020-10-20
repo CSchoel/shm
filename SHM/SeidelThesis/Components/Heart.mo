@@ -36,7 +36,7 @@ model Heart "Main heart model"
   Boolean systole "if true, the system is currently in a systole";
   Real progress "progress of systole (rising from 0 to 1 linearly)";
   SHM.Shared.Components.Noise.AutoregressiveGaussianDeg1 T_fluct(
-    trigger=systole, sigma=sigma_T, r_last=r_noise_last, samplePeriod=0.01
+    trigger=systole, sigma=sigma_T, r_last=r_noise_last, generator.samplePeriod=0.01
   ) "noise model for fluctuations in heart beat period";
   Real T_base(start=T_hat, fixed=true) "base heart perioid without dynamic influences (apart from noise)";
 initial equation
