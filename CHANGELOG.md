@@ -18,6 +18,35 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - nothing
 
+## [1.5] - 2020-10-20
+
+### Added
+
+- code by V. Blesius in `BlesiusThesis` that integrates `SHMConduction` and `SeidelThesis` in the hope of generating plausible HRT responses
+- smylink `SHMConduction` that links to `subprojects/shm-conduction/SHMConduction`
+- adds class from `SHMConduction` to `AVDelayExample` in `SchoelzelThesis` to test that the subproject can be simulated together with the main project
+- unit test script using MoST.jl
+- Travis CI script that calls Julia and Python unit tests
+- experiment annotations for full model examples
+
+### Changed
+
+- adjusts Python unit tests to work with newer version of nolds
+  - uses `fit="poly"` for `hurst_rs` call in Python unit tests
+  - adjusts tolerance for RMSE of frequency domain to `1e-5` instead of `1e-6`
+- adds newlines in printing of unit tests
+
+### Fixed
+
+- copy-paste error in readme: `SHM` is the main package, not `SHMConduction`
+- `package.order` files now contain all classes and no extra classes
+- parameters having modifiers for `start` value now instead have proper default values
+- adds missing `start` and `fixed` values for variables in `SHMConduction` (not entirely sure why this is needed at some points)
+
+### Removed
+
+- old classes `AVConductionDelay` and `ModularConduction` in `SeidelThesis`, which have now been superseded by the models in `SchoelzelThesis` and `SHMConduction`
+
 ## [1.4] - 2020-05-26
 
 ### Added
