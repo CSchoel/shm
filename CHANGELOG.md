@@ -8,11 +8,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- nothing
+- subproject `shm-ref` that contains reference data from simulating the SHM
+- Julia unit tests now also perform regression tests using data from `shm-ref`
 
 ### Changed
 
-- nothing
+- models covered by unit tests now also have a MoST.jl variable filter annotation
 
 ### Fixed
 

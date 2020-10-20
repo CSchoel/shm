@@ -83,7 +83,8 @@ This project has grown considerably since its first commit in January 2014 and h
 * `SHM` contains the Modelica code for all versions of the model
   * `SHM/Kotani2005` contains the implementation according to [\[6\]](#ref6) (without noise)
   * `SHM/SeidelThesis` contains the implementation according to [\[1\]](#ref1) (again without noise)
-  * `SHM/SchoelzelThesis` contains extensions to the `SeidelThesis` models
+  * `SHM/SchoelzelThesis` contains extensions to the `SeidelThesis` models by C. Schölzel
+  * `SHM/BlesiusThesis` contains extensions to the `SeidelThesis` models by V. Blesius
   * `SHM/SH1998` is planned to contain an implementation according to [\[4\]](#ref4) but is currently empty
   * `SHM/Shared` contains base classes and utility components that are shared between the different implementations
   * Each of `Kotani2005`, `SeidelThesis`. `SchoelzelThesis` and `SH1998` can contain the following subfolders:
@@ -109,6 +110,7 @@ This project has grown considerably since its first commit in January 2014 and h
 * `refData` contains simulation results of the C implementation by H. Seidel
 * `subprojects` contains projects that are related to this project but have evolved enough to be hosted as standalone repositories
   * `shm-conduction` contains a modular version of the cardiac conduction system of the SHM
+  * `shm-ref` contains reference simulation data for regression tests
 * `tests/python` contains Python code to test the physiological plausibility of the model with regard to actual HRV parameters
   * `test.py` and `ompython_helper.py` build a test suite that uses the Python interface of OpenModelica
   * `extract_hrv.py` and `human_hrv.py` provide functions to create a database of healthy human HRV data from sources that can be downloaded from PyhsioNet
