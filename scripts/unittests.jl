@@ -5,7 +5,7 @@ refdir = ""
 
 withOMC("test-output", ".") do omc
     @testset "Kotani2005" begin
-        testmodel(omc, "SHM.Kotani2005.Examples.FullModel.KotaniFullExample"; refdir=refdir)
+        testmodel(omc, "SHM.Kotani2005.Examples.FullModel.KotaniFullExample"; refdir=refdir, override=Dict("stopTime" => "10"))
     end
     @testset "SeidelThesis" begin
         testmodel(omc, "SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample"; refdir=refdir)
