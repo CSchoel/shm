@@ -39,7 +39,7 @@ initial equation
   psys = pdia "there is already a connection between one of these variables and artery.pressure";
   S = initial_S;
 equation
-  contraction.inp = sinus;
+  contraction.outp = sinus;
   progress = (time - contraction.cont_last) / tau_sys;
   der(psys) = 1 / tau_sys * S/compliance * (1 - progress) * exp(1 - progress);
   der(pdia) = -(pdia-p_wind0) / tau_wind;
