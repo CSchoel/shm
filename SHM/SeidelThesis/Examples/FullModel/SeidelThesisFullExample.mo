@@ -81,6 +81,9 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
 
   parameter Real lung_T_r = 4 "respiratory period";
   parameter Real lung_r_start = 0.16 "respiratory phase shift in seconds";
+  parameter Real lung_sigma_T_r = 0.2 "sigma for gaussian noise for respiratory phase fluctuations";
+  parameter Real lung_r_noise_last1 = 0.5 "ratio of last noise value that is kept";
+  parameter Real lung_r_noise_last2 = 0.25 "ratio of second last noise value that is kept";
 
   parameter Real baro_p0 = 60 "minimum blood pressure needed to generate baroreceptor signal";
   parameter Real baro_kb = 0.06 "sensitivity of baroreceptors to blood pressure increase";
@@ -106,6 +109,8 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real heart_tau_wind0 = 1.3 "base value for windkessel relaxation";
   parameter Real heart_k_wind_wNe = 0.8 "sensitivity of windkessel relaxation to Norepinephrine in Windkesel arteries";
   parameter Real heart_p_wind0 = 0 "minimum blood pressure that remains even if the heart would completely cease to beat";
+  parameter Real heart_sigma_T = 0.02 "sigma for gaussian noise for heart period fluctuations";
+  parameter Real heart_r_noise_last = 0.9 "how much of heart period noise is kept between beats";
   parameter Real heart_initial_T = 1 "initial value for T";
   parameter Real heart_initial_t_last = -heart_initial_T "initial value for last ventricular contraction time";
   parameter Real heart_initial_T_avc = 0.15 "initial value for atrioventricular conduction delay";
