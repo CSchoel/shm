@@ -29,8 +29,6 @@ model Heart "Main heart model"
   parameter Real initial_S = S_0 "initial value for contractility";
   parameter Real sigma_T = 0.02 "sigma for gaussian noise for heart period fluctuations";
   parameter Real r_noise_last = 0.9 "how much of heart period noise is kept between beats";
-  parameter Real initial_noise = 0 "initial value for heart period noise";
-  parameter Real initial_noise_last = 0 "initial value for heart period noise during last beat";
   Real tau_wind "windkessel relaxation (time until blood pressure hypothetically drops to zero during diastole)";
   discrete Real S "Contractility";
   Real pdia "diastolic blood pressure";
@@ -38,8 +36,7 @@ model Heart "Main heart model"
   Boolean systole "if true, the system is currently in a systole";
   Real progress "progress of systole (rising from 0 to 1 linearly)";
   SHM.Shared.Components.Noise.AutoregressiveGaussianDeg1 T_fluct(
-    trigger=systole, sigma=sigma_T, r_last=r_noise_last, stimPeriod=0.01,
-    noise.start=initial_noise, noise_last.start=initial_noise_last
+    trigger=systole, sigma=sigma_T, r_last=r_noise_last, stimPeriod=0.01
   ) "noise model for fluctuations in heart beat period";
   Real T_base(start=T_hat, fixed=true) "base heart perioid without dynamic influences (apart from noise)";
 initial equation
