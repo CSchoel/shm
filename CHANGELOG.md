@@ -8,6 +8,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- nothing
+
+### Changed
+
+- nothing
+
+### Fixed
+
+- nothing
+
+## [1.6] - 2020-10-20
+
+### Added
+
 - subproject `shm-ref` that contains reference data from simulating the SHM
 - Julia unit tests now also perform regression tests using data from `shm-ref`
 
