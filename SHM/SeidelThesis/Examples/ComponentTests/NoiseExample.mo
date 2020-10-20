@@ -1,4 +1,4 @@
-within SHM.SeidelThesis.Examples;
+within SHM.SeidelThesis.Examples.ComponentTests;
 model NoiseExample
   import SHM.Shared.Components.Noise.*;
   AutoregressiveGaussianDeg1 noise1(sigma=2, generator.samplePeriod=0.1);
