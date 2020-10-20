@@ -3,7 +3,7 @@ model AutoregressiveGaussianDeg1
   extends TriggeredNoise(generator.sigma=sigma);
   parameter Real r_last "ratio of last difference that is kept";
   parameter Real sigma "sigma of gaussian";
-  discrete Real noise_last "last noise value output by this component";
+  discrete Real noise_last(start=0, fixed=true) "last noise value output by this component";
 equation
   when trigger then
     noise = r_last * pre(noise_last) + noise_raw;
