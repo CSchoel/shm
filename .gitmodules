@@ -1,3 +1,7 @@
 [submodule "subprojects/shm-conduction"]
 	path = subprojects/shm-conduction
 	url = https://github.com/CSchoel/shm-conduction.git
+
+[submodule "subprojects/shm-ref"]
+	path = subprojects/shm-ref
+	url = https://github.com/CSchoel/shm-ref.git
