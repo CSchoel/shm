@@ -1,4 +1,4 @@
-within SHM.SeidelThesis.Components;
+within SHM.BlesiusThesis.Components;
 model Heart "Main heart model"
   SHM.Shared.Connectors.RespirationInput mresp "mechanical respiratory influence" annotation(Placement(visible = true, transformation(origin = {40, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {40, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.Shared.Connectors.SubstanceConcentration vNe "concentration of Norepinephrine in the ventricles" annotation(Placement(visible = true, transformation(origin = {0, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -13,7 +13,7 @@ model Heart "Main heart model"
   parameter Real initial_T_avc = 0.15 "initial value for atrioventricular conduction delay";
   parameter Real initial_T = T_hat "initial value for T";
   parameter Real initial_t_last = 0 "initial value for last ventricular contraction time";
-  SHMConduction.Components.ModularConduction contraction(
+  SHMConduction.Components.PVC.ModularConductionX contraction(
   refrac_av.d_refrac=T_refrac, pace_av.period=T_av,
   delay_sa_v.k_avc_t=k_avc_t, delay_sa_v.d_avc0=T_avc0,
   delay_sa_v.tau_avc=tau_avc, delay_sa_v.initial_d_avc=initial_T_avc,
