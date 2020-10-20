@@ -30,6 +30,7 @@ equation
   connect(down.dirac, cd.down.downward);
 annotation(
   experiment(StartTime=0, StopTime=20, Tolerance=1e-6, Interval=0.002),
-  __OpenModelica_simulationFlags(s = "dassl")
+  __OpenModelica_simulationFlags(s = "dassl"),
+  __MoST_experiment(variableFilter= "(up|down)\\.sawtooth")
 );
 end BidirectionalContractionExample;

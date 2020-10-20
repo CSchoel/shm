@@ -131,6 +131,7 @@ equation
   connect(heart.sinus,sinus.signal) annotation(Line(points = {{-20, -48}, {-20.3015, -48}, {-20.3015, -59.8894}, {-5.27839, -59.8894}, {-5.27839, -59.8894}}));
 annotation(
   experiment(StartTime=0, StopTime=200, Tolerance=1e-6, Interval=0.001),
-  __OpenModelica_simulationFlags(s = "dassl")
+  __OpenModelica_simulationFlags(s = "dassl"),
+  __MoST_experiment(variableFilter= "blood\\.vessel\\.pressure|lung\\.resp\\.phase|heart\\.contraction\\.T|(sNe|vNe|wNe|sAc)\\.con\\.concentration|(sym|para|baro|lung)\\.signal\\.activation")
 );
 end SeidelThesisFullExample;

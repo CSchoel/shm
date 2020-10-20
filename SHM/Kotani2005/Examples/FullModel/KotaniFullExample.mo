@@ -83,6 +83,7 @@ annotation(
   Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})),
   Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})),
   experiment(StartTime = 0, StopTime = 10, Interval=0.0001, Tolerance = 1e-6),
-  __OpenModelica_simulationFlags(s = "dassl")
+  __OpenModelica_simulationFlags(s = "dassl"),
+  __MoST_experiment(variableFilter= "blood\\.vessel\\.pressure|lung\\.r|heart\\.tlast|(vNe|cNe|vNe)Amount\\.con\\.concentration|(symp|para|baro)\\.signal\\.activation")
 );
 end KotaniFullExample;
