@@ -4,7 +4,10 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   	p0=baro_p0,kb=baro_kb,sat_inflection=baro_sat_inflection,saturated=baro_saturated,broadened=baro_broadened,
   	broad_len = baro_broad_len,broad_res=baro_broad_res,broad_eta=baro_broad_eta,broad_sigma=baro_broad_sigma
   ) "baroreceptors" annotation(Placement(visible = true, transformation(origin = {-80, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  SHM.SeidelThesis.Components.Lung lung(T_r=lung_T_r,r_start=lung_r_start) "lung" annotation(Placement(visible = true, transformation(origin = {20, 80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  SHM.SeidelThesis.Components.Lung lung(
+    T_r=lung_T_r,r_start=lung_r_start, sigma_T_r=lung_sigma_T_r,
+    r_noise_last1=lung_r_noise_last1, r_noise_last2=lung_r_noise_last2
+  ) "lung" annotation(Placement(visible = true, transformation(origin = {20, 80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.SeidelThesis.Components.SympatheticSystem sym(
   	base_activity=sym_base_activity,k_baro_resp=sym_k_baro_resp,k_resp=sym_k_resp
   ) "sympathetic system" annotation(Placement(visible = true, transformation(origin = {-40, 80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -33,9 +36,11 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   	initial_T = heart_initial_T,initial_t_last=heart_initial_t_last,tau_sys=heart_tau_sys,S_0=heart_S_0,
   	k_S_vNe=heart_k_S_vNe,k_S_mresp=heart_k_S_mresp,T_hat=heart_T_hat,compliance=heart_compliance,
   	tau_wind0=heart_tau_wind0,k_wind_wNe=heart_k_wind_wNe,p_wind0=heart_p_wind0,initial_S=heart_initial_S,
-  	initial_T_avc=heart_initial_T_avc
+    initial_T_avc=heart_initial_T_avc, sigma_T=heart_sigma_T, r_noise_last=heart_r_noise_last
   ) "the heart" annotation(Placement(visible = true, transformation(origin = {0, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.Shared.Components.Compartments.BloodSystem blood(initialPressure=initial_p) "whole blood system of the body" annotation(Placement(visible = true, transformation(origin = {60, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+
+  inner Modelica.Blocks.Noise.GlobalSeed globalSeed(generateNoise=use_noise) "global seed for all noise terms in the model";
 
   parameter Real initial_p = 100 "initial blood pressure";
 
