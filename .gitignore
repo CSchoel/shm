@@ -1,6 +1,7 @@
 .project
 .settings/*
 *.zip
+*.tar
 *.tar.gz
 *.tar.xz
 *.pyc
