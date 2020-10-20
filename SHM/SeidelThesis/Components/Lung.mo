@@ -10,7 +10,7 @@ model Lung "Lung model with simple sinus signal"
   Real phi_r(start = 0, fixed=true) "internal respiratory phase";
   Real T_r(start=T_r0, fixed=true) "respiratory period with noise";
   SHM.Shared.Components.Noise.AutoregressiveGaussianDeg2 T_r_fluct(
-    trigger=phase_end, sigma=sigma_T_r, r_last1=r_noise_last1,y
+    trigger=phase_end, sigma=sigma_T_r, r_last1=r_noise_last1,
     r_last2=r_noise_last2, stimPeriod=0.1
   );
 protected
