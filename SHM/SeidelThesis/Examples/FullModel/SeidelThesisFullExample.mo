@@ -5,7 +5,7 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   	broad_len = baro_broad_len,broad_res=baro_broad_res,broad_eta=baro_broad_eta,broad_sigma=baro_broad_sigma
   ) "baroreceptors" annotation(Placement(visible = true, transformation(origin = {-80, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.SeidelThesis.Components.Lung lung(
-    T_r=lung_T_r,r_start=lung_r_start, sigma_T_r=lung_sigma_T_r,
+    T_r0=lung_T_r0, r_start=lung_r_start, sigma_T_r=lung_sigma_T_r,
     r_noise_last1=lung_r_noise_last1, r_noise_last2=lung_r_noise_last2
   ) "lung" annotation(Placement(visible = true, transformation(origin = {20, 80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.SeidelThesis.Components.SympatheticSystem sym(
@@ -79,7 +79,7 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real para_k_baro_resp = 0.38 "sensitivity of parasympathetic system to correlated signal of baroreceptors and respiratory neurons";
   parameter Real para_k_resp = 30 "sensitivity of parasympathetic system to respiratory neurons";
 
-  parameter Real lung_T_r = 4 "respiratory period";
+  parameter Real lung_T_r0 = 4 "respiratory period";
   parameter Real lung_r_start = 0.16 "respiratory phase shift in seconds";
   parameter Real lung_sigma_T_r = 0.2 "sigma for gaussian noise for respiratory phase fluctuations";
   parameter Real lung_r_noise_last1 = 0.5 "ratio of last noise value that is kept";
