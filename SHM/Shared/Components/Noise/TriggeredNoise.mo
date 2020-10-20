@@ -8,6 +8,6 @@ protected
   discrete Real noise_raw(start=0, fixed=true);
 equation
   when trigger then
-    noise_raw = generator.r;
+    noise_raw = generator.y;
   end when;
 end TriggeredNoise;
