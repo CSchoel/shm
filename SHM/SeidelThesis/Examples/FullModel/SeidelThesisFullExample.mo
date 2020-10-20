@@ -115,6 +115,8 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real heart_initial_t_last = -heart_initial_T "initial value for last ventricular contraction time";
   parameter Real heart_initial_T_avc = 0.15 "initial value for atrioventricular conduction delay";
   parameter Real heart_initial_S = 120 "initial value for contractility";
+
+  parameter Boolean use_noise = false "if true, noise is added to heart and respiratory period";
 equation
   connect(baro.artery,blood.vessel) annotation(Line(points = {{50, -60}, {18.6047, -60}, {18.6047, -89.8032}, {-90.5188, -89.8032}, {-90.5188, 57.6029}, {-90.5188, 57.6029}}));
   connect(heart.artery,blood.vessel) annotation(Line(points = {{5.2, -52.4}, {49.7317, -52.4}, {49.7317, -60.1073}, {49.7317, -60.1073}}));
