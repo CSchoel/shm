@@ -7,17 +7,15 @@ model Heart "Main heart model"
   SHM.Shared.Connectors.BloodVessel artery "connection to blood system" annotation(Placement(visible = true, transformation(origin = {40, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {52, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   parameter Real T_refrac = 0.22 "refractory period that has to pass until a signal from the sinus node can take effect again";
   parameter Real T_av = 1.7 "time that can pass after the beginning of a systole until the av node initiates a contraction";
-  parameter Real k_avc_t = 0.78 "sensitivity of the atrioventricular conduction time to the time passed since the last ventricular conduction";
   parameter Real T_avc0 = 0.09 "base value for atrioventricular conduction time";
   parameter Real tau_avc = 0.11 "reference time for atrioventricular conduction time"; //TODO find better description
-  parameter Real initial_T_avc = 0.15 "initial value for atrioventricular conduction delay";
+  parameter Real k_avc_t = 0.78 "sensitivity of the atrioventricular conduction time to the time passed since the last ventricular conduction";
   parameter Real initial_T = T_hat "initial value for T";
   parameter Real initial_t_last = 0 "initial value for last ventricular contraction time";
-  SHMConduction.Components.ModularConduction contraction(
-  refrac_av.d_refrac=T_refrac, pace_av.period=T_av,
-  delay_sa_v.k_avc_t=k_avc_t, delay_sa_v.d_avc0=T_avc0,
-  delay_sa_v.tau_avc=tau_avc, delay_sa_v.initial_d_avc=initial_T_avc,
-  initial_T=initial_T, initial_cont_last=initial_t_last
+  parameter Real initial_T_avc = 0.15 "initial value for atrioventricular conduction delay";
+  SHM.SeidelThesis.Components.Contraction contraction(
+  	T_refrac=T_refrac,T_av=T_av,initial_T=initial_T,initial_cont_last=initial_t_last,
+  	initial_T_avc=initial_T_avc,k_avc_t=k_avc_t,T_avc0=T_avc0,tau_avc=tau_avc
   ) "contraction model used to calculate the actual time of ventricular contraction";
   parameter Real tau_sys = 0.125 "duration of systole";
   parameter Real S_0 = 110 "base value for contractility";
@@ -39,14 +37,14 @@ initial equation
   psys = pdia "there is already a connection between one of these variables and artery.pressure";
   S = initial_S;
 equation
-  contraction.outp = sinus;
+  contraction.signal = sinus;
   progress = (time - contraction.cont_last) / tau_sys;
   der(psys) = 1 / tau_sys * S/compliance * (1 - progress) * exp(1 - progress);
   der(pdia) = -(pdia-p_wind0) / tau_wind;
   tau_wind = tau_wind0 + k_wind_wNe * wNe.concentration;
   systole = time - contraction.cont_last < tau_sys;
   when systole then
-    S = S_0 + (k_S_vNe * vNe.concentration + k_S_mresp * mresp.phase) * (1 - (1 - min(1,contraction.d_interbeat/T_hat))^2);
+    S = S_0 + (k_S_vNe * vNe.concentration + k_S_mresp * mresp.phase) * (1 - (1 - min(1,contraction.T/T_hat))^2);
     reinit(psys,pdia);
   end when;
   when not systole then //end of systole
