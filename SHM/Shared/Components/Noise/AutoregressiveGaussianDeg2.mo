@@ -7,7 +7,7 @@ model AutoregressiveGaussianDeg2
   discrete Real noise_last1(start=0, fixed=true) "last noise value output by this component";
   discrete Real noise_last2(start=0, fixed=true) "second last noise value output by this component";
 equation
-  when trigger
+  when trigger then
     noise = r_last1 * pre(noise_last1) + r_last2 * pre(noise_last2) + noise_raw;
     noise_last1 = noise;
     noise_last2 = pre(noise_last1);

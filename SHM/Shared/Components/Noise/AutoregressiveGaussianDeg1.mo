@@ -5,7 +5,7 @@ model AutoregressiveGaussianDeg1
   parameter Real sigma "sigma of gaussian";
   discrete Real noise_last "last noise value output by this component";
 equation
-  when trigger
+  when trigger then
     noise = r_last * pre(noise_last) + noise_raw;
     noise_last = noise;
   end when;
