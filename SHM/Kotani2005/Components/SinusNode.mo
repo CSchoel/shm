@@ -19,7 +19,6 @@ model SinusNode "sinus node integrate-and-fire model"
   SHM.Shared.Components.Saturation satCcne(sat=ccneMax,satexp=ccneSatexp) "saturation function for cardiac concentration of Norepinephrine";
   Real fs "sympathetic influence on sinus node";
   Real fp "parasympathetic influence on sinus node";
-  Boolean signal0(start = false, fixed = true) "switches values on each heartbeat (used to propagate heartbeat event)";
 initial equation
   phase = initialPhase;
 equation
