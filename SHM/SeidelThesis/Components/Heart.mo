@@ -27,19 +27,12 @@ model Heart "Main heart model"
   parameter Real k_wind_wNe = 0.8 "sensitivity of windkessel relaxation to Norepinephrine in Windkessel arteries";
   parameter Real p_wind0 = 7 "minimum pressure that remains even if the heart totally stops beating";
   parameter Real initial_S = S_0 "initial value for contractility";
-  parameter Real sigma_T = 0.02 "sigma for gaussian noise for heart period fluctuations";
-  parameter Real r_noise_last = 0.9 "how much of heart period noise is kept between beats";
-  parameter Boolean use_noise = false "use noise term?";
   Real tau_wind "windkessel relaxation (time until blood pressure hypothetically drops to zero during diastole)";
   discrete Real S "Contractility";
   Real pdia "diastolic blood pressure";
   Real psys "systolic blood pressure";
   Boolean systole "if true, the system is currently in a systole";
   Real progress "progress of systole (rising from 0 to 1 linearly)";
-  SHM.Shared.Components.Noise.AutoregressiveGaussianDeg1 T_fluct(
-    trigger=systole, sigma=sigma_T, r_last=r_noise_last, generator.samplePeriod=0.01
-  ) if use_noise "noise model for fluctuations in heart beat period";
-  Real T_base(start=T_hat, fixed=true) "base heart perioid without dynamic influences (apart from noise)";
 initial equation
   psys = pdia "there is already a connection between one of these variables and artery.pressure";
   S = initial_S;
@@ -51,9 +44,7 @@ equation
   tau_wind = tau_wind0 + k_wind_wNe * wNe.concentration;
   systole = time - contraction.cont_last < tau_sys;
   when systole then
-    // FIXME this is wrong, I completely misunderstood where noise is added :(
-    T_base = T_hat + (if use_noise then T_fluct.noise else 0);
-    S = S_0 + (k_S_vNe * vNe.concentration + k_S_mresp * mresp.phase) * (1 - (1 - min(1,contraction.T/T_base))^2);
+    S = S_0 + (k_S_vNe * vNe.concentration + k_S_mresp * mresp.phase) * (1 - (1 - min(1,contraction.T/T_hat))^2);
     reinit(psys,pdia);
   end when;
   when not systole then //end of systole
