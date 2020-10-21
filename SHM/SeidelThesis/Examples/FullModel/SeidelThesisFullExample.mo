@@ -31,7 +31,10 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   SHM.Shared.Components.Compartments.NeurotransmitterAmount sAc(initialConcentration=initial_sAc) "postsynaptic concentration of Acetylcholine at the sinus node" annotation(Placement(visible = true, transformation(origin = {60, 40}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
   SHM.Shared.Components.Compartments.HormoneAmount vNe(initialConcentration=initial_vNe) "vascular concentration of Norepinephrine at the ventricles" annotation(Placement(visible = true, transformation(origin = {20, 0}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
   SHM.Shared.Components.Compartments.HormoneAmount wNe(initialConcentration=initial_wNe) "vascular concentration of Norepinephrine at the  Windkesel arteries" annotation(Placement(visible = true, transformation(origin = {20, 20}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
-  SHM.SeidelThesis.Components.SinusNode sinus(T_0=sinus_T_0,k_sNe=sinus_k_sNe,k_sAc=sinus_k_sAc) "sinus node" annotation(Placement(visible = true, transformation(origin = {-20, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  SHM.SeidelThesis.Components.SinusNode sinus(
+    T_0=sinus_T_0,k_sNe=sinus_k_sNe,k_sAc=sinus_k_sAc, sigma_T_0=sinus_sigma_T_0,
+    r_noise_last=sinus_r_noise_last, use_noise=use_noise
+  ) "sinus node" annotation(Placement(visible = true, transformation(origin = {-20, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   SHM.SeidelThesis.Components.Heart heart(
   	T_refrac=heart_T_refrac,T_av=heart_T_av,T_avc0=heart_T_avc0,tau_avc=heart_tau_avc,k_avc_t=heart_k_avc_t,
   	initial_T = heart_initial_T,initial_t_last=heart_initial_t_last,tau_sys=heart_tau_sys,S_0=heart_S_0,
@@ -53,6 +56,8 @@ model SeidelThesisFullExample "Full baroreflex model as found in Dr. Seidel's Ph
   parameter Real sinus_T_0 = 0.9 "heart period for denervated heart";
   parameter Real sinus_k_sNe = 0.6 "sensitivity of sinus node to concentration of Norepinephrine";
   parameter Real sinus_k_sAc = 0.2 "sensitivity of sinus node to concentration of Acetylcholine";
+  parameter Real sinus_sigma_T_0 = 0.02 "sigma for gaussian noise for fluctuations in medulla activity";
+  parameter Real sinus_r_noise_last = 0.9 "how much of medullary noise is kept between signals";
 
   parameter Real sNe_tau = 2 "time until concentration drops to zero without any nervous signal";
   parameter Real sNe_k_ex = 0.014 "scaling factor for excitatory influence of sympathetic system on sinoatrial concentration of Norepinephrine";
