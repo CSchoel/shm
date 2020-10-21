@@ -51,6 +51,7 @@ equation
   tau_wind = tau_wind0 + k_wind_wNe * wNe.concentration;
   systole = time - contraction.cont_last < tau_sys;
   when systole then
+    // FIXME this is wrong, I completely misunderstood where noise is added :(
     T_base = T_hat + (if use_noise then T_fluct.noise else 0);
     S = S_0 + (k_S_vNe * vNe.concentration + k_S_mresp * mresp.phase) * (1 - (1 - min(1,contraction.T/T_base))^2);
     reinit(psys,pdia);
