@@ -12,8 +12,12 @@ model Lung "Lung model with simple sinus signal"
   discrete Real T_r(start=T_r0, fixed=true) "respiratory period with noise";
   SHM.Shared.Components.Noise.AutoregressiveGaussianDeg2 T_r_fluct(
     trigger=phase_end, sigma=sigma_T_r, r_last1=r_noise_last1,
-    r_last2=r_noise_last2, generator.samplePeriod=0.1
+    r_last2=r_noise_last2, generator.samplePeriod=0.1001
   ) if use_noise;
+  // NOTE: T_r_fluct.generator.samplePeriod must be smaller than the smallest
+  // RR-interval. Also you may get the following error if the sample period
+  // aligns with "normal" events in the model:
+  // DASKR-- TOUT (=R1) TOO CLOSE TO T (=R2) TO START INTEGRATION
 protected
   Boolean phase_end = phi_r > 1;
 equation
