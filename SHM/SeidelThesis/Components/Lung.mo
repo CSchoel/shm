@@ -5,6 +5,7 @@ model Lung "Lung model with simple sinus signal"
   parameter Real sigma_T_r = 0.2 "sigma for gaussian noise for respiratory phase fluctuations";
   parameter Real r_noise_last1 = 0.5 "ratio of last noise value that is kept";
   parameter Real r_noise_last2 = 0.25 "ratio of second last noise value that is kept";
+  parameter Boolean use_noise = false "use noise term?";
   SHM.Shared.Connectors.NerveOutput signal "generated nerve signal"  annotation(Placement(visible = true, transformation(origin = {0,-80}, extent = {{-14.85,-10.5},{14.85,10.5}}, rotation = 0), iconTransformation(origin = {0, -80}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
   SHM.Shared.Connectors.RespirationOutput resp "mechanical respiratory phase"  annotation(Placement(visible = true, transformation(origin = {100,-20}, extent = {{-14.85,-10.5},{14.85,10.5}}, rotation = 0), iconTransformation(origin = {100, -20}, extent = {{-10.0,-10.0},{10.0,10.0}}, rotation = 0)));
   Real phi_r(start = 0, fixed=true) "internal respiratory phase";
@@ -12,13 +13,13 @@ model Lung "Lung model with simple sinus signal"
   SHM.Shared.Components.Noise.AutoregressiveGaussianDeg2 T_r_fluct(
     trigger=phase_end, sigma=sigma_T_r, r_last1=r_noise_last1,
     r_last2=r_noise_last2, generator.samplePeriod=0.1
-  );
+  ) if use_noise;
 protected
   Boolean phase_end = phi_r > 1;
 equation
   der(phi_r) = 1/T_r;
   when phase_end then
-    T_r = T_r0 + T_r_fluct.noise;
+    T_r = T_r0 + (if use_noise then T_r_fluct.noise else 0);
     reinit(phi_r,0);
   end when;
   resp.phase = - sin(2*Modelica.Constants.pi*phi_r); // FIXME: shouldn't r_start also affect this?
