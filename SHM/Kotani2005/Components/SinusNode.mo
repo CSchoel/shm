@@ -29,11 +29,10 @@ equation
   fs = 1 + sfsym * satCcne.satx;
   fp = 1 - sfpara * satPara.satx;
   rate = 1 / T0 * fs * fp;
-  when phase > 1 then
+  signal = phase > 1;
+  when signal then
     reinit(phase, 0);
-    signal0 = not pre(signal0);
   end when;
-  signal = change(signal0);
   //we do not change the input signals
   ccne.rate = 0;
 annotation(Documentation(info="<html>
