@@ -1,5 +1,6 @@
-#Author: Christopher Sch�lzel
+#Author: Christopher Schölzel
 #Compares modelica output to SeidelThesis output
+#must be run from the folder where output files are found
 library(stats) #for fft
 library(plotrix) #for gap.plot
 library(ggplot2)
@@ -14,7 +15,7 @@ phinames <- c(
   "Pn",
   "Tn",
 #  "Tavn",
-  "ny_b",
+#  "ny_b",
   "ny_b_broadened",
   "ny_r",
   "tau_w",
@@ -32,7 +33,7 @@ names(phinames) <- c(
   "heart.S",
   "heart.contraction.T",
   #"heart.contraction.T_avc",
-  "baro.sat_signal",
+  #"baro.sat_signal",
   "baro.signal.activation",
   "lung.signal.activation",
   "heart.tau_wind",
@@ -68,6 +69,7 @@ compare.print.first <- function(phinames,dataMo,dataC) {
   #   dataC: java data as matrix
   for(moname in names(phinames)) {
     phiname = phinames[moname]
+    print(moname)
     moval = as.numeric(dataMo[1,moname])
     phival = dataC[1,phiname]
     if(moval == phival) {
@@ -312,9 +314,7 @@ nameMo.beats <- "heartbeats.csv"
 nameC.beats <- "DeepThought1000.out_per" #"DeepThought.out_per"
 n <- 1000
 #load csv as matrix
-cls <- rep("numeric",23)
-#ignore empty row stemming from additional comma at end of line in modelica output
-cls[23] <- "NULL"
+cls <- rep("numeric",18)
 dataMo <- as.matrix(read.csv(nameMo,sep=",",dec=".",header=T,colClasses=cls))
 dataC <- as.matrix(read.csv(nameC,sep="\t",dec=".",header=T))
 dataC[,"Pn"] <- dataC[,"Pn"]*2 #adjust Pn to obtain S
@@ -347,4 +347,4 @@ compare.plot.all.gap(phinames,dataMo2,dataC2,gap,F)
 compare.beats(dataC.beats,dataMo.beats)
 
 #make ggplot2 plots
-compare.plot2(phinames, dataMo2, dataC2)
+compare.plot2(phinames, dataMo2, dataC2, from, to)
