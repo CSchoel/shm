@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -14,7 +12,7 @@
    viewBox="0 0 3181.2039 1107.5488"
    id="svg8725"
    version="1.1"
-   inkscape:version="0.92.4 5da689c313, 2019-01-14"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
    sodipodi:docname="PrintModularConductionXPaper.svg">
   <defs
      id="defs8727">
@@ -60,7 +58,7 @@
          inkscape:connector-curvature="0"
          id="path8334-2"
          d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
-         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         style="fill:#007ce3;fill-opacity:1;fill-rule:evenodd;stroke:#007ce3;stroke-width:1pt;stroke-opacity:1"
          transform="matrix(-0.2,0,0,-0.2,-1.2,0)" />
     </marker>
     <marker
@@ -75,7 +73,7 @@
          inkscape:connector-curvature="0"
          id="path8334-32"
          d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
-         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         style="fill:#007ce3;fill-opacity:1;fill-rule:evenodd;stroke:#007ce3;stroke-width:1pt;stroke-opacity:1"
          transform="matrix(-0.2,0,0,-0.2,-1.2,0)" />
     </marker>
   </defs>
@@ -86,16 +84,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497474"
-     inkscape:cx="1810.3312"
-     inkscape:cy="1180.5387"
+     inkscape:zoom="0.25407317"
+     inkscape:cx="1735.8029"
+     inkscape:cy="92.659764"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g1052"
      showgrid="false"
-     inkscape:window-width="1664"
-     inkscape:window-height="907"
-     inkscape:window-x="1248"
-     inkscape:window-y="1176"
+     inkscape:window-width="1712"
+     inkscape:window-height="908"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -115,7 +113,8 @@
      inkscape:snap-center="true"
      inkscape:snap-text-baseline="true"
      inkscape:snap-page="true"
-     inkscape:snap-global="true" />
+     inkscape:snap-global="true"
+     inkscape:document-rotation="0" />
   <metadata
      id="metadata8730">
     <rdf:RDF>
@@ -124,7 +123,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -340,14 +339,14 @@
          id="tspan6342"
          x="-438.62491"
          y="599.39142"
-         style="font-size:180.00001526px;line-height:1.25">S</tspan></text>
+         style="font-size:180px;line-height:1.25">S</tspan></text>
     <text
        id="text6344"
        y="599.39142"
        x="2632.8037"
        style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
-         style="font-size:180.00001526px;line-height:1.25"
+         style="font-size:180px;line-height:1.25"
          y="599.39142"
          x="2632.8037"
          id="tspan6346"
@@ -356,9 +355,9 @@
        id="text6348"
        y="1230.8199"
        x="2085.7502"
-       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#007ce3;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#007ce3;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
-         style="font-size:180.00001526px;line-height:1.25;fill:#007ce3;fill-opacity:1;"
+         style="font-size:180px;line-height:1.25;fill:#007ce3;fill-opacity:1"
          y="1230.8199"
          x="2085.7502"
          id="tspan6350"
@@ -542,7 +541,7 @@
          inkscape:connector-curvature="0"
          id="path8313-1"
          d="M 741.43295,604.1469 H 798.5758 V 572.36119 H 740.71866"
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:7.08661413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send-1)" />
+         style="fill:none;fill-rule:evenodd;stroke:#007ce3;stroke-width:7.08661413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send-1)" />
       <g
          id="g872"
          transform="translate(595.33901,270.43822)">
@@ -745,7 +744,7 @@
          inkscape:connector-curvature="0"
          sodipodi:nodetypes="cccccc" />
       <path
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:4.33849382;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send-2)"
+         style="fill:none;fill-rule:evenodd;stroke:#007ce3;stroke-width:4.33849382;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send-2)"
          d="m 1353.9364,606.46825 h 34.9834 v -19.45952 h -35.4207"
          id="path8313-8"
          inkscape:connector-curvature="0" />
