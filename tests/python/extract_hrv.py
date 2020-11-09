@@ -6,6 +6,16 @@ import matplotlib.pyplot as plt
 
 beat_chars = set(['N','L','R','B','A','a','J','S','V','r','F','e','j','n','E','/','f','Q','?'])
 
+# Note for future users:
+# This file requires a download of the PhysioNet databases listed in the
+# load_all() function.
+# Addtionally, you have to use the tool `rdann` to extract the annotations in
+# human readable form.
+# The parameter settings used are simply
+# `rdann -r filename_without_extension -a annotator`
+# where the `annotator` depends on the database and is defined in the file
+# `ANNOTATORS` (e.g. `ecg` for the Fantasia database).
+
 def ra(fname):
 	#data = np.loadtxt(fname, dtype=bytes, usecols=(0,2))
 	line_re = r"\[?([\d:\.]+(?: \d)?)\]?\s+\d+\s+(.)\s+.+"
