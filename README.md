@@ -1,6 +1,7 @@
 # Modelica implementation of the Seidel-Herzel model of the human baroreflex
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3855126.svg)](https://doi.org/10.5281/zenodo.3855126)
+[![DOI](https://img.shields.io/badge/BioModels-MODEL2101280001.6-377)](https://www.ebi.ac.uk/biomodels/MODEL2101280001.6)
 
 This project contains a Modelica implementation of the model of the human baroreflex developed by H. Seidel in his PhD thesis under the supervision of H. Herzel [\[1\]](#ref1).
 We published and presented this implementation at the 2015 International Modelica Conference [\[2\]](#ref2).
