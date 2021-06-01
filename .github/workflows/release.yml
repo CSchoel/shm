@@ -25,8 +25,8 @@ jobs:
           omc dist_fmu.mos
       - uses: actions/cache@v2
         with:
-          key: fmu-${{ hashFiles('InaMo', '.github/workflows/release.yml', 'scripts/dist_fmu.mos') }}
-          path: out/InaMo.Examples.FullCell.AllCells.fmu
+          key: fmu-${{ hashFiles('SHM', '.github/workflows/release.yml', 'scripts/dist_fmu.mos') }}
+          path: out/SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample.fmu
   release:
     name: Create Release
     runs-on: ubuntu-latest
@@ -41,7 +41,7 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Create archive
         run: |
-          zip -r inamo-${RELEASE_VERSION}.zip . -x \*.git/\* \*.git
+          zip -r shm-${RELEASE_VERSION}.zip . -x \*.git/\* \*.git
       - name: Extract changelog for release version
         # explanation of sed command:
         # 1. select lines between those starting with `## [x.y.z]` and `## `
@@ -70,14 +70,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # reference previous output
-          asset_path: ./inamo-${{ env.RELEASE_VERSION }}.zip
-          asset_name: inamo-${{ env.RELEASE_VERSION }}.zip
+          asset_path: ./shm-${{ env.RELEASE_VERSION }}.zip
+          asset_name: shm-${{ env.RELEASE_VERSION }}.zip
           asset_content_type: application/zip
       - name: Get cached FMUs
         uses: actions/cache@v2
         with:
-          key: fmu-${{ hashFiles('InaMo', '.github/workflows/release.yml', 'scripts/dist_fmu.mos') }}
-          path: out/InaMo.Examples.FullCell.AllCells.fmu
+          key: fmu-${{ hashFiles('SHM', '.github/workflows/release.yml', 'scripts/dist_fmu.mos') }}
+          path: out/SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample.fmu
       - name: Upload FMUs
         id: upload-fmu
         uses: actions/upload-release-asset@v1
@@ -85,6 +85,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # reference previous output
-          asset_path: out/InaMo.Examples.FullCell.AllCells.fmu
-          asset_name: AllCells.fmu
+          asset_path: out/SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample.fmu
+          asset_name: SeidelThesisFullExample-${{ env.RELEASE_VERSION }}.fmu
           asset_content_type: application/zip
