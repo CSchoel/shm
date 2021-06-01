@@ -7,6 +7,8 @@ refdir = "subprojects/shm-ref"
 twosec = Dict("stopTime" => 2, "numberOfIntervals" => 2000)
 
 withOMC("test-output", ".") do omc
+    sendExpression(omc, "setCommandLineOptions(\"-d=newInst,nfAPI\")")
+    installAndLoad(omc, "Modelica"; version="3.2.3")
     @testset "Simulations" begin
         @testset "Kotani2005" begin
             testmodel(omc, "SHM.Kotani2005.Examples.FullModel.KotaniFullExample"; refdir=refdir, override=twosec)
