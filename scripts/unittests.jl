@@ -1,5 +1,6 @@
 using ModelicaScriptingTools
 using Test
+using OMJulia: sendExpression
 
 refdir = "subprojects/shm-ref"
 # only simulate full models for two seconds in order to reduce execution time
