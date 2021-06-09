@@ -13,6 +13,7 @@ model Lung "Lung model with simple sinus signal"
   SHM.Shared.Components.Noise.AutoregressiveGaussianDeg2 T_r_fluct(
     trigger=phase_end, sigma=sigma_T_r, r_last1=r_noise_last1,
     r_last2=r_noise_last2,
+    generator.startTime=(if use_noise then 0 else -1),
     generator.samplePeriod=(if use_noise then 0.1001 else 1e100),
     generator.enableNoise=use_noise
   );
