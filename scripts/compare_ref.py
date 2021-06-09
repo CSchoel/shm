@@ -10,5 +10,5 @@ if __name__ == "__main__":
     ref = pandas.read_csv("subprojects/shm-ref/{}".format(reffile))
     cur = pandas.read_csv("test-output/{}".format(reffile))
     plt.plot(ref["time"], ref[refvar])
-    plt.plot(cur["time"], cur[refvar])
+    plt.plot(cur["time"], cur[refvar], "--")
     plt.show()
