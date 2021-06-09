@@ -12,10 +12,7 @@ model Lung "Lung model with simple sinus signal"
   discrete Real T_r(start=T_r0, fixed=true) "respiratory period with noise";
   SHM.Shared.Components.Noise.AutoregressiveGaussianDeg2 T_r_fluct(
     trigger=phase_end, sigma=sigma_T_r, r_last1=r_noise_last1,
-    r_last2=r_noise_last2,
-    generator.startTime=(if use_noise then 0 else -1),
-    generator.samplePeriod=(if use_noise then 0.1001 else 1e100),
-    generator.enableNoise=use_noise
+    r_last2=r_noise_last2, samplePeriod=0.1001, enableNoise=use_noise
   );
   // NOTE: T_r_fluct.generator.samplePeriod must be smaller than the smallest
   // RR-interval. Also you may get the following error if the sample period
