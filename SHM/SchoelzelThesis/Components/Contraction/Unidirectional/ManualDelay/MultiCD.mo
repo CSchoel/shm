@@ -1,5 +1,5 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ManualDelay;
-partial model MultiCD
+model MultiCD
   "conduction delay strategy that allows multiple "
   +  "signals to be delayed at a time"
   extends ConductionDelay;

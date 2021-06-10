@@ -1,5 +1,5 @@
 within SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ManualDelay;
-partial model SingleCD
+model SingleCD
   "conduction delay strategy that only allows one "
   +  "signal to be delayed at a time"
   extends ConductionDelay;
