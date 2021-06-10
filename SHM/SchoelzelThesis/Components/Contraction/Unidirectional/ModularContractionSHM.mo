@@ -15,6 +15,9 @@ model ModularContractionSHM "modular contraction model using unidirectional comp
   SchedulingPacemaker pace(T=T_av) "AV node pacemaker";
   RaceCondition race "race condition between AV and sinus signal";
   DecoupledRefractoryGate refrac(T_refrac=T_refrac) "refractory gate for sinus signal";
+initial equation
+  race.next_a = pace.t_next;
+  race.next_b = av_delay.t_next;
 equation
   race.inp = false;
   connect(inp, refrac.inp);

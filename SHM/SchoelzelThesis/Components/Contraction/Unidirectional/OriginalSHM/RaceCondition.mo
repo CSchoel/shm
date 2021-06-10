@@ -3,8 +3,8 @@ model RaceCondition
   extends UnidirectionalContractionComponent;
   import SHM.Shared.Connectors.ScheduleInput;
   parameter Real initial_next = 1e100;
-  ScheduleInput next_a(start=initial_next, fixed=true); // FIXME why does this need an initial value?
-  ScheduleInput next_b(start=initial_next, fixed=true); // FIXME why does this need an initial value?
+  ScheduleInput next_a;
+  ScheduleInput next_b;
   Real next;
   discrete Real next_min;
   Boolean next_passed(start=false, fixed=true) = time >= pre(next); // FIXME why does this need an initial value?
