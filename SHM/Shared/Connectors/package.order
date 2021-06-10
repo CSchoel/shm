@@ -10,3 +10,5 @@ ExcitationInput
 ExcitationOutput
 BidirectionalExcitationOutput
 BidirectionalExcitationInput
+ScheduleInput
+ScheduleOutput
