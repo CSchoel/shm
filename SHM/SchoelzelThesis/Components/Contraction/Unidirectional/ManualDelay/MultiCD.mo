@@ -11,11 +11,11 @@ partial model MultiCD
     "the buffer containing the scheduled emission times of delayed signals";
   Integer n_signals(start=0, fixed=true)
     "number of signals that are currently in the buffer";
+  discrete Real t_next = pre(buffer[1])
+    "time when the next signal should leave the component";
 protected
   Real t_emit = time + duration
     "time when the signal currently arriving should be emitted";
-  discrete Real t_next = pre(buffer[1])
-    "time when the next signal should leave the component";
   discrete Real t_last = if pre(n_signals) == 0 then -1 else pre(buffer[pre(n_signals)])
     "last signal that will leave the component";
   Boolean ignore = t_emit - t_last < min_dist
