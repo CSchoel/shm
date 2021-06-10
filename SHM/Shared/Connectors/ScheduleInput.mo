@@ -1,2 +1,2 @@
 within SHM.Shared.Connectors;
-connector ScheduleInout = input Modelica.SIUnits.Time "scheduled time stamp";
+connector ScheduleInput = input Modelica.SIUnits.Time "scheduled time stamp";
