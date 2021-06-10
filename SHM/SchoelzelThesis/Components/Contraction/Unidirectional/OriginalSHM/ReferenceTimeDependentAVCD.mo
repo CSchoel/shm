@@ -18,11 +18,14 @@ model ReferenceTimeDependentAVCD
   parameter Real initial_T_avc = 0.15 "initial value for conduction delay";
   Real T(start=0, fixed=true);
   Real t_last(start=0, fixed=true);
-  ScheduleOutput t_next = if internalCD.t_next > 0 then internalCD.t_next else 1e100
-    "time for which next signal is scheduled (1e100 if there is no such signal)";
+  ScheduleOutput t_next "time for which next signal is scheduled (1e100 if there is no such signal)";
 initial equation
   duration = initial_T_avc;
+  t_next = if internalCD.t_next > 0 then internalCD.t_next else 1e100;
 equation
+  when change(internalCD.t_next) then
+    t_next = if internalCD.t_next > 0 then internalCD.t_next else 1e100;
+  end when;
   when inp then
     T = time - pre(t_last);
     duration = T_avc0 + k_avc_t * exp(-T/tau_avc);

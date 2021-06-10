@@ -6,18 +6,22 @@ model RaceCondition
   ScheduleInput next_a(start=initial_next, fixed=true); // FIXME why does this need an initial value?
   ScheduleInput next_b(start=initial_next, fixed=true); // FIXME why does this need an initial value?
   Real next;
-  discrete Real next_min = min(next_a, next_b);
+  discrete Real next_min;
   Boolean next_passed(start=false, fixed=true) = time >= pre(next); // FIXME why does this need an initial value?
 initial equation
   next = initial_next;
+  next_min = min(next_a, next_b);
 equation
   outp = edge(next_passed);
 algorithm
   when outp then
     next := initial_next;
   end when;
+  when change(next_a) or change(next_b) then
+    next_min := min(next_a, next_b);
+  end when;
   when change(next_a) and change(next_b) and next_min < next then
-    next := next_min;
+    next := min(next_a, next_b);
   elsewhen change(next_a) and next_a < next then
     next := next_a;
   elsewhen change(next_b) and next_b < next then

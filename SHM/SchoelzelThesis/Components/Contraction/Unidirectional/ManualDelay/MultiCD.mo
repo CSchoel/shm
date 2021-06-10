@@ -11,19 +11,22 @@ partial model MultiCD
     "the buffer containing the scheduled emission times of delayed signals";
   Integer n_signals(start=0, fixed=true)
     "number of signals that are currently in the buffer";
-  discrete Real t_next = pre(buffer[1])
+  discrete Real t_next(start=-1, fixed=true)
     "time when the next signal should leave the component";
 protected
   Real t_emit = time + duration
     "time when the signal currently arriving should be emitted";
-  discrete Real t_last = if pre(n_signals) == 0 then -1 else pre(buffer[pre(n_signals)])
+  Real t_last = if pre(n_signals) == 0 then -1 else pre(buffer[pre(n_signals)])
     "last signal that will leave the component";
   Boolean ignore = t_emit - t_last < min_dist
     "condition when an arriving signal should be ignored";
-  Boolean delay_passed(start=false, fixed=true) = time > t_next;  // FIXME why does this need an initial value?
+  Boolean delay_passed(start=false, fixed=true) = time > pre(t_next);  // FIXME why does this need an initial value?
 equation
   outp = edge(delay_passed);
 algorithm
+  when change(buffer[1]) then
+    t_next := buffer[1];
+  end when;
   when inp and not(ignore) then
     assert(pre(n_signals) < n, "signal buffer overflow, increase n!");
     // put the signal in the buffer
