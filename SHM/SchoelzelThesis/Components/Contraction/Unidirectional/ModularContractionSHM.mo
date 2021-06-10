@@ -19,8 +19,14 @@ equation
   race.inp = false;
   connect(inp, refrac.inp);
   connect(refrac.outp, av_delay.inp);
-  connect(pace.t_next, race.next_a);
-  connect(av_delay.t_next, race.next_b);
+  when change(pace.t_next) then
+    race.next_a = pace.t_next;
+  end when;
+  when change(av_delay.t_next) then
+    race.next_b = av_delay.t_next;
+  end when;
+  // pace.t_next = race.next_a;
+  // av_delay.t_next = race.next_b;
   connect(outp, race.outp);
   connect(race.outp, pace.reset);
   connect(race.outp, av_delay.reference);
