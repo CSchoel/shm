@@ -18,6 +18,21 @@ withOMC("test-output", ".") do omc
             #testmodel(omc, "SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample"; refdir=refdir, override=twosec)
         end
         @testset "SchoelzelThesis" begin
+            @testset "AVDelayExample" begin
+                testmodel(omc, "SHM.SchoelzelThesis.Examples.AVDelayExample"; refdir=refdir)
+            end
+            @testset "MultiDelayExample" begin
+                testmodel(omc, "SHM.SchoelzelThesis.Examples.MultiDelayExample"; refdir=refdir)
+            end
+            @testset "PacemakerExample" begin
+                testmodel(omc, "SHM.SchoelzelThesis.Examples.PacemakerExample"; refdir=refdir)
+            end
+            @testset "RefractoryDelayExample" begin
+                testmodel(omc, "SHM.SchoelzelThesis.Examples.RefractoryDelayExample"; refdir=refdir)
+            end
+            @testset "RefractoryExample" begin
+                testmodel(omc, "SHM.SchoelzelThesis.Examples.RefractoryExample"; refdir=refdir)
+            end
             @testset "UnidirectionalModularExample" begin
                 testmodel(omc, "SHM.SchoelzelThesis.Examples.UnidirectionalModularExample"; refdir=refdir)
             end
