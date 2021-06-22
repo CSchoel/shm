@@ -19,6 +19,7 @@ withOMC("test-output", ".") do omc
         end
         @testset "SchoelzelThesis" begin
             @testset "AVDelayExample" begin
+                installAndLoad(omc, "SHMConduction") # SHMConduction is required for AVDelayExample
                 testmodel(omc, "SHM.SchoelzelThesis.Examples.AVDelayExample"; refdir=refdir)
             end
             @testset "MultiDelayExample" begin
