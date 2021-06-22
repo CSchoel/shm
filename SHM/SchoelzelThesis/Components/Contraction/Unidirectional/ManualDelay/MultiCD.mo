@@ -23,10 +23,10 @@ protected
   Boolean delay_passed(start=false, fixed=true) = time > pre(t_next);  // FIXME why does this need an initial value?
 equation
   outp = edge(delay_passed);
-algorithm
   when change(buffer[1]) then
-    t_next := buffer[1];
+    t_next = buffer[1];
   end when;
+algorithm
   when inp and not(ignore) then
     assert(pre(n_signals) < n, "signal buffer overflow, increase n!");
     // put the signal in the buffer
