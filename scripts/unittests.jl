@@ -18,9 +18,15 @@ withOMC("test-output", ".") do omc
             #testmodel(omc, "SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample"; refdir=refdir, override=twosec)
         end
         @testset "SchoelzelThesis" begin
-            testmodel(omc, "SHM.SchoelzelThesis.Examples.UnidirectionalModularExample"; refdir=refdir)
-            testmodel(omc, "SHM.SchoelzelThesis.Examples.BidirectionalContractionExample"; refdir=refdir)
-            testmodel(omc, "SHM.SchoelzelThesis.Examples.BidirectionalContractionMixinExample"; refdir=refdir)
+            @testset "UnidirectionalModularExample" begin
+                testmodel(omc, "SHM.SchoelzelThesis.Examples.UnidirectionalModularExample"; refdir=refdir)
+            end
+            @testset "BidirectionalContractionExample" begin
+                testmodel(omc, "SHM.SchoelzelThesis.Examples.BidirectionalContractionExample"; refdir=refdir)
+            end
+            @testset "BidirectionalContractionMixinExample" begin
+                testmodel(omc, "SHM.SchoelzelThesis.Examples.BidirectionalContractionMixinExample"; refdir=refdir)
+            end
         end
         @testset "shm-conduction" begin
             #testmodel(omc, "SHMConduction.Examples.ModularExample"; refdir=refdir)
