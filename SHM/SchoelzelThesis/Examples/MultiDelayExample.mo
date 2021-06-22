@@ -18,4 +18,9 @@ equation
   when mcd.outp then
     count_multi = pre(count_multi) + 1;
   end when;
+  annotation(
+    experiment(StartTime=0, StopTime=5, Tolerance=1e-6, Interval=0.1),
+    __OpenModelica_simulationFlags(s = "dassl"),
+    __MoST_experiment(variableFilter= "count_(multi|single)")
+  );
 end MultiDelayExample;
