@@ -9,4 +9,9 @@ equation
   when cd.outp then
     reinit(test, 0);
   end when;
+  annotation(
+    experiment(StartTime=0, StopTime=5, Tolerance=1e-6, Interval=0.1),
+    __OpenModelica_simulationFlags(s = "dassl"),
+    __MoST_experiment(variableFilter= "visible_output|test|gate.inp")
+  );
 end RefractoryDelayExample;
