@@ -8,7 +8,7 @@ protected
   // and interpolation that is applied to delay-expressions.
   // An alternating step function is the easiest choice for this.
   Real continuous_inp(start=0, fixed=true) "auxiliary variable";
-  Real continuous_outp(start=0, fixed=true);
+  Real continuous_outp;
   Boolean discrete_outp(start=false, fixed=true);
 equation
   der(continuous_inp) = 0;
