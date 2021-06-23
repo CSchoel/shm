@@ -25,11 +25,11 @@ model BidirectionalContractionMixinExample
   );
   DiracToSawtooth up, down;
 equation
-  connect(ex.ex, pm.up.downward);
+  ex.ex = pm.up.downward;
   connect(pm.down, cd.up);
   cd.down.upward = false;
-  connect(up.dirac, pm.up.upward);
-  connect(down.dirac, cd.down.downward);
+  up.dirac = pm.up.upward;
+  down.dirac = cd.down.downward;
 annotation(
   experiment(StartTime=0, StopTime=20, Tolerance=1e-6, Interval=0.002),
   __OpenModelica_simulationFlags(s = "dassl"),
