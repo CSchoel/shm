@@ -7,14 +7,14 @@ import os
 if __name__ == "__main__":
     resfile = "SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample_res.csv"
     resfile = "SHM.SchoelzelThesis.Examples.UnidirectionalModularExample_res.csv"
-    resfile = "SHM.SchoelzelThesis.Examples.AVDelayExample_res.csv"
+    resfile = "SHM.SchoelzelThesis.Examples.BidirectionalContractionExample_res.csv"
     reffile = "subprojects/shm-ref/{}".format(resfile)
     # refvar = "lung.resp.phase"
     # refvar = "blood.vessel.pressure"
     # refvar = "para.signal.activation"
     # refvar = "heart.contraction.T"
     # refvars = [refvar]
-    refvars = ["countIn", "countOut", "countOuts"]
+    refvars = ["up.sawtooth", "down.sawtooth"]
     withref = os.path.exists(reffile)
     if withref:
         ref = pandas.read_csv(reffile)
