@@ -14,13 +14,14 @@ if __name__ == "__main__":
     # refvar = "para.signal.activation"
     # refvar = "heart.contraction.T"
     # refvars = [refvar]
-    refvars = ["countOut", "countOuts"]
+    refvars = ["countIn", "countOut", "countOuts"]
     withref = os.path.exists(reffile)
     if withref:
         ref = pandas.read_csv(reffile)
     cur = pandas.read_csv("test-output/{}".format(resfile))
     for i, refvar in enumerate(refvars):
         if withref:
-            plt.plot(ref["time"], ref[refvar], color="C%d" % i)
-        plt.plot(cur["time"], cur[refvar], "--", color="C%d" % i)
+            plt.plot(ref["time"], ref[refvar], color="C%d" % i, label=refvar)
+        plt.plot(cur["time"], cur[refvar], "--", color="C%d" % i, label=refvar)
+    plt.legend()
     plt.show()
