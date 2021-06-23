@@ -4,8 +4,11 @@ model RefractoryPacemaker
   import SHM.SchoelzelThesis.Components.Contraction.BidirectionalMixin.{
     RefractoryMixin, PacemakerMixin
   };
-  replaceable RefractoryMixin refrac;
-  replaceable PacemakerMixin pace;
+  // NOTE: this component would be more reusable if refrac and pace
+  // were replaceable. However, OpenModelica 1.17 currently does not support
+  // this.
+  ConstantRefractoryMixin refrac;
+  ConstantPacemakerMixin pace;
   inner Boolean refractory;
   inner Boolean pacemaker_reset;
   inner Boolean refrac_signal;

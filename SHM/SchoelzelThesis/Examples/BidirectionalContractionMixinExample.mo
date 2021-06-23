@@ -13,8 +13,8 @@ model BidirectionalContractionMixinExample
   parameter Real T_refrac = 0.4;
   parameter Real duration_constant = 0.2;
   RefractoryPacemaker pm(
-    replaceable ConstantPacemakerMixin pace(T=pacemaker_cycle),
-    replaceable ConstantRefractoryMixin refrac(duration=T_refrac)
+    pace(T=pacemaker_cycle),
+    refrac(duration=T_refrac)
   );
   ConstantConductionDelay cd(duration_constant=duration_constant);
   ThreePhasesExcitation ex(
