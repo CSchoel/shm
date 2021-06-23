@@ -13,7 +13,7 @@ protected
 equation
   der(continuous_inp) = 0;
   when inp then
-    reinit(continuous_inp, 1.0 - continuous_inp);
+    reinit(continuous_inp, 1.0 - pre(continuous_inp));
   end when;
   discrete_outp = continuous_outp > 0.5;
   outp = change(discrete_outp);
