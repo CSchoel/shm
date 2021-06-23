@@ -9,7 +9,7 @@ protected
   // An alternating step function is the easiest choice for this.
   Real continuous_inp(start=0, fixed=true) "auxiliary variable";
   Real continuous_outp(start=0, fixed=true);
-  Boolean discrete_outp;
+  Boolean discrete_outp(start=false, fixed=true);
 equation
   der(continuous_inp) = 0;
   when inp then
