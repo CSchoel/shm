@@ -1,5 +1,5 @@
 within SHM.SchoelzelThesis.Examples;
-model AVDelayExample
+model AVDelayExample "test contraction components using delay() => tests show that both variants introduce spurious additional signals"
   SHM.SchoelzelThesis.Components.Contraction.Unidirectional.BuiltinDelay.AVConductionDelay del;
   SHMConduction.Components.AVConductionDelay del2;
   SHM.SchoelzelThesis.Components.Contraction.Unidirectional.BuiltinDelay.SafeAVConductionDelay dels;
