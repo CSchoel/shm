@@ -2,6 +2,7 @@ import pandas
 import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
+import os
 
 if __name__ == "__main__":
     reffile = "SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample_res.csv"
@@ -11,9 +12,14 @@ if __name__ == "__main__":
     # refvar = "blood.vessel.pressure"
     # refvar = "para.signal.activation"
     # refvar = "heart.contraction.T"
-    refvar = "countOut"
-    #ref = pandas.read_csv("subprojects/shm-ref/{}".format(reffile))
+    # refvars = [refvar]
+    refvars = ["countOut", "countOuts"]
+    withref = os.path.exists("subprojects/shm-ref/{}".format(reffile))
+    if withref:
+        ref = pandas.read_csv("subprojects/shm-ref/{}".format(reffile))
     cur = pandas.read_csv("test-output/{}".format(reffile))
-    #plt.plot(ref["time"], ref[refvar])
-    plt.plot(cur["time"], cur[refvar], "--")
+    for i, refvar in enumerate(refvars):
+        if withref:
+            plt.plot(ref["time"], ref[refvar], color="C%d" % i)
+        plt.plot(cur["time"], cur[refvar], "--", color="C%d" % i)
     plt.show()
