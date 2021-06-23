@@ -30,6 +30,6 @@ equation
 annotation(
   experiment(StartTime=0, StopTime=30, Tolerance=1e-6, Interval=0.01),
   __OpenModelica_simulationFlags(s = "dassl"),
-  __MoST_experiment(variableFilter= "count*")
+  __MoST_experiment(variableFilter= "count.*")
 );
 end AVDelayExample;
