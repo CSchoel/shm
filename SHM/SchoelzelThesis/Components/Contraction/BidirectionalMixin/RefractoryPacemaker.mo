@@ -8,7 +8,6 @@ model RefractoryPacemaker
   replaceable PacemakerMixin pace;
   inner Boolean refractory;
   inner Boolean pacemaker_reset;
-protected
   inner Boolean refrac_signal;
 equation
   refrac_signal = up.upward or down.downward;
