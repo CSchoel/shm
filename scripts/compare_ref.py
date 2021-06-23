@@ -21,7 +21,7 @@ if __name__ == "__main__":
     cur = pandas.read_csv("test-output/{}".format(resfile))
     for i, refvar in enumerate(refvars):
         if withref:
-            plt.plot(ref["time"], ref[refvar], color="C%d" % i, label=refvar)
-        plt.plot(cur["time"], cur[refvar], "--", color="C%d" % i, label=refvar)
+            plt.plot(ref["time"], ref[refvar], color="C%d" % i, alpha=0.5, label=refvar)
+        plt.plot(cur["time"], cur[refvar], "--", color="C%d" % i, alpha=0.5, label=refvar)
     plt.legend()
     plt.show()
