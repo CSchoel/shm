@@ -21,10 +21,12 @@ equation
   elsewhen up.downward
        and not delay_passed
        and pre(direction_next) == Direction.Up then
+    t_next = 0;
     direction_next = Direction.None;
   elsewhen down.upward
        and not delay_passed
        and pre(direction_next) == Direction.Down then
+    t_next = 0;
     direction_next = Direction.None;
   end when;
 end ConductionDelay;
