@@ -12,10 +12,10 @@ withOMC("test-output", ".") do omc
     installAndLoad(omc, "Modelica"; version="3.2.3")
     @testset "Simulations" begin
         @testset "Kotani2005" begin
-            #testmodel(omc, "SHM.Kotani2005.Examples.FullModel.KotaniFullExample"; refdir=refdir, override=twosec)
+            testmodel(omc, "SHM.Kotani2005.Examples.FullModel.KotaniFullExample"; refdir=refdir, override=twosec)
         end
         @testset "SeidelThesis" begin
-            #testmodel(omc, "SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample"; refdir=refdir, override=twosec)
+            testmodel(omc, "SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample"; refdir=refdir, override=twosec)
         end
         @testset "SchoelzelThesis" begin
             @testset "AVDelayExample" begin
@@ -45,7 +45,7 @@ withOMC("test-output", ".") do omc
             end
         end
         @testset "shm-conduction" begin
-            #testmodel(omc, "SHMConduction.Examples.ModularExample"; refdir=refdir)
+            testmodel(omc, "SHMConduction.Examples.ModularExample"; refdir=refdir)
         end
     end
 end
