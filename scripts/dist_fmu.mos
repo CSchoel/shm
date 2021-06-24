@@ -4,5 +4,5 @@ setModelicaPath(getModelicaPath()+":"+cd());
 mkdir("out");
 cd("out");
 loadModel(Modelica, {"3.2.3"});
-loadModel(InaMo); getErrorString();
+loadModel(SHM); getErrorString();
 buildModelFMU(SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample, "2.0", "me_cs"); getErrorString();
