@@ -8,15 +8,55 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- nothing
+nothing
+
+### Changed
+
+nothing
+
+### Fixed
+
+nothing
+
+## [1.7.0] - 2021-06-24
+
+### Added
+
+- optional noise terms for `SeidelThesis` model (affects `SinusNode` and `Lung` components)
+- small script to compare reference and current plots
+- support for OpenModelica 1.15-1.17 through ModelicaScriptingTools version 1.1.0
+- README now contains information how to get `*_ann.txt` files required for the script `extract_hrv.py`
+- `ScheduleInput` and `ScheduleOutput` connectors for `OriginalSHM` version of cardiac conduction model
+- component tests in `SchoelzelThesis` are now part of the unit test suite and have reference data
 
 ### Changed
 
 - changed default branch from `master` to `main`
+- version numbering now also includes patch part
+- former parameter `T_r` in `SeidelThesis.Components.Lung` is now a variable => some other parts of the code needed to use the new parameter `T_r0` instead
+- simplified sinus node output
+- escapes dots in variable filter used in `simulateSeidelThesis.mos`
+- switched from Travis CI to GitHub Actions
+- removed some alias variables from reference data
+- unit tests now use nested test sets to better identify which model test failed
+- updated component tests in `SchoelzelThesis`
+- removed `use_single` parameter in `MultiDelayExample` in `SchoelzelThesis`
 
 ### Fixed
 
-- nothing
+- some small bugs in `plotCompare.R`
+- explicitly loads correct version of MSL in unit test script
+- incorrect use of `redeclare` in `SHM.Kotani2005.Components.NeurotransmitterRelease`
+- `t_next` in `SHM.SchoelzelThesis.Components.Contraction.Unidirectional.ManualDelay.MultiCD` needs to be public, because it is accessed in `ReferenceTimeDependendAVCD`
+- incorrect use of `discrete` variables in `SchoelzelThesis` (must only be set in `when` equations)
+- removed `partial` keyword from `MultiCD` and `SingleCD` in `SchoelzelThesis`
+- moved `change(buffer[1])` event out of algorithm section in `MultiCD` in `SchoelzelThesis`
+- adds start value for `discrete_outp`, removes start value for `continuous_outp`, and adds missing `pre()` in `SHM.SchoelzelThesis.Contraction.Unidirectional.BuiltinDelay.ConductionDelay`
+- some models in `SchoelzelThesis` used `connect()` equations with items that are no connectors, these were replaced with normal equations using equals signs
+- resets `t_next` to zero on signal collisions in `SHM.SchoelzelThesis.Components.Contraction.Bidirectional.ConductionDelay`
+- the variables `tick` in `PacemakerMixin`and `refrac_signal` in `RefractoryPacemaker` need to be public within the `BidirectionalMixin` example in `SchoelzelThesis`
+- due to a bug in OpenModelica, `refrac` and `pace` in the `RefractoryPacemaker` of the `BidirectionalMixin` package in `SchoelzelThesis` cannot be `replaceable`
+
 
 ## [1.6] - 2020-10-20
 
