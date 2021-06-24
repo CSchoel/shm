@@ -43,15 +43,10 @@ jobs:
         run: |
           zip -r shm-${RELEASE_VERSION}.zip . -x \*.git/\* \*.git
       - name: Extract changelog for release version
-        # explanation of sed command:
-        # 1. select lines between those starting with `## [x.y.z]` and `## `
-        # 2. invert this selection
-        # 3. delete it
-        # => only selection is remaining in stream
-        run: |
-          cp RELEASE_HEAD.md RELEASE.md
-          printf "\n" >> RELEASE.md
-          sed -e "/^## \\[${RELEASE_VERSION:1}\\]/,/^## / ! d" CHANGELOG.md | head -n -2 >> RELEASE.md
+        uses: CSchoel/release-notes-from-changelog@v1
+        with:
+          begin-pattern: '/^## \\[${RELEASE_VERSION#v}\\]/'
+          link-pattern: '^\\[${RELEASE_VERSION#v}\\]:'
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
