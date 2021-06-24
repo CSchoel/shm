@@ -28,6 +28,7 @@ nothing
 - README now contains information how to get `*_ann.txt` files required for the script `extract_hrv.py`
 - `ScheduleInput` and `ScheduleOutput` connectors for `OriginalSHM` version of cardiac conduction model
 - component tests in `SchoelzelThesis` are now part of the unit test suite and have reference data
+- releases now include a FMU of `SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample`
 
 ### Changed
 
