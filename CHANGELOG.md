@@ -230,3 +230,16 @@ nothing
 ### Fixed
 
 - nothing
+
+
+[Unreleased]: https://github.com/CSchoel/shm/compare/v1.7.0..HEAD
+[1.7.0]: https://github.com/CSchoel/shm/compare/1.6..v1.7.0
+[1.6]: https://github.com/CSchoel/shm/compare/1.5..1.6
+[1.5]: https://github.com/CSchoel/shm/compare/1.4..1.5
+[1.4]: https://github.com/CSchoel/shm/compare/1.3..1.4
+[1.3]: https://github.com/CSchoel/shm/compare/1.2..1.3
+[1.2]: https://github.com/CSchoel/shm/compare/1.1..1.2
+[1.1]: https://github.com/CSchoel/shm/compare/1.0..1.1
+[1.0]: https://github.com/CSchoel/shm/compare/0.6..1.0
+[0.6]: https://github.com/CSchoel/shm/compare/0.5..0.6
+[0.5]: https://github.com/CSchoel/shm/releases/tag/0.5
