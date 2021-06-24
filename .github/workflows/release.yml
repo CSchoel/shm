@@ -55,6 +55,8 @@ jobs:
       - name: Rename FMU
         run: mv out/SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample.fmu "out/SeidelThesisFullExample_linux64_$RELEASE_VERSION.fmu"
       - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: >
           gh release create -d $RELEASE_VERSION -F RELEASE.md
           "out/SeidelThesisFullExample_linux64_$RELEASE_VERSION.fmu"
