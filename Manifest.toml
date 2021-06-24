@@ -23,9 +23,9 @@ version = "0.8.3"
 
 [[Compat]]
 deps = ["Base64", "Dates", "DelimitedFiles", "Distributed", "InteractiveUtils", "LibGit2", "Libdl", "LinearAlgebra", "Markdown", "Mmap", "Pkg", "Printf", "REPL", "Random", "SHA", "Serialization", "SharedArrays", "Sockets", "SparseArrays", "Statistics", "Test", "UUIDs", "Unicode"]
-git-tree-sha1 = "e4e2b39db08f967cc1360951f01e8a75ec441cab"
+git-tree-sha1 = "dc7dedc2c2aa9faf59a55c622760a25cbefbe941"
 uuid = "34da2185-b29b-5c13-b0c7-acf172513d20"
-version = "3.30.0"
+version = "3.31.0"
 
 [[Conda]]
 deps = ["JSON", "VersionParsing"]
@@ -68,10 +68,10 @@ deps = ["Random", "Serialization", "Sockets"]
 uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 
 [[DocStringExtensions]]
-deps = ["LibGit2", "Markdown", "Pkg", "Test"]
-git-tree-sha1 = "9d4f64f79012636741cf01133158a54b24924c32"
+deps = ["LibGit2"]
+git-tree-sha1 = "a32185f5428d3986f47c2ab78b1f216d5e6cc96f"
 uuid = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
-version = "0.8.4"
+version = "0.8.5"
 
 [[Documenter]]
 deps = ["Base64", "Dates", "DocStringExtensions", "IOCapture", "InteractiveUtils", "JSON", "LibGit2", "Logging", "Markdown", "REPL", "Test", "Unicode"]
@@ -144,9 +144,9 @@ uuid = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
 
 [[Libiconv_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "8d22e127ea9a0917bc98ebd3755c8bd31989381e"
+git-tree-sha1 = "42b62845d70a619f063a7da093d995ec8e15e778"
 uuid = "94ce4f54-9a6c-5748-9c1c-f9c7231a4531"
-version = "1.16.1+0"
+version = "1.16.1+1"
 
 [[LightXML]]
 deps = ["Libdl", "XML2_jll"]
@@ -258,9 +258,9 @@ uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
 
 [[SentinelArrays]]
 deps = ["Dates", "Random"]
-git-tree-sha1 = "ea6cf57f735e8cb0181c10c3b33a9ccc4b8af6d1"
+git-tree-sha1 = "ffae887d0f0222a19c406a11c3831776d1383e3d"
 uuid = "91c51154-3ec4-41a3-a24f-3f23e20d615c"
-version = "1.3.1"
+version = "1.3.3"
 
 [[Serialization]]
 uuid = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
@@ -304,9 +304,9 @@ version = "1.0.1"
 
 [[Tables]]
 deps = ["DataAPI", "DataValueInterfaces", "IteratorInterfaceExtensions", "LinearAlgebra", "TableTraits", "Test"]
-git-tree-sha1 = "aa30f8bb63f9ff3f8303a06c604c8500a69aa791"
+git-tree-sha1 = "8ed4a3ea724dac32670b062be3ef1c1de6773ae8"
 uuid = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
-version = "1.4.3"
+version = "1.4.4"
 
 [[Tar]]
 deps = ["ArgTools", "SHA"]
@@ -342,9 +342,9 @@ version = "1.2.1"
 
 [[ZeroMQ_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg", "libsodium_jll"]
-git-tree-sha1 = "74a74a3896b63980734cc876da8a103454559fe8"
+git-tree-sha1 = "fe5c65a526f066fb3000da137d5785d9649a8a47"
 uuid = "8f1865be-045e-5c20-9c9f-bfbfb0764568"
-version = "4.3.2+6"
+version = "4.3.4+0"
 
 [[Zlib_jll]]
 deps = ["Libdl"]
