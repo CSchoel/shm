@@ -47,39 +47,21 @@ jobs:
         with:
           begin-pattern: '/^## \\[${RELEASE_VERSION#v}\\]/'
           link-pattern: '^\\[${RELEASE_VERSION#v}\\]:'
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # provided by Actions
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body_path: RELEASE.md
-          draft: true
-          prerelease: false
-      - name: Upload Release ZIP
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # reference previous output
-          asset_path: ./shm-${{ env.RELEASE_VERSION }}.zip
-          asset_name: shm-${{ env.RELEASE_VERSION }}.zip
-          asset_content_type: application/zip
       - name: Get cached FMUs
         uses: actions/cache@v2
         with:
           key: fmu-${{ hashFiles('SHM', '.github/workflows/release.yml', 'scripts/dist_fmu.mos') }}
           path: out/SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample.fmu
-      - name: Upload FMUs
-        id: upload-fmu
-        uses: actions/upload-release-asset@v1
+      - name: Rename FMU
+        run: mv out/SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample.fmu "out/SeidelThesisFullExample_linux64_$RELEASE_VERSION.fmu"
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # provided by Actions
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # reference previous output
-          asset_path: out/SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample.fmu
-          asset_name: SeidelThesisFullExample-${{ env.RELEASE_VERSION }}.fmu
-          asset_content_type: application/zip
+          body_path: RELEASE.md
+          files: |
+            out/SeidelThesisFullExample_linux64_${{ env.RELEASE_VERSION }}.fmu
+            shm-${{ env.RELEASE_VERSION }}.zip
+          draft: true
+          prerelease: false
