@@ -55,13 +55,7 @@ jobs:
       - name: Rename FMU
         run: mv out/SHM.SeidelThesis.Examples.FullModel.SeidelThesisFullExample.fmu "out/SeidelThesisFullExample_linux64_$RELEASE_VERSION.fmu"
       - name: Create Release
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # provided by Actions
-        with:
-          body_path: RELEASE.md
-          files: |
-            out/SeidelThesisFullExample_linux64_${{ env.RELEASE_VERSION }}.fmu
-            shm-${{ env.RELEASE_VERSION }}.zip
-          draft: true
-          prerelease: false
+        run: >
+          gh release create -d $RELEASE_VERSION -F RELEASE.md
+          "out/SeidelThesisFullExample_linux64_$RELEASE_VERSION.fmu"
+          shm-${{ env.RELEASE_VERSION }}.zip
